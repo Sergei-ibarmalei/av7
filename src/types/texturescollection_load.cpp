@@ -15,7 +15,7 @@ bool TexturesCollection::loadFromFile(SDL_Renderer* r,
         status = false;
         return false;
     }
-    if (!*t)
+    if (!t)
     {
         log.log_info = "In loadFromFile texture is absent or nullptr.";
         log.push(log.log_info);
@@ -69,7 +69,7 @@ bool TexturesCollection::loadFromText(SDL_Renderer* r,
         log.push(log.log_info);
         return false;
     }
-    if (!*t)
+    if (!t)
     {
         log.log_info = "In load from text texture is absent or is nullptr.";
         log.push(log.log_info);

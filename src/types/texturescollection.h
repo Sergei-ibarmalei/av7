@@ -5,10 +5,27 @@
 #include "gamefonts.h"
 //#include "errs.h"
 #include "../loging/loging.h"
+#include "texturesnames.h"
 
 class TexturesCollection
 {
     private:
+        const char* names[tn::allStringTextures] = 
+        {
+            "NEW GAME", "RULES", "EXIT",
+            "NEW GAME", "RULES", "EXIT",
+            "PAUSE", "Press Esc to continue, Q to exit",
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "x 1", "x 2", "x 3"
+        };
+
+        const char* names_pics[tn::all_pics]
+        {
+            "images/hero.png", "images/alien_one.png",
+            "images/laserBlue01.png", "images/laserRed01.png",
+            "images/one_star.png", "images/moon_one.png"
+        };
         SDL_Renderer* r = nullptr;
         bool status = true;
         gamefont_* gameFonts = nullptr;

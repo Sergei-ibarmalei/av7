@@ -1,6 +1,6 @@
 #include "texturescollection.h"
-#include "texturesnames.h"
 
+#include "texturesnames.h"
 using string_ = std::string;
 
 TexturesCollection::TexturesCollection(SDL_Renderer* const renderer,
@@ -22,10 +22,12 @@ TexturesCollection::TexturesCollection(SDL_Renderer* const renderer,
     {
         status = false; return;
     }
+
     if (!makePicturesTextures(log))
     {
         status = false; return;
     }
+
 }
 
 TexturesCollection::~TexturesCollection()
@@ -54,10 +56,12 @@ bool TexturesCollection::makePicturesTextures(log_::Log& log)
     }
     for (texture = tn::hero; texture < tn::all_pics; ++texture)
     {
+        pictures[texture].texture = nullptr;
         if (loadFromFile(r,
                          &pictures[texture].texture,
                          pictures[texture].rect,
-                         tn::names_pics[texture], log) == false) return false;
+                         names_pics[texture], log) == false) return false;
+
     }
     return true;
 }
@@ -79,7 +83,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
         if (loadFromText(r,
                          &strings[texture].texture,
                          strings[texture].rect,
-                         tn::names[texture],
+                         names[texture],
                          &gameFonts[tn::MainMenu], log) == false) return false;
     }
     /*MAKING TEXTURES FOR MAIN MENU BRIGHT*/
@@ -88,23 +92,25 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
         if (loadFromText(r,
                          &strings[texture].texture,
                          strings[texture].rect,
-                         tn::names[texture],
+                         names[texture],
                          &gameFonts[tn::MainMenuBright], log) == false)
             return false;
     }
+
     /*MAKING TEXTURES FOR PAUSE*/
     texture = tn::pause;
     if (loadFromText(r,
                      &strings[texture].texture,
                      strings[texture].rect,
-                     tn::names[texture],
+                     names[texture],
                      &gameFonts[tn::Pause], log) == false) return false;
     /*MAKING TEXTURE FOR PRESS ESC..*/
+
     texture = tn::PressEsc;
     if (loadFromText(r,
                      &strings[texture].texture,
                      strings[texture].rect,
-                     tn::names[texture],
+                     names[texture],
                      &gameFonts[tn::Pause], log) == false) return false;
     /*MAKING TEXTURE FOR SCORES*/
     for (texture = tn::zeroScore; texture < tn::zeroScoreB; ++texture)
@@ -112,7 +118,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
         if (loadFromText(r,
                          &strings[texture].texture,
                          strings[texture].rect,
-                         tn::names[texture],
+                         names[texture],
                          &gameFonts[tn::Scores], log) == false) return false;
     }
     /*MAKING TEXTURE FOR SCORE BANNER*/
@@ -121,19 +127,21 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
         if (loadFromText(r,
                          &strings[texture].texture,
                          strings[texture].rect,
-                         tn::names[texture],
+                         names[texture],
                          &gameFonts[tn::ScoresBanner], log) == false)
             return false;
     }
     /*MAKING TEXTURE FOR LIVE MULTIPLIVCATION*/
+
     for (texture = tn::x1; texture < tn::allStringTextures; ++texture)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
                          strings[texture].rect,
-                         tn::names[texture],
+                         names[texture],
                          &gameFonts[tn::LiveMult], log) == false) return false;
     }
+
     return true;
 }
 
