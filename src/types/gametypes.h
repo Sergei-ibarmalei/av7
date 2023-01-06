@@ -10,5 +10,6 @@ typedef struct
     bool partOne;
     bool partTwo;
     int  HeroLives;
+    bool gameQuit;
 } status_t;
 #endif

@@ -20,6 +20,7 @@ class Sdl
     bool Status() const {return init;}
     void TextureRender(SDL_Texture* const t, rect_* const r) const;
     SDL_Renderer* Renderer() {return gRenderer;}
+    SDL_Event& event() {return e;}
 };
 
 #endif

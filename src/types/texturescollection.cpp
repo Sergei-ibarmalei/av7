@@ -102,7 +102,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                      &gameFonts[tn::Pause], log) == false) return false;
     /*MAKING TEXTURE FOR PRESS ESC..*/
 
-    texture = tn::PressEsc;
+    texture = tn::pressEscape;
     if (loadFromText(r,
                      &strings[texture].texture,
                      strings[texture].rect,

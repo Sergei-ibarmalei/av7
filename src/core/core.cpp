@@ -4,15 +4,25 @@ bool mainCore()
 {
     log_::Log gameLog;
     Sdl sdl("app", gameLog);
-    if (sdl.Status() == false) return false;
-
-    TexturesCollection tc(sdl.Renderer(), gameLog);
-    if (tc.Status() == false)
+    if (sdl.Status() == false)
     {
-        gameLog.Show();
-        return false;
+        gameLog.Show(); return false;
     }
 
+    tc collection(sdl.Renderer(), gameLog);
+    if (collection.Status() == false)
+    {
+        gameLog.Show(); return false;
+    }
+    GameClass gc(sdl, collection, gameLog);
+    if (gc.Status() == false)
+    {
+        gameLog.Show(); return false;
+    }
+    if (!gc.flow(gameLog))
+    {
+        gameLog.Show(); return false;
+    }
 
     return true;
 }
