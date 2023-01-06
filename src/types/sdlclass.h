@@ -2,6 +2,7 @@
 #define SDLCLASS_H
 
 #include "sdltypes.h"
+#include "../loging/loging.h"
 
 class Sdl
 {
@@ -9,11 +10,11 @@ class Sdl
     SDL_Renderer*   gRenderer;
     SDL_Window*     gWindow;
     SDL_Event       e;
-    bool Init(const char* appName);
+    bool Init(const char* appName, log_::Log& log);
     bool init = true;
 
     public:
-    explicit Sdl(const char* appName);
+    explicit Sdl(const char* appName, log_::Log& log);
     Sdl(const Sdl& ) = delete;
     ~Sdl();
     bool Status() const {return init;}

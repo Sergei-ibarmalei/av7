@@ -3,7 +3,7 @@
 
 
 #include "gamefonts.h"
-#include "errs.h"
+//#include "errs.h"
 #include "../loging/loging.h"
 
 class TexturesCollection

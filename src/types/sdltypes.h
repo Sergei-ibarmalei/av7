@@ -12,10 +12,6 @@
 
 struct Rect: public SDL_Rect
 {
-    int x;
-    int y;
-    int w;
-    int h;
     Rect() {x = y = w = h = 0;}
     bool operator==(const struct Rect& r)
     {

@@ -1,27 +1,32 @@
 #include "sdlclass.h"
 
-Sdl::Sdl(const char* appName)
+using string_ = std::string;
+
+Sdl::Sdl(const char* appName, log_::Log& log)
 {
-    init = Init(appName);
+    init = Init(appName, log);
 }
 
-bool Sdl::Init(const char* appName)
+bool Sdl::Init(const char* appName, log_::Log& log)
 {
     if (appName == nullptr)
     {
-        std::cout << "Application name is absent.\n";
+        log.log_info = "Application name is absent, abort.";
+        log.push(log.log_info);
         return false;
     }
         
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        std::cout << "Could not initialize video mode.\n";
+        log.log_info = "Could not initialize video mode.";
+        log.push(log.log_info);
         return false;
     }
 
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
     {
-        std::cout << "SDL linear texture error.\n";
+        log.log_info = "SDL linear texture error.";
+        log.push(log.log_info);
         return false;
     }
 
@@ -34,7 +39,8 @@ bool Sdl::Init(const char* appName)
                                    SDL_WINDOW_SHOWN);
     if (!gWindow)
     {
-        std::cout << "Cannot create window.\n";
+        log.log_info = "Cannot create window.";
+        log.push(log.log_info);
         return false;
     }
 
@@ -43,20 +49,23 @@ bool Sdl::Init(const char* appName)
                                     SDL_RENDERER_ACCELERATED);
     if (!gRenderer)
     {
-        std::cout << "Renderer could not be created.\n";
+        log.log_info = "Renderer could not be created.";
+        log.push(log.log_info);
         return false;
     }
 
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags))
     {
-        std::cout << "Could not initialize png image.\n";
+        log.log_info = "Could not initialize png image.";
+        log.push(log.log_info);
         return false;
     }
 
     if (TTF_Init() == 1)
     {
-        std::cout << "SDL_ttf could not initialize.\n";
+        log.log_info = "SDL_ttf could not initialize.";
+        log.push(log.log_info);
         return false;
     }
 
