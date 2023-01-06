@@ -30,10 +30,6 @@ TexturesCollection::TexturesCollection(SDL_Renderer* const renderer,
 
 }
 
-TexturesCollection::~TexturesCollection()
-{
-    
-}
 
 void TexturesCollection::textureFree(SDL_Texture* t)
 {
@@ -207,4 +203,51 @@ void TexturesCollection::setFontsProperties()
     gameFonts[tn::LiveMult].size = LIVEMULTFONTSIZE;
     gameFonts[tn::LiveMult].color = LIGHTSTEELBLUE;
     gameFonts[tn::LiveMult].isAlpha = true;
+}
+
+TexturesCollection::~TexturesCollection()
+{
+    int object;
+    if (gameFonts)
+    {
+        for (object = tn::MainMenu; object < tn::allGameFonts; ++object)
+        {
+            if (gameFonts[object].font)
+            {
+                TTF_CloseFont(gameFonts[object].font);
+                gameFonts[object].font = nullptr;
+            }
+        }
+        delete[] gameFonts;
+        gameFonts = nullptr;
+    }
+
+    if (pictures)
+    {
+        for (object = tn::hero; object < tn::all_pics; ++object)
+        {
+            if (pictures[object].texture)
+            {
+                textureFree(pictures[object].texture);
+                pictures[object].texture = nullptr;
+            }
+        }
+        delete[] pictures;
+        pictures = nullptr;
+    }
+
+    if (strings)
+    {
+        for (object = tn::new_game; object < tn::allStringTextures; ++object)
+        {
+            if(strings[object].texture)
+            {
+                textureFree(strings[object].texture);
+                strings[object].texture = nullptr;
+            }
+        }
+        delete[] strings;
+        strings = nullptr;
+    }
+
 }
