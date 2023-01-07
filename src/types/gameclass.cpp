@@ -58,8 +58,3 @@ bool GameClass::flow(log_::Log& log)
     return true;
 }
 
-/*void GameClass::showMM(Sdl& sdl, status_t& status)
-{
-    mm->ShowMainMenu(sdl, status);
-}*/
-

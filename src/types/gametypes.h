@@ -12,4 +12,12 @@ typedef struct
     int  HeroLives;
     bool gameQuit;
 } status_t;
+
+enum borderSides {borderUp,
+                  borderDown,
+                  borderRight,
+                  borderLeft,
+                  blackBanner,
+                  allBorderSides};
+
 #endif

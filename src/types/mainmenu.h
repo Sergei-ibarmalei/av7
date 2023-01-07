@@ -6,14 +6,12 @@
 #include "texturescollection.h"
 #include "gametypes.h"
 
-//enum mainMenuFlow {toNewGame, toRules, toExit};
 
 class MainMenu
 {
     private:
     texture_* mmTextures = nullptr;
     bool      mmStatus = true;
-    //mainMenuFlow mmF = toNewGame;
 
     void init_mmTextures(texture_* t, log_::Log& log);
     void set_mmTextures();
