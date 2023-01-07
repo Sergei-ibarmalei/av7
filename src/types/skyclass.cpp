@@ -27,6 +27,7 @@ Sky::Sky(texture_* t, log_::Log& log)
         init = false;
         return;
     }
+    setStarsCoords();
 
 }
 
@@ -49,7 +50,7 @@ void Sky::setStarsCoords()
        fast[star].x = getRand(LEFT, RIGHT);
        fast[star].y = getRand(UP, DOWN);
        fast[star].w = starTexture->rect.w;
-       fast[star].h = starTexture->rect.h; 
+       fast[star].h = starTexture->rect.h;
     }
 
     for (int star = 0; star < slowStarMax; ++star)
