@@ -9,7 +9,7 @@ bool GameClass::partOne(log_::Log& log)
         if (status.mainMenu) return true;
         action();
         SDL_RenderClear(sdl_->Renderer());
-        BorderSky_show_moving(sdl_, border, sky);
+        borderSky_show_moving();
 
 
 

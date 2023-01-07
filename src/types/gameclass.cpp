@@ -120,3 +120,10 @@ void GameClass::action()
     }
 }
 
+void GameClass::borderSky_show_moving()
+{
+    border->ShowBorder(sdl_);
+    sky->ShowSky(sdl_);
+    sky->MoveSky();
+}
+

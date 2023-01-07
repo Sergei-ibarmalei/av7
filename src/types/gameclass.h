@@ -22,6 +22,7 @@ class GameClass
     bool initSky(texture_* starTexture, log_::Log& log);
     bool partOne(log_::Log& log);
     void action();
+    void borderSky_show_moving();
 
     public:
     GameClass(Sdl& sdl, tc& collection, log_::Log& log);
@@ -31,7 +32,8 @@ class GameClass
     bool Status() const {return gameClassStatus;}
 
     bool flow(log_::Log& log);
-    friend void BorderSky_moving(Sdl* sdl, Border* b, Sky* s);
+    //friend void BorderSky_moving(Sdl* sdl, Border* b, Sky* s);
+    
 };
 
 #endif

@@ -27,9 +27,10 @@ bool mainCore()
     return true;
 }
 
-void BorderSky_show_moving(Sdl* sdl, Border* border, Sky* sky)
+/*void BorderSky_show_moving(Sdl* sdl, Border* border, Sky* sky)
 {
     border->ShowBorder(sdl);
     sky->ShowSky(sdl);
     sky->MoveSky();
-}
+    
+}*/
