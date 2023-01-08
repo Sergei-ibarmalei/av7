@@ -28,7 +28,24 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
         gameClassStatus = false; return;
     }
 
+    if (!(initGameInfo(collection, log)))
+    {
+        gameClassStatus = false; return;
+    }
 
+
+}
+
+bool GameClass::initGameInfo(tc& collection, log_::Log& log)
+{
+    gameInfo = new (std::nothrow) GameInfoClass(collection, log);
+    if (!gameInfo)
+    {
+        log.log_info = "Cannot allocate memory for gameInfo in game class.\n";
+        log.push(log.log_info);
+        return false;
+    }
+    return gameInfo->Status();
 }
 
 bool GameClass::initBorder(log_::Log& log)
@@ -81,6 +98,10 @@ GameClass::~GameClass()
     if (sky)
     {
         delete sky; sky = nullptr;
+    }
+    if (gameInfo)
+    {
+        delete gameInfo; gameInfo = nullptr;
     }
 }
 

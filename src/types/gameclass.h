@@ -5,13 +5,15 @@
 #include "mainmenu.h"
 #include "borderclass.h"
 #include "skyclass.h"
+#include "gameInfoClass.h"
 
 class GameClass
 {
     private:
-    MainMenu* mm;
-    Border*   border;
-    Sky*      sky;
+    MainMenu*      mm {nullptr};
+    Border*        border {nullptr};
+    Sky*           sky {nullptr};
+    GameInfoClass* gameInfo {nullptr};
 
     Sdl*      sdl_;
     status_t status;
@@ -23,6 +25,7 @@ class GameClass
     bool partOne(log_::Log& log);
     void action();
     void borderSky_show_moving();
+    bool initGameInfo(tc& collection, log_::Log& log);
 
     public:
     GameClass(Sdl& sdl, tc& collection, log_::Log& log);
