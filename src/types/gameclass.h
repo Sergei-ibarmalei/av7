@@ -35,7 +35,6 @@ class GameClass
     bool Status() const {return gameClassStatus;}
 
     bool flow(log_::Log& log);
-    //friend void BorderSky_moving(Sdl* sdl, Border* b, Sky* s);
     
 };
 

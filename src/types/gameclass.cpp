@@ -123,7 +123,7 @@ bool GameClass::flow(log_::Log& log)
         if (status.mainMenu)
         {
             mm->ShowMainMenu(sdl_, status, log);
-            if (mm->Status() == false) return false;
+            //if (mm->Status() == false) return false;
         }
         if (status.partOne)
         {

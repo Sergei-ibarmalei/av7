@@ -137,6 +137,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          names[texture],
                          &gameFonts[tn::LiveMult], log) == false) return false;
     }
+    
 
     return true;
 }

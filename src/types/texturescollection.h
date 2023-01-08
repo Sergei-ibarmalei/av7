@@ -22,7 +22,8 @@ class TexturesCollection
 
         const char* names_pics[tn::all_pics]
         {
-            "images/hero.png", "images/alien_one.png",
+            "images/hero.png", "images/hero_scale_mult.png",
+            "images/alien_one.png",
             "images/laserBlue01.png", "images/laserRed01.png",
             "images/one_star.png", "images/moon_one.png"
         };

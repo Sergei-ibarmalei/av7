@@ -4,19 +4,30 @@
 #define GAMEINFOCLASS_H
 
 #include "texturescollection.h"
+#include "sdlclass.h"
+#include "gametypes.h"
 #include "../loging/loging.h"
+#include "../consts/gameconsts.h"
 
 class GameInfoClass
 {
     private:
     enum {scoreBannerLen = 6};
     enum {heroLivesLen = 3};
+    enum {textureOfZero};
+    enum {x1, x2, x3, all_x};
     texture_*  heap_scoreBanner {nullptr};
-    texture_*  heap_heroLives   {nullptr};
+    texture_*  heap_heroLivesMult   {nullptr};
     texture_*  hero_texture {nullptr};
+    texture_*  scoreBanner {nullptr};
+    texture_*  heroLivesMult   {nullptr};
     bool       init {true};
-    bool       initScoreBanner(tc& collection, log_::Log& log);
-    bool       initHeroLives(tc& collection, log_::Log& log);
+    bool       initScoreBanner_heap(tc& collection, log_::Log& log);
+    bool       initHeroLives_heap(tc& collection, log_::Log& log);
+    bool       initScoreBanner(log_::Log& log);
+    void       initHeroLives(tc& collection);
+    void       setScoreBannerCoords();
+    void       setHeroLivesCoords();
 
     public:
     explicit GameInfoClass(tc& collection, log_::Log& log);
@@ -24,6 +35,7 @@ class GameInfoClass
     GameInfoClass& operator=(const GameInfoClass& ) = delete;
     ~GameInfoClass();
     bool Status() const {return init;}
+    void ShowGameInfo(Sdl* sdl, status_t& gameStatus);
 };
 
 
