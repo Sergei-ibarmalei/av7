@@ -14,7 +14,7 @@ class TexturesCollection
         {
             "NEW GAME", "RULES", "EXIT",
             "NEW GAME", "RULES", "EXIT",
-            "PAUSE", "Press Esc to continue, Q to exit",
+            "PAUSE", "Press Esc to continue, Q to exit in Main menu",
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
             "x 1", "x 2", "x 3"

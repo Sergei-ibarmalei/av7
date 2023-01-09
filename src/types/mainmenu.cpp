@@ -16,15 +16,12 @@ MainMenu::MainMenu(texture_* t,log_::Log& log)
 
 MainMenu::~MainMenu()
 {
-    if (mmTextures)
+    for (int object = tn::new_game; object < tn::pause; ++object)
     {
-        for (int object = tn::new_game; object < tn::pause; ++object)
-        {
-            mmTextures[object].texture = nullptr;
-        }
-        delete[] mmTextures;
-        mmTextures = nullptr;
+        mmTextures[object].texture = nullptr;
     }
+    delete[] mmTextures;
+    mmTextures = nullptr;
 }
 
 void MainMenu::init_mmTextures(texture_* t, log_::Log& log)

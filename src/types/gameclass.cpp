@@ -15,6 +15,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     if (mm->Status() == false)
     {
         log.log_info = "Main menu creation is failure.\n";
+        log.push(log.log_info);
         gameClassStatus = false;
         return;
     }
@@ -33,6 +34,35 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
         gameClassStatus = false; return;
     }
 
+    pause = new (std::nothrow) texture_[2];
+    if (!pause)
+    {
+        log.log_info = "Main menu creation is failure.\n";
+        log.push(log.log_info);
+        gameClassStatus = false;
+        return;       
+    }
+    initPause(collection);
+
+
+}
+
+void GameClass::initPause(tc& collection)
+{
+    //enum {pause_, pressEscape};
+
+    pause[pause_] = collection.Strings()[tn::pause];
+    pause[pressEscape] = collection.Strings()[tn::pressEscape];
+
+    int centerPause_x = S_W / 2;
+    int centerPause_y = S_H / 2;
+    int centerPrEsc_x = S_W / 2;
+    int centerPrEsc_y = S_H - 100;
+
+    pause[pause_].rect.x = centerPause_x - pause[pause_].rect.w / 2;
+    pause[pause_].rect.y = centerPause_y - pause[pause_].rect.h / 2;
+    pause[pressEscape].rect.x = centerPrEsc_x - pause[pressEscape].rect.w / 2;
+    pause[pressEscape].rect.y = centerPrEsc_y - pause[pressEscape].rect.h / 2;
 
 }
 
@@ -87,22 +117,16 @@ bool GameClass::initSky(texture_* starTexture, log_::Log& log)
 GameClass::~GameClass()
 {
     sdl_ = nullptr;
-    if (mm) 
+    delete mm; mm = nullptr;
+    delete border; border = nullptr;
+    delete sky; sky = nullptr;
+    delete gameInfo; gameInfo = nullptr;
+
+    for (int t = 0; t < 2; ++t)
     {
-        delete mm; mm = nullptr;
+        pause[t].texture = nullptr;
     }
-    if (border)
-    {
-        delete border; border = nullptr;
-    }
-    if (sky)
-    {
-        delete sky; sky = nullptr;
-    }
-    if (gameInfo)
-    {
-        delete gameInfo; gameInfo = nullptr;
-    }
+    delete[] pause;
 }
 
 void GameClass::initStatus()
@@ -133,11 +157,61 @@ bool GameClass::flow(log_::Log& log)
     return true;
 }
 
-void GameClass::action()
+void GameClass::check_key_events()
 {
     while (SDL_PollEvent(&sdl_->event()) != 0)
     {
         if (sdl_->event().type == SDL_QUIT) status.gameQuit = true;
+        else if(sdl_->event().type == SDL_KEYDOWN &&
+            sdl_->event().key.repeat == 0)
+        {
+            switch (sdl_->event().key.keysym.sym)
+            {
+                case SDLK_ESCAPE:
+                {
+                    status.pause = true; break;
+                }
+                default: {}
+            }
+        }
+
+    }
+}
+
+void GameClass::pauseIsPressed()
+{
+    while (!status.gameQuit || !status.pause)
+    {
+        SDL_RenderClear(sdl_->Renderer());
+        borderSky_show_moving();
+        gameInfo->ShowGameInfo(sdl_, status);
+        showPause();
+        while (SDL_PollEvent(&sdl_->event()) != 0)
+        {
+            if (sdl_->event().type == SDL_QUIT)
+            {
+                status.gameQuit = true;
+                status.pause = false;
+                return;
+            }
+            else if(sdl_->event().type == SDL_KEYDOWN &&
+                sdl_->event().key.repeat == 0)
+            {
+                switch (sdl_->event().key.keysym.sym)
+                {
+                    case SDLK_ESCAPE:
+                    {
+                        status.pause = false; return;
+                    }
+                    case SDLK_q:
+                    {
+                        status.mainMenu = true; return;
+                    }
+                    default: {}
+                }
+            }
+        }
+        SDL_RenderPresent(sdl_->Renderer());
     }
 }
 
@@ -146,5 +220,11 @@ void GameClass::borderSky_show_moving()
     border->ShowBorder(sdl_);
     sky->ShowSky(sdl_);
     sky->MoveSky();
+}
+
+void GameClass::showPause()
+{
+    sdl_->TextureRender(pause[pause_].texture, &pause[pause_].rect);
+    sdl_->TextureRender(pause[pressEscape].texture, &pause[pressEscape].rect);
 }
 

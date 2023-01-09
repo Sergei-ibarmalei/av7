@@ -107,7 +107,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                      &strings[texture].texture,
                      strings[texture].rect,
                      names[texture],
-                     &gameFonts[tn::Pause], log) == false) return false;
+                     &gameFonts[tn::PressEsc], log) == false) return false;
     /*MAKING TEXTURE FOR SCORES*/
     for (texture = tn::zeroScore; texture < tn::zeroScoreB; ++texture)
     {
@@ -209,46 +209,36 @@ void TexturesCollection::setFontsProperties()
 TexturesCollection::~TexturesCollection()
 {
     int object;
-    if (gameFonts)
+    for (object = tn::MainMenu; object < tn::allGameFonts; ++object)
     {
-        for (object = tn::MainMenu; object < tn::allGameFonts; ++object)
+        if (gameFonts[object].font)
         {
-            if (gameFonts[object].font)
-            {
-                TTF_CloseFont(gameFonts[object].font);
-                gameFonts[object].font = nullptr;
-            }
+            TTF_CloseFont(gameFonts[object].font);
+            gameFonts[object].font = nullptr;
         }
-        delete[] gameFonts;
-        gameFonts = nullptr;
     }
+    delete[] gameFonts;
+    gameFonts = nullptr;
 
-    if (pictures)
+    for (object = tn::hero; object < tn::all_pics; ++object)
     {
-        for (object = tn::hero; object < tn::all_pics; ++object)
+        if (pictures[object].texture)
         {
-            if (pictures[object].texture)
-            {
-                textureFree(pictures[object].texture);
-                pictures[object].texture = nullptr;
-            }
+            textureFree(pictures[object].texture);
+            pictures[object].texture = nullptr;
         }
-        delete[] pictures;
-        pictures = nullptr;
     }
+    delete[] pictures;
+    pictures = nullptr;
 
-    if (strings)
+    for (object = tn::new_game; object < tn::allStringTextures; ++object)
     {
-        for (object = tn::new_game; object < tn::allStringTextures; ++object)
+        if(strings[object].texture)
         {
-            if(strings[object].texture)
-            {
-                textureFree(strings[object].texture);
-                strings[object].texture = nullptr;
-            }
+            textureFree(strings[object].texture);
+            strings[object].texture = nullptr;
         }
-        delete[] strings;
-        strings = nullptr;
     }
-
+    delete[] strings;
+    strings = nullptr;
 }

@@ -27,33 +27,26 @@ GameInfoClass::GameInfoClass(tc& collection, log_::Log& log)
 
 GameInfoClass::~GameInfoClass()
 {
-    if (heap_scoreBanner)
+    for (int t = 0; t < scoreBannerLen; ++t)
     {
-        for (int t = 0; t < scoreBannerLen; ++t)
-        {
-            heap_scoreBanner[t].texture = nullptr;
-        }
-        delete[] heap_scoreBanner;
-        heap_scoreBanner = nullptr;
+        heap_scoreBanner[t].texture = nullptr;
     }
-    if (heap_heroLivesMult)
+    delete[] heap_scoreBanner;
+    heap_scoreBanner = nullptr;
+
+    for (int t = 0; t < heroLivesLen; ++t)
     {
-        for (int t = 0; t < heroLivesLen; ++t)
-        {
-            heap_heroLivesMult[t].texture = nullptr;
-        }
-        delete[] heap_heroLivesMult;
-        heap_heroLivesMult = nullptr;
+        heap_heroLivesMult[t].texture = nullptr;
     }
-    if (scoreBanner)
+    delete[] heap_heroLivesMult;
+    heap_heroLivesMult = nullptr;
+
+    for (int segment = 0; segment < scoreBannerLen; ++segment)
     {
-        for (int segment = 0; segment < scoreBannerLen; ++segment)
-        {
-            scoreBanner[segment].texture = nullptr;
-        }
-        delete[] scoreBanner;
-        scoreBanner = nullptr;
+        scoreBanner[segment].texture = nullptr;
     }
+    delete[] scoreBanner;
+    scoreBanner = nullptr;
     heroLivesMult = nullptr;
     hero_texture = nullptr;
 }

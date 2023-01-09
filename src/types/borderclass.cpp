@@ -17,11 +17,8 @@ Border::Border(log_::Log& log)
 
 Border::~Border()
 {
-    if (border)
-    {
-        delete[] border;
-        border = nullptr;
-    }
+    delete[] border;
+    border = nullptr;
 }
 
 void Border::ShowBorder(Sdl* sdl)

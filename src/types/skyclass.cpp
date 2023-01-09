@@ -90,17 +90,10 @@ void Sky::MoveSky()
 Sky::~Sky()
 {
     starTexture = nullptr;
-    if (fast)
-    {
-        delete[] fast;
-        fast = nullptr;
-    }
-    if (slow)
-    {
-        delete[] slow;
-        slow = nullptr;
-    }
-
+    delete[] fast;
+    fast = nullptr;
+    delete[] slow;
+    slow = nullptr;
 }
 
 
