@@ -33,5 +33,31 @@ struct Texture
 
 using texture_ = Texture;
 
+struct plot_
+{
+    int x; int y;
+};
+
+using plot = plot_;
+
+/*Collision compare arrays*/
+class Cca
+{
+    private:
+    rect_* arr;
+    int    length;
+    bool init {true};
+    bool comparis(rect_* first, const int len, 
+                  rect_* second);
+
+    public:
+    Cca(): arr(nullptr), length(0) {}
+    bool operator==(const Cca& ca);
+    Cca& operator=(const Cca& ca);
+    void Set(rect_* a, const int len);
+    ~Cca();
+    bool Status() const {return init;}
+};
+
 
 #endif

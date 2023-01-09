@@ -44,6 +44,9 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
     initPause(collection);
 
+    plot center {S_W / 2, S_H / 2};
+    temp_hero = new Hero(center, &collection.Pictures()[tn::hero], log);
+
 
 }
 

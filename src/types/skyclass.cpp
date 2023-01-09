@@ -66,7 +66,7 @@ void Sky::setStarsCoords()
 
 void Sky::MoveSky()
 {
-    for (int star = 0; star < fastStarMax; ++star)
+    for (int star = 0; star < fastMax; ++star)
     {
         fast[star].x -= FAST_STAR_VELOCITY;
         if (fast[star].x < LEFT)
@@ -76,7 +76,7 @@ void Sky::MoveSky()
         }
     }
 
-    for (int star = 0; star < slowStarMax; ++star)
+    for (int star = 0; star < slowMax; ++star)
     {
         slow[star].x -= SLOW_STAR_VELOCITY;
         if (slow[star].x < LEFT)

@@ -8,8 +8,9 @@
 class Sky
 {
     private:
-    int fastStarMax {5};
-    int slowStarMax {4};
+    enum {fastMax = 5, slowMax = 4};
+    int fastStarMax {fastMax};
+    int slowStarMax {slowMax};
     rect_* fast {nullptr};
     rect_* slow {nullptr};
     texture_* starTexture {nullptr};

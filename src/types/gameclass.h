@@ -7,6 +7,8 @@
 #include "skyclass.h"
 #include "gameInfoClass.h"
 
+#include "ob.h"
+
 class GameClass
 {
     private:
@@ -20,6 +22,8 @@ class GameClass
     status_t status;
     texture_* pause {nullptr};
     bool     gameClassStatus = true;
+
+    Hero* temp_hero;
 
     void initStatus();
     bool initBorder(log_::Log& log);

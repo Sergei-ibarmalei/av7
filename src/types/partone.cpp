@@ -2,6 +2,7 @@
 #include "../core/core.h"
 
 
+
 bool GameClass::partOne(log_::Log& log)
 {
     while (!status.gameQuit)
@@ -11,6 +12,10 @@ bool GameClass::partOne(log_::Log& log)
         SDL_RenderClear(sdl_->Renderer());
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
+        temp_hero->ShowObj(sdl_);
+        #ifdef SHOW_COL_R
+            temp_hero->showColR(sdl_);
+        #endif
 
 
         if (status.pause) pauseIsPressed();
