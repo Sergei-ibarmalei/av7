@@ -5,6 +5,7 @@
 
 typedef struct 
 {
+    bool heroIntro;
     bool mainMenu;
     bool pause;
     bool partOne;

@@ -83,9 +83,9 @@ void GameInfoClass::initHeroLives(tc& collection)
 void GameInfoClass::setScoreBannerCoords()
 {
     #define SPACE 4
-    #define WIDTH scoreBanner[textureOfZero].rect.w
+    #define WIDTH scoreBanner[textureOfZero].main_rect.w
     #define BORDER_UP_Y UP_BORDER_Y
-    #define HEIGHT scoreBanner[textureOfZero].rect.h
+    #define HEIGHT scoreBanner[textureOfZero].main_rect.h
 
     int scoreBanner_x = S_W - (scoreBannerLen * WIDTH) -
         ((scoreBannerLen-1) * SPACE);
@@ -93,9 +93,9 @@ void GameInfoClass::setScoreBannerCoords()
 
     for (int s = 0; s < scoreBannerLen; ++s)
     {
-        scoreBanner[s].rect.x = 
+        scoreBanner[s].main_rect.x = 
             scoreBanner_x + (WIDTH + SPACE)*s;
-        scoreBanner[s].rect.y = scoreBanner_y;
+        scoreBanner[s].main_rect.y = scoreBanner_y;
     }
 
     #undef SPACE
@@ -111,17 +111,19 @@ void GameInfoClass::setHeroLivesCoords()
     #define LEFT_SIDE LEFT_BORDER_W + BORDER_THICKNESS
     #define UP_SIDE UP_BORDER_Y //- hero_texture->rect.h
     #define HEROTEXTURE_H hero_texture->rect.h
-    #define XTEXTURE_H heap_heroLivesMult[textureOfZero].rect.h 
-    #define HEROTEXTURE_W  hero_texture->rect.x + hero_texture->rect.w
+    #define XTEXTURE_H heap_heroLivesMult[textureOfZero].main_rect.h 
+    #define HEROTEXTURE_W  hero_texture->main_rect.x + hero_texture->main_rect.w
 
 
     /*Устанавливаем координаты х у для уменьшенной текстуры героя*/
-    hero_texture->rect.x = LEFT_SIDE + BORDER_THICKNESS;
-    hero_texture->rect.y = UP_SIDE - hero_texture->rect.h;
+    hero_texture->main_rect.x = LEFT_SIDE + BORDER_THICKNESS;
+    hero_texture->main_rect.y = UP_SIDE - hero_texture->main_rect.h;
     for (int t = x1; t < all_x; ++t)
     {
-        heap_heroLivesMult[t].rect.x = HEROTEXTURE_W + 2 * BORDER_THICKNESS;
-        heap_heroLivesMult[t].rect.y = UP_SIDE - XTEXTURE_H - BORDER_THICKNESS;
+        heap_heroLivesMult[t].main_rect.x = 
+            HEROTEXTURE_W + 2 * BORDER_THICKNESS;
+        heap_heroLivesMult[t].main_rect.y = 
+            UP_SIDE - XTEXTURE_H - BORDER_THICKNESS;
 
     }
 
@@ -138,17 +140,17 @@ void GameInfoClass::ShowGameInfo(Sdl* sdl, status_t& gameStatus)
     for (int segment = 0; segment < scoreBannerLen; ++segment)
     {
         sdl->TextureRender(scoreBanner[segment].texture,
-                            &scoreBanner[segment].rect);
+                            &scoreBanner[segment].main_rect);
     }
     
     /*Рисуем оставшиеся жизни слева*/
     /*Сперва рисуем уменьшенную копию героя*/
-    sdl->TextureRender(hero_texture->texture, &hero_texture->rect);
+    sdl->TextureRender(hero_texture->texture, &hero_texture->main_rect);
 
     /*Рисуем множитель*/
     heroLivesMult = &heap_heroLivesMult[gameStatus.HeroLives-1];
 
-    sdl->TextureRender(heroLivesMult->texture, &heroLivesMult->rect);
+    sdl->TextureRender(heroLivesMult->texture, &heroLivesMult->main_rect);
 
 }
 

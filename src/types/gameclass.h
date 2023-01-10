@@ -7,6 +7,7 @@
 #include "skyclass.h"
 #include "gameInfoClass.h"
 
+
 #include "ob.h"
 
 class GameClass
@@ -35,6 +36,7 @@ class GameClass
     void initPause(tc& collection);
     void pauseIsPressed();
     void showPause();
+    void showHeroIntro();
 
     public:
     GameClass(Sdl& sdl, tc& collection, log_::Log& log);

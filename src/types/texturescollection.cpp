@@ -55,7 +55,7 @@ bool TexturesCollection::makePicturesTextures(log_::Log& log)
         pictures[texture].texture = nullptr;
         if (loadFromFile(r,
                          &pictures[texture].texture,
-                         pictures[texture].rect,
+                         pictures[texture].main_rect,
                          names_pics[texture], log) == false) return false;
 
     }
@@ -78,7 +78,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
-                         strings[texture].rect,
+                         strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::MainMenu], log) == false) return false;
     }
@@ -87,7 +87,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
-                         strings[texture].rect,
+                         strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::MainMenuBright], log) == false)
             return false;
@@ -97,7 +97,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     texture = tn::pause;
     if (loadFromText(r,
                      &strings[texture].texture,
-                     strings[texture].rect,
+                     strings[texture].main_rect,
                      names[texture],
                      &gameFonts[tn::Pause], log) == false) return false;
     /*MAKING TEXTURE FOR PRESS ESC..*/
@@ -105,7 +105,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     texture = tn::pressEscape;
     if (loadFromText(r,
                      &strings[texture].texture,
-                     strings[texture].rect,
+                     strings[texture].main_rect,
                      names[texture],
                      &gameFonts[tn::PressEsc], log) == false) return false;
     /*MAKING TEXTURE FOR SCORES*/
@@ -113,7 +113,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
-                         strings[texture].rect,
+                         strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::Scores], log) == false) return false;
     }
@@ -122,7 +122,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
-                         strings[texture].rect,
+                         strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::ScoresBanner], log) == false)
             return false;
@@ -133,7 +133,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
-                         strings[texture].rect,
+                         strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::LiveMult], log) == false) return false;
     }

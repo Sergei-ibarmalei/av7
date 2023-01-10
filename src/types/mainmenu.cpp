@@ -53,12 +53,12 @@ void MainMenu::set_mmTextures()
     for (count = tn::new_game; count < tn::new_game_bright; ++count)
     {
         center_y = step * oneFourth;
-        mmTextures[count].rect.x =
-            center_x - mmTextures[count].rect.w / 2;
-        mmTextures[count+offset].rect.x = mmTextures[count].rect.x;
-        mmTextures[count].rect.y =
-            center_y - mmTextures[count].rect.h / 2;
-        mmTextures[count+offset].rect.y = mmTextures[count].rect.y;
+        mmTextures[count].main_rect.x =
+            center_x - mmTextures[count].main_rect.w / 2;
+        mmTextures[count+offset].main_rect.x = mmTextures[count].main_rect.x;
+        mmTextures[count].main_rect.y =
+            center_y - mmTextures[count].main_rect.h / 2;
+        mmTextures[count+offset].main_rect.y = mmTextures[count].main_rect.y;
         step += 1;
     }
 
@@ -139,7 +139,7 @@ void MainMenu::showNewGameString(Sdl* sdl, int chosen_texture)
     if (chosen_texture != tn::new_game_bright)
         chosen_texture = tn::new_game;
     sdl->TextureRender(mmTextures[chosen_texture].texture,
-                        &mmTextures[chosen_texture].rect);
+                        &mmTextures[chosen_texture].main_rect);
 }
 
 void MainMenu::showRulesString(Sdl* sdl, int chosen_texture)
@@ -147,7 +147,7 @@ void MainMenu::showRulesString(Sdl* sdl, int chosen_texture)
     if (chosen_texture != tn::rules_bright)
         chosen_texture = tn::rules;
     sdl->TextureRender(mmTextures[chosen_texture].texture,
-                        &mmTextures[chosen_texture].rect);
+                        &mmTextures[chosen_texture].main_rect);
 }
 
 void MainMenu::showExitString(Sdl* sdl, int chosen_texture)
@@ -155,6 +155,6 @@ void MainMenu::showExitString(Sdl* sdl, int chosen_texture)
     if (chosen_texture != tn::exit_bright)
         chosen_texture = tn::exit;
     sdl->TextureRender(mmTextures[chosen_texture].texture,
-                        &mmTextures[chosen_texture].rect);
+                        &mmTextures[chosen_texture].main_rect);
 
 }

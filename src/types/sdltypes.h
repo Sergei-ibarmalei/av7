@@ -28,7 +28,7 @@ using rect_ = Rect;
 struct Texture 
 {
     SDL_Texture* texture;
-    rect_        rect;
+    rect_        main_rect;
 };
 
 using texture_ = Texture;

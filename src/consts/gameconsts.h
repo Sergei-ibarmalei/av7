@@ -2,6 +2,8 @@
 #define GAMECONSTS_H
 
 #define HERO_LIVES 3
+#define HERO_VELOCITY_X 1
+#define HERO_VELOCITY_Y 1
 
 #define BORDER_THICKNESS 5
 #define UP_BORDER_X 0
@@ -23,6 +25,13 @@
 
 #define FAST_STAR_VELOCITY 2
 #define SLOW_STAR_VELOCITY 1
+
+
+/*Направление движения*/
+namespace dir
+{
+    enum direction {right, left, up, down};
+}
 
 
 

@@ -8,6 +8,13 @@ bool GameClass::partOne(log_::Log& log)
     while (!status.gameQuit)
     {
         if (status.mainMenu) return true;
+        if (status.heroIntro)
+        {
+            //temp_hero->HeroMovesInIntro(status);
+            showHeroIntro();
+            if (status.pause) pauseIsPressed();
+            continue;
+        }
         check_key_events();
         SDL_RenderClear(sdl_->Renderer());
         borderSky_show_moving();

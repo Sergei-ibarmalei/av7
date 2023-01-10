@@ -44,8 +44,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
     initPause(collection);
 
-    plot center {S_W / 2, S_H / 2};
-    temp_hero = new Hero(center, &collection.Pictures()[tn::hero], log);
+    temp_hero = new Hero(&collection.Pictures()[tn::hero], log);
 
 
 }
@@ -62,10 +61,12 @@ void GameClass::initPause(tc& collection)
     int centerPrEsc_x = S_W / 2;
     int centerPrEsc_y = S_H - 100;
 
-    pause[pause_].rect.x = centerPause_x - pause[pause_].rect.w / 2;
-    pause[pause_].rect.y = centerPause_y - pause[pause_].rect.h / 2;
-    pause[pressEscape].rect.x = centerPrEsc_x - pause[pressEscape].rect.w / 2;
-    pause[pressEscape].rect.y = centerPrEsc_y - pause[pressEscape].rect.h / 2;
+    pause[pause_].main_rect.x = centerPause_x - pause[pause_].main_rect.w / 2;
+    pause[pause_].main_rect.y = centerPause_y - pause[pause_].main_rect.h / 2;
+    pause[pressEscape].main_rect.x = 
+        centerPrEsc_x - pause[pressEscape].main_rect.w / 2;
+    pause[pressEscape].main_rect.y = 
+        centerPrEsc_y - pause[pressEscape].main_rect.h / 2;
 
 }
 
@@ -134,6 +135,7 @@ GameClass::~GameClass()
 
 void GameClass::initStatus()
 {
+    status.heroIntro = true;
     status.gameQuit = false;
     status.mainMenu = true;
     status.pause = false;
@@ -186,9 +188,11 @@ void GameClass::pauseIsPressed()
     while (!status.gameQuit || !status.pause)
     {
         SDL_RenderClear(sdl_->Renderer());
+        temp_hero->ShowObj(sdl_);
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
         showPause();
+
         while (SDL_PollEvent(&sdl_->event()) != 0)
         {
             if (sdl_->event().type == SDL_QUIT)
@@ -218,6 +222,47 @@ void GameClass::pauseIsPressed()
     }
 }
 
+void GameClass::showHeroIntro()
+{
+    while (!status.gameQuit || !status.pause)
+    {
+        SDL_RenderClear(sdl_->Renderer());
+        if (status.heroIntro == false) return;
+        temp_hero->ShowObj(sdl_);
+        #ifdef SHOW_COL_R
+            temp_hero->showColR(sdl_);
+        #endif
+        borderSky_show_moving();
+        gameInfo->ShowGameInfo(sdl_, status);
+        temp_hero->HeroMovesInIntro(status);
+
+        while (SDL_PollEvent(&sdl_->event()) != 0)
+        {
+            if (sdl_->event().type == SDL_QUIT)
+            {
+                status.heroIntro = false;
+                status.gameQuit = true;
+                status.pause = false;
+                return;
+            }
+            else if (sdl_->event().type == SDL_KEYDOWN &&
+                sdl_->event().key.repeat == 0)
+            {
+                switch (sdl_->event().key.keysym.sym)
+                {
+                    case SDLK_ESCAPE:
+                    {
+                        status.pause = true; return;
+                    }
+                    default: {}
+                }
+            }
+        }
+        SDL_RenderPresent(sdl_->Renderer());
+
+    }
+}
+
 void GameClass::borderSky_show_moving()
 {
     border->ShowBorder(sdl_);
@@ -227,7 +272,8 @@ void GameClass::borderSky_show_moving()
 
 void GameClass::showPause()
 {
-    sdl_->TextureRender(pause[pause_].texture, &pause[pause_].rect);
-    sdl_->TextureRender(pause[pressEscape].texture, &pause[pressEscape].rect);
+    sdl_->TextureRender(pause[pause_].texture, &pause[pause_].main_rect);
+    sdl_->TextureRender(pause[pressEscape].texture, 
+                        &pause[pressEscape].main_rect);
 }
 

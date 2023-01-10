@@ -49,16 +49,16 @@ void Sky::setStarsCoords()
     {
        fast[star].x = getRand(LEFT, RIGHT);
        fast[star].y = getRand(UP, DOWN);
-       fast[star].w = starTexture->rect.w;
-       fast[star].h = starTexture->rect.h;
+       fast[star].w = starTexture->main_rect.w;
+       fast[star].h = starTexture->main_rect.h;
     }
 
     for (int star = 0; star < slowStarMax; ++star)
     {
         slow[star].x = getRand(LEFT, RIGHT);
         slow[star].y = getRand(UP, DOWN);
-        slow[star].w = starTexture->rect.w;
-        slow[star].h = starTexture->rect.h;
+        slow[star].w = starTexture->main_rect.w;
+        slow[star].h = starTexture->main_rect.h;
     }
 
 
