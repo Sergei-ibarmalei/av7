@@ -1,12 +1,10 @@
 #include "ob.h"
 
-Object::Object(const texture_* t, log_::Log& log)
+Object::Object(const texture_* t)
 {
     obj_texture = new (std::nothrow) texture_;
     if (!obj_texture)
     {
-        log.log_info = "Cannot allocate memory for abc object.\n";
-        log.push(log.log_info);
         init = false; return;
     }
     obj_texture->texture = t->texture;
@@ -17,10 +15,10 @@ Object::Object(const texture_* t, log_::Log& log)
     ca = new (std::nothrow) Cca();
     if (!ca)
     {
-        log.log_info = "Cannot allocate memory for cca.\n";
-        log.push(log.log_info);
         init = false;        
     }
+    obj_velocities = new plot;
+    obj_velocities->x = obj_velocities->y = 0;
 }
 
 Object::Object(const Object& o)
@@ -38,6 +36,10 @@ Object& Object::operator=(const Object& o)
     obj_texture->texture = o.obj_texture->texture;
     obj_texture->main_rect = o.obj_texture->main_rect;
     ca = o.ca;
+    delete obj_velocities;
+    obj_velocities = new plot;
+    obj_velocities->x = o.obj_velocities->x;
+    obj_velocities->y = o.obj_velocities->y;
     return *this;
 }
 
@@ -63,6 +65,8 @@ Object::~Object()
     obj_texture->texture = nullptr;
     delete obj_texture;
     obj_texture = nullptr;
+    delete obj_velocities;
+    obj_velocities = nullptr;
 }
 
 void Object::ShowObj(Sdl* sdl)
@@ -140,6 +144,12 @@ void Object::resetUpLeftCorner(dir::direction d, const int delta)
     }
 }
 
+void Object::resetUpLeftCorner()
+{
+    obj_texture->main_rect.x += obj_velocities->x;
+    obj_texture->main_rect.y += obj_velocities->y;
+}
+
 /// @brief Перерасчет прямоугольников при движении ПО ПУТИ
 /// @param rects_offSets массив смещений прямоугольников
 /// @param stopR конец массива - последний прямоугольник
@@ -164,6 +174,7 @@ void Object::setRectsToNewPosByPath(const plot* rects_offSets,
         {
             SDL_RenderDrawRect(sdl->Renderer(), &rects[r]);
         }
+        SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
         SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
     }
 #endif
@@ -175,32 +186,54 @@ void Object::setRectsToNewPosByPath(const plot* rects_offSets,
 #define MAINRECT_UPLEFT_X obj_texture->main_rect.x
 #define MAINRECT_UPLEFT_Y obj_texture->main_rect.y
  
-Hero::Hero(const texture_* t, log_::Log& log):
-    Object(t, log)
+Hero::Hero(const texture_* t):
+    Object(t)
 {
     if (!t)
     {
-        log.log_info = "Cannot create hero, texture is absent.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }
     collisionRects = new rect_[allRects];
-
+    initHeroStopIntro();
     setToStartPosition();
+    initLaserStart();
+}
+
+void Hero::initLaserStart()
+{
+    laserStart = new plot;
+    recomputeLaserStart();
+}
+
+void Hero::recomputeLaserStart()
+{
+    #define HERO_W obj_texture->main_rect.x + obj_texture->main_rect.w
+    #define HERO_H_HALF obj_texture->main_rect.y + obj_texture->main_rect.h / 2
+
+    laserStart->x = HERO_W + PLAINLASER_OFFSET;
+    laserStart->y = HERO_H_HALF;
+
+    #undef HERO_W
+    #undef HERO_H_HALF
+}
+
+
+
+void Hero::initHeroStopIntro()
+{
+    heroStopIntro = new plot;
+    #define HERO_WIDTH obj_texture->main_rect.w
+    heroStopIntro->x = BORDER_THICKNESS + (4 * HERO_WIDTH);
+    heroStopIntro->y = obj_texture->main_rect.y;
+    #undef HERO_WIDTH
 }
 
 void Hero::setToStartPosition()
 {
     Object::setUpLeftCorner(-BORDER_THICKNESS-obj_texture->main_rect.w,
                             S_H / 2 - obj_texture->main_rect.h / 2);
-
-    #define HERO_WIDTH obj_texture->main_rect.w
-    heroStopIntro.x = BORDER_THICKNESS + (4 * HERO_WIDTH);
-    heroStopIntro.y = obj_texture->main_rect.y;
-    #undef HERO_WIDTH
     setCollisionsRects();
-   
 }
 
 void Hero::setCollisionsRects()
@@ -237,7 +270,7 @@ void Hero::setCollisionsRects()
 /*Выход героя на экран*/
 void Hero::HeroMovesInIntro(status_t& status)
 {
-    if ((MAINRECT_UPLEFT_X + obj_texture->main_rect.w) >= heroStopIntro.x) 
+    if ((MAINRECT_UPLEFT_X + obj_texture->main_rect.w) >= heroStopIntro->x) 
     {
         status.heroIntro = false;
         setCollisionsRects();
@@ -252,6 +285,10 @@ Hero::~Hero()
 {
     delete[] collisionRects;
     collisionRects = nullptr;
+    delete heroStopIntro;
+    heroStopIntro = nullptr;
+    delete laserStart;
+    laserStart = nullptr;
 }
 
 #ifdef SHOW_COL_R
@@ -260,6 +297,9 @@ Hero::~Hero()
         Object::showCollisionRects(sdl, collisionRects, one, allRects);
     }
 #endif
+
+
+
 
 #undef MAINRECT_UPLEFT_X
 #undef MAINRECT_UPLEFT_Y

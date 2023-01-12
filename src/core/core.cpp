@@ -1,4 +1,5 @@
 #include "core.h"
+#include <exception>
 
 bool mainCore()
 {
@@ -24,13 +25,7 @@ bool mainCore()
         gameLog.Show(); return false;
     }
 
+
     return true;
 }
 
-/*void BorderSky_show_moving(Sdl* sdl, Border* border, Sky* sky)
-{
-    border->ShowBorder(sdl);
-    sky->ShowSky(sdl);
-    sky->MoveSky();
-    
-}*/

@@ -2,8 +2,8 @@
 #define GAMECONSTS_H
 
 #define HERO_LIVES 3
-#define HERO_VELOCITY_X 1
-#define HERO_VELOCITY_Y 1
+#define HERO_VELOCITY_X 3
+#define HERO_VELOCITY_Y 3
 
 #define BORDER_THICKNESS 5
 #define UP_BORDER_X 0
@@ -25,6 +25,9 @@
 
 #define FAST_STAR_VELOCITY 2
 #define SLOW_STAR_VELOCITY 1
+
+#define PLAINLASER_VELOCITY 3
+#define PLAINLASER_OFFSET 20
 
 
 /*Направление движения*/
