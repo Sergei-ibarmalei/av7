@@ -1,11 +1,11 @@
 #include "ob.h"
 
 
-LaserNode::LaserNode(plot* s, dir::direction d, const texture_* t)
+/*LaserNode::LaserNode(plot* s, dir::direction d, const texture_* t)
 {
     laser = new Laser(s, d, t);
     next = prev = nullptr;
-}
+}*/
 
 Laser::Laser(plot* start, dir::direction d, 
                         const texture_* t): Object(t)
@@ -22,7 +22,6 @@ Laser::Laser(plot* start, dir::direction d,
 
 Laser::~Laser()
 {
-
 }
 
 void Laser::Move()

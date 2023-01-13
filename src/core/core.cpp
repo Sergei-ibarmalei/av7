@@ -1,5 +1,4 @@
 #include "core.h"
-#include <exception>
 
 bool mainCore()
 {

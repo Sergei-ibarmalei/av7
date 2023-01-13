@@ -7,6 +7,11 @@
 #include "../consts/gameconsts.h"
 #include "test.h"
 
+
+#include<list>
+#include <memory>
+
+
 class Object
 {
     protected:
@@ -62,55 +67,15 @@ class Laser: public Object
     Laser(const Laser& ) = delete;
     Laser& operator=(const Laser&) = delete;
     void Move() override;
+
     bool OnScreen() const {return isOnScreen;}
+    int GetLaser_x() const {return Object::obj_texture->main_rect.x;};
+    int GetLaser_w() const {return Object::obj_texture->main_rect.w;}
 
 
 };
 
-struct LaserNode 
-{
-    Laser* laser;
-    struct LaserNode* next;
-    struct LaserNode* prev;
-    LaserNode(plot* s, dir::direction d, const texture_* t);
-    ~LaserNode()
-    {
-        delete laser;
-        next = prev = nullptr;
-    }
-};
 
-using laserNode = LaserNode;
-
-struct SetOfLaserNodes
-{
-    laserNode* first;
-    laserNode* last;
-    laserNode* curent;
-    laserNode* tmp;
-};
-using setLaserNodes = SetOfLaserNodes;
-
-
-class LaserStore 
-{
-    private:
-    setLaserNodes* heroLasersNodes;
-    texture_* heroLasertexture;
-
-    void clearList(laserNode* first);
-    void moveLaser(laserNode* first);
-    void deletingShot(laserNode* first);
-    void showLaser(laserNode* first, Sdl* sdl);
-
-    public:
-    LaserStore(const texture_* heroLaser);
-    void MakeHeroLaser(plot* start, dir::direction d);
-    ~LaserStore();
-    void ShowLaserStore(Sdl* sdl);
-    void MoveLaserStore();
-
-};
 
 
 class Hero: public Object
@@ -152,4 +117,25 @@ class Hero: public Object
 };
 
 
+
+class Std_LaserStore
+{
+    private:
+    std::list<Laser*> herolasers;
+    texture_*  textureHeroLaser;
+
+    public:
+    ~Std_LaserStore();
+    Std_LaserStore(texture_* t);
+    Std_LaserStore(const Std_LaserStore& ) = delete;
+    Std_LaserStore& operator=(const Std_LaserStore& ) = delete;
+    void MakeHeroLaser(plot* start, dir::direction d);
+    void ShowLaserStore(Sdl* sdl);
+    void MoveLaserStore();
+    void ClearLaserStore();
+
+};
+
+
 #endif
+

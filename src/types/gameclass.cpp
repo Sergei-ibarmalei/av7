@@ -45,7 +45,8 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     initPause(collection);
 
     temp_hero = new Hero(&collection.Pictures()[tn::hero]);
-    laserStore = new LaserStore(&collection.Pictures()[tn::blue_laser]);
+    //laserStore = new LaserStore(&collection.Pictures()[tn::blue_laser]);
+    stdlaserStore = new Std_LaserStore(&collection.Pictures()[tn::blue_laser]);
 
 
 }
@@ -133,8 +134,10 @@ GameClass::~GameClass()
     }
     delete[] pause;
 
-    delete laserStore;
-    laserStore = nullptr;
+    //delete laserStore;
+    //laserStore = nullptr;
+    delete stdlaserStore;
+    stdlaserStore = nullptr;
 }
 
 void GameClass::initStatus()
@@ -198,7 +201,8 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    laserStore->MakeHeroLaser(temp_hero->LaserStart(), dir::right);
+                    //laserStore->MakeHeroLaser(temp_hero->LaserStart(), dir::right);
+                    stdlaserStore->MakeHeroLaser(temp_hero->LaserStart(), dir::right);
                 }
                  
                 default: {}
