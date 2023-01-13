@@ -3,6 +3,6 @@
 
 int main()
 {
-    if (!(mainCore())) return 1;;
+    if (!(mainCore())) return 1;
     return 0;
 }

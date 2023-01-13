@@ -1,12 +1,6 @@
 #include "ob.h"
 
 
-/*LaserNode::LaserNode(plot* s, dir::direction d, const texture_* t)
-{
-    laser = new Laser(s, d, t);
-    next = prev = nullptr;
-}*/
-
 Laser::Laser(plot* start, dir::direction d, 
                         const texture_* t): Object(t)
 {
@@ -52,4 +46,11 @@ void Laser::Move()
 
     #undef LASER_W
 }
+
+#ifdef SHOW_COL_R
+    void Laser::ShowColR(Sdl* sdl)
+    {
+        Object::showCollisionMainRect(sdl);
+    }
+#endif
 

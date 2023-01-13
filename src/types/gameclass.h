@@ -23,7 +23,7 @@ class GameClass
     status_t status;
     texture_* pause {nullptr};
     bool     gameClassStatus = true;
-    Std_LaserStore* stdlaserStore;
+    GameStore* gameStore;
 
     Hero* temp_hero;
 

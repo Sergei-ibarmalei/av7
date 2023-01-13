@@ -18,11 +18,9 @@ bool GameClass::partOne(log_::Log& log)
         check_key_events();
         SDL_RenderClear(sdl_->Renderer());
         temp_hero->Move();
-        //laserStore->ShowLaserStore(sdl_);
-        stdlaserStore->ShowLaserStore(sdl_);
+        gameStore->ShowAllHeroLasers(sdl_);
         temp_hero->ShowObj(sdl_);
-        //laserStore->MoveLaserStore();
-        stdlaserStore->MoveLaserStore();
+        gameStore->MoveAllHeroLasers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
         #ifdef SHOW_COL_R

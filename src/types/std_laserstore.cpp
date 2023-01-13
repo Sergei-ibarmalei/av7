@@ -37,6 +37,9 @@ void Std_LaserStore::ShowLaserStore(Sdl* sdl)
             it != herolasers.end(); ++it)
     {
         (*it)->ShowObj(sdl);
+        #ifdef SHOW_COL_R
+            (*it)->ShowColR(sdl);
+        #endif
     }
 }
 
@@ -68,3 +71,4 @@ void Std_LaserStore::ClearLaserStore()
         }
     }
 }
+

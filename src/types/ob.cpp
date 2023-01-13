@@ -52,7 +52,6 @@ bool Object::operator==(const Object& o)
 
 bool Object::operator==(const Object* po)
 {
-    //return obj_texture->main_rect == po->obj_texture->main_rect;
     if (obj_texture->main_rect == po->obj_texture->main_rect)
     {
         return ca == po->ca;
@@ -174,6 +173,13 @@ void Object::setRectsToNewPosByPath(const plot* rects_offSets,
         {
             SDL_RenderDrawRect(sdl->Renderer(), &rects[r]);
         }
+        SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
+        SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
+    }
+
+    void Object::showCollisionMainRect(Sdl* sdl)
+    {
+        SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF,  0, 0, 0xFF);
         SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
         SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
     }

@@ -7,6 +7,8 @@
 #include "../consts/gameconsts.h"
 #include "test.h"
 
+#include "texturescollection.h"
+
 
 #include<list>
 #include <memory>
@@ -37,6 +39,7 @@ class Object
         void showCollisionRects(Sdl* sdl,
                                 rect_* rects,
                                 int start, int end);
+        void showCollisionMainRect(Sdl* sdl);
     #endif
 
     public:
@@ -71,6 +74,9 @@ class Laser: public Object
     bool OnScreen() const {return isOnScreen;}
     int GetLaser_x() const {return Object::obj_texture->main_rect.x;};
     int GetLaser_w() const {return Object::obj_texture->main_rect.w;}
+    #ifdef SHOW_COL_R
+        void ShowColR(Sdl* sdl);
+    #endif
 
 
 };
@@ -118,24 +124,55 @@ class Hero: public Object
 
 
 
-class Std_LaserStore
+
+/*=======================================================*/
+
+class ObjectList
 {
-    private:
-    std::list<Laser*> herolasers;
-    texture_*  textureHeroLaser;
+    protected:
+    tc*  tcollection;
+    std::list<Object*> objectList;
 
     public:
-    ~Std_LaserStore();
-    Std_LaserStore(texture_* t);
-    Std_LaserStore(const Std_LaserStore& ) = delete;
-    Std_LaserStore& operator=(const Std_LaserStore& ) = delete;
-    void MakeHeroLaser(plot* start, dir::direction d);
-    void ShowLaserStore(Sdl* sdl);
-    void MoveLaserStore();
-    void ClearLaserStore();
+    ObjectList(tc* collection): tcollection(collection) {}
+    virtual ~ObjectList();
+    ObjectList(const ObjectList& ) = delete;
+    ObjectList& operator=(const ObjectList& ) = delete;
+    std::list<Object*>& getObjectList()  {return objectList;}
+    virtual void Show(Sdl* sdl) = 0;
+};
+
+class HeroLasers: public ObjectList
+{
+    public:
+    HeroLasers(tc* collection);
+    ~HeroLasers() {}
+    HeroLasers(const HeroLasers& ) = delete;
+    HeroLasers& operator=(const HeroLasers& ) = delete;
+
+    void Push(plot* start);
+    void Show(Sdl* sdl);
+    void MoveLasers();
 
 };
 
 
+/*Класс для хранения списков*/
+class GameStore
+{
+    private:
+    HeroLasers*  herolasers {nullptr};
+
+    public:
+    GameStore(tc* collection);
+    ~GameStore();
+    GameStore(const GameStore& ) = delete;
+    GameStore& operator=(const GameStore& ) = delete;
+    void MakeHeroLaser(plot* start);
+    void ShowAllHeroLasers(Sdl* sdl);
+    void MoveAllHeroLasers();
+};
+
+/*=======================================================*/
 #endif
 

@@ -45,9 +45,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     initPause(collection);
 
     temp_hero = new Hero(&collection.Pictures()[tn::hero]);
-    //laserStore = new LaserStore(&collection.Pictures()[tn::blue_laser]);
-    stdlaserStore = new Std_LaserStore(&collection.Pictures()[tn::blue_laser]);
-
+    gameStore = new GameStore(&collection);
 
 }
 
@@ -134,10 +132,7 @@ GameClass::~GameClass()
     }
     delete[] pause;
 
-    //delete laserStore;
-    //laserStore = nullptr;
-    delete stdlaserStore;
-    stdlaserStore = nullptr;
+    delete gameStore; gameStore = nullptr;
 }
 
 void GameClass::initStatus()
@@ -159,7 +154,6 @@ bool GameClass::flow(log_::Log& log)
         if (status.mainMenu)
         {
             mm->ShowMainMenu(sdl_, status, log);
-            //if (mm->Status() == false) return false;
         }
         if (status.partOne)
         {
@@ -201,8 +195,7 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    //laserStore->MakeHeroLaser(temp_hero->LaserStart(), dir::right);
-                    stdlaserStore->MakeHeroLaser(temp_hero->LaserStart(), dir::right);
+                    gameStore->MakeHeroLaser(temp_hero->LaserStart());
                 }
                  
                 default: {}
@@ -220,8 +213,9 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         temp_hero->ShowObj(sdl_);
-        borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
+        gameStore->ShowAllHeroLasers(sdl_);
+        borderSky_show_moving();
         showPause();
 
         while (SDL_PollEvent(&sdl_->event()) != 0)
