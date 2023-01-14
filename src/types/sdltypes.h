@@ -59,5 +59,25 @@ class Cca
     bool Status() const {return init;}
 };
 
+class CRC 
+{
+    private:
+    rect_* array;
+    int    arrLen;
+    bool   init {true};
+    bool   comparison(rect_* first, const int len, rect_* second);
+
+    public:
+    //CRC(const int len): array(nullptr), arrLen(len) {}
+    CRC(const int len);
+    CRC(const CRC& crc);
+    CRC& operator=(const CRC& crc);
+    bool operator==(const CRC& crc);
+    rect_* Array() {return array;}
+    bool Status() const {return init;}
+
+
+};
+
 
 #endif

@@ -44,8 +44,15 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
     initPause(collection);
 
-    temp_hero = new Hero(&collection.Pictures()[tn::hero]);
-    gameStore = new GameStore(&collection);
+    //temp_hero = new Hero(&collection.Pictures()[tn::hero]);
+    //gameStore = new GameStore(&collection);
+    nHero = new NHero(&collection.Pictures()[tn::hero]);
+    if (nHero->Status() == false)
+    {
+        gameClassStatus = false;
+        return;
+    }
+    
 
 }
 
@@ -132,7 +139,8 @@ GameClass::~GameClass()
     }
     delete[] pause;
 
-    delete gameStore; gameStore = nullptr;
+    //delete gameStore; gameStore = nullptr;
+    delete nHero; nHero = nullptr;
 }
 
 void GameClass::initStatus()
@@ -175,19 +183,23 @@ void GameClass::check_key_events()
             {
                 case SDLK_UP:
                 {
-                    temp_hero->HeroUp(); break;
+                    //temp_hero->HeroUp(); break;
+                    nHero->HeroUp(); break;
                 }
                 case SDLK_DOWN:
                 {
-                    temp_hero->HeroDown(); break;
+                    //temp_hero->HeroDown(); break;
+                    nHero->HeroDown(); break;
                 }
                 case SDLK_RIGHT:
                 {
-                    temp_hero->HeroRight(); break;
+                    //temp_hero->HeroRight(); break;
+                    nHero->HeroRight(); break;
                 }
                 case SDLK_LEFT:
                 {
-                    temp_hero->HeroLeft(); break;
+                    //temp_hero->HeroLeft(); break;
+                    nHero->HeroLeft(); break;
                 }
                 case SDLK_ESCAPE:
                 {
@@ -195,14 +207,15 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    gameStore->MakeHeroLaser(temp_hero->LaserStart());
+                    //gameStore->MakeHeroLaser(temp_hero->LaserStart());
                 }
                  
                 default: {}
             }
         }
         else if(sdl_->event().type == SDL_KEYUP)
-            temp_hero->HeroStop();
+            //temp_hero->HeroStop();
+            nHero->HeroStop();
 
     }
 }
@@ -212,9 +225,10 @@ void GameClass::pauseIsPressed()
     while (!status.gameQuit || !status.pause)
     {
         SDL_RenderClear(sdl_->Renderer());
-        temp_hero->ShowObj(sdl_);
+        //temp_hero->ShowObj(sdl_);
+        nHero->ShowObj(sdl_);
         gameInfo->ShowGameInfo(sdl_, status);
-        gameStore->ShowAllHeroLasers(sdl_);
+        //gameStore->ShowAllHeroLasers(sdl_);
         borderSky_show_moving();
         showPause();
 
@@ -253,13 +267,16 @@ void GameClass::showHeroIntro()
     {
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
-        temp_hero->ShowObj(sdl_);
+        //temp_hero->ShowObj(sdl_);
+        nHero->ShowObj(sdl_);
         #ifdef SHOW_COL_R
-            temp_hero->showColR(sdl_);
+            //temp_hero->showColR(sdl_);
+            
         #endif
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
-        temp_hero->HeroMovesInIntro(status);
+        //temp_hero->HeroMovesInIntro(status);
+        nHero->HeroMovesInIntro(status);
 
         while (SDL_PollEvent(&sdl_->event()) != 0)
         {

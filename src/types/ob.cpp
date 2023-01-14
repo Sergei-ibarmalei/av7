@@ -47,7 +47,12 @@ Object& Object::operator=(const Object& o)
 
 bool Object::operator==(const Object& o)
 {
-    return obj_texture->main_rect == o.obj_texture->main_rect;
+    if (obj_texture->main_rect == o.obj_texture->main_rect)
+    {
+        return *ca == *o.ca;
+    }
+    //return obj_texture->main_rect == o.obj_texture->main_rect;
+    return false;
 }
 
 bool Object::operator==(const Object* po)

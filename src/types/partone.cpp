@@ -17,14 +17,17 @@ bool GameClass::partOne(log_::Log& log)
         }
         check_key_events();
         SDL_RenderClear(sdl_->Renderer());
-        temp_hero->Move();
-        gameStore->ShowAllHeroLasers(sdl_);
-        temp_hero->ShowObj(sdl_);
-        gameStore->MoveAllHeroLasers();
+        //temp_hero->Move();
+        nHero->Move();
+        //gameStore->ShowAllHeroLasers(sdl_);
+        //temp_hero->ShowObj(sdl_);
+        nHero->ShowObj(sdl_);
+        //gameStore->MoveAllHeroLasers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
         #ifdef SHOW_COL_R
-            temp_hero->showColR(sdl_);
+            //temp_hero->showColR(sdl_);
+            nHero->ShowColR(sdl_);
         #endif
 
 

@@ -8,7 +8,8 @@
 #include "gameInfoClass.h"
 
 
-#include "ob.h"
+//#include "ob.h"
+#include "n_ob.h"
 
 class GameClass
 {
@@ -23,9 +24,10 @@ class GameClass
     status_t status;
     texture_* pause {nullptr};
     bool     gameClassStatus = true;
-    GameStore* gameStore;
+    //GameStore* gameStore;
 
-    Hero* temp_hero;
+    //Hero* temp_hero;
+    NHero* nHero;
 
     void initStatus();
     bool initBorder(log_::Log& log);
