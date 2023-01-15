@@ -51,7 +51,7 @@ void LongLazer::Move()
 }
 
 #ifdef SHOW_COL_R
-    void LongLazer::ShowColR(const Sdl* sdl)
+    void LongLazer::ShowColR(const Sdl* sdl) const
     {
         ElementaryObject::showCollisionMainRect(sdl);
     }
@@ -78,7 +78,7 @@ int LongLazer::GetLazerH() const
     return ElementaryObject::GetMainRectH();
 }
 
-void LongLazer::Show(const Sdl* sdl) 
+void LongLazer::Show(const Sdl* sdl) const 
 {
     ElementaryObject::ShowObj(sdl);
 }

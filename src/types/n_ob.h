@@ -8,8 +8,6 @@
 #include "test.h"
 #include "texturescollection.h"
 
-#include <list>
-#include <memory>
 
 class ElementaryObject
 {
@@ -22,10 +20,10 @@ class ElementaryObject
     void resetUpLeftCorner();
     void resetUpLeftCorner_x(const int x);
     void resetUpLeftCorner_y(const int y);
-    void ShowObj(const Sdl* sdl);
+    void ShowObj(const Sdl* sdl) const;
 
 #ifdef SHOW_COL_R
-    void showCollisionMainRect(const Sdl* sdl);
+    void showCollisionMainRect(const Sdl* sdl) const;
 #endif
 
     public:
@@ -35,7 +33,6 @@ class ElementaryObject
     bool operator==(const ElementaryObject& eo);
     bool operator==(const ElementaryObject* peo);
     virtual ~ElementaryObject();
-    //void ShowObj(const Sdl* sdl);
     bool Status() const {return init;}
     virtual void Move() = 0;
     rect_& MainRect() const {return obj_texture->main_rect;}
@@ -136,49 +133,73 @@ class LongLazer: public ElementaryObject
     int GetLazer_w() const;
     int GetLazerW()  const;
     int GetLazerH()  const;
-    void Show(const Sdl* sdl);
+    void Show(const Sdl* sdl) const;
     #ifdef SHOW_COL_R
-        void ShowColR(const Sdl* sdl);
+        void ShowColR(const Sdl* sdl) const;
     #endif
 };
 
 
-class ObjectList
+
+struct ObjectNode
+{
+    ElementaryObject* object;
+    struct ObjectNode* next;
+    ObjectNode(): object(nullptr), next(nullptr) {}
+    ObjectNode(const ObjectNode& ) = delete;
+    ObjectNode& operator=(const ObjectNode& ) = delete;
+    ~ObjectNode()
+    {
+        delete object;
+    }
+};
+
+using obNode = ObjectNode;
+
+class E_listABC
 {
     protected:
-    bool init {true};
-    const tc* tcolleciton;
-    std::list<ElementaryObject*> objectList;
+    obNode* first;
+    obNode* root;
+    const tc* tcollection;
 
+    void push(ElementaryObject* ob);
 
     public:
-    ObjectList(const tc* collection);
-    ObjectList(const ObjectList& ) = delete;
-    ObjectList& operator=(const ObjectList& ) = delete;
-    virtual ~ObjectList();
-    std::list<ElementaryObject*>& getObjectList() {return objectList;}
-    bool Status() const {return init;}
+    E_listABC(const tc* collection);
+    E_listABC(const E_listABC& ) = delete;
+    E_listABC& operator=(const E_listABC& ) = delete;
+    const obNode* GetFirst() const {return first;}
+    virtual ~E_listABC();
     virtual void Show(const Sdl* sdl) = 0;
+
 };
 
-class HeroLazers: public ObjectList
+class HeroLazersList: public E_listABC
 {
-    public:
-    HeroLazers(const tc* collection);
-    ~HeroLazers() {}
-    HeroLazers(const HeroLazers& ) = delete;
-    HeroLazers& operator=(const HeroLazers& ) = delete;
+    private:
+    void showLazer(const Sdl* sdl, obNode* first);
+    void moveLazer(obNode* first);
 
-    void Push(const plot* start);
+    public:
+    HeroLazersList(const tc* collection): E_listABC(collection) {}
+    HeroLazersList(const HeroLazersList& ) = delete;
+    HeroLazersList& operator=(const HeroLazersList& ) = delete;
+
     void Show(const Sdl* sdl);
+    void Push(const plot* start);
     void Move();
+
 };
+
+
+
 
 class ObjectsStore
 {
     private:
     bool init {true};
-    HeroLazers*  heroLazers {nullptr};
+    HeroLazersList* heroLazers {nullptr};
 
 
     public:

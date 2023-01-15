@@ -57,13 +57,13 @@ bool ElementaryObject::operator==(const ElementaryObject* peo)
     return obj_texture->main_rect == peo->obj_texture->main_rect;
 }
 
-void ElementaryObject::ShowObj(const Sdl* sdl)
+void ElementaryObject::ShowObj(const Sdl* sdl) const
 {
     sdl->TextureRender(obj_texture->texture, &obj_texture->main_rect);
 }
 
 #ifdef SHOW_COL_R
-void ElementaryObject::showCollisionMainRect(const Sdl* sdl)
+void ElementaryObject::showCollisionMainRect(const Sdl* sdl) const
 {
     SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
     SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
