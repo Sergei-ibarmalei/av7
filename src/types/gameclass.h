@@ -28,6 +28,7 @@ class GameClass
 
     //Hero* temp_hero;
     NHero* nHero;
+    ObjectsStore* objectsStore;
 
     void initStatus();
     bool initBorder(log_::Log& log);

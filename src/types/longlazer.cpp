@@ -3,6 +3,8 @@
 LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
     ElementaryObject(t)
 {
+    #define LAZER_HALF_H ElementaryObject::GetMainRect_h() / 2
+
     direct = d;
     isOnScreen = true;
     switch (direct)
@@ -14,45 +16,75 @@ LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
         }
         case dir::right:
         {
-            setUpLeftCorner(start->x + obj_texture->main_rect.w, start->y);
+            setUpLeftCorner(start->x, (start->y - LAZER_HALF_H));
             break;
         }
         default: {}
     }
+
+    #undef LAZER_HALF_H
 }
 
 void LongLazer::Move()
 {
-    #define LAZER_W obj_texture->main_rect.x+obj_texture->main_rect.w
-
     if (isOnScreen)
     {
         switch (direct)
         {
             case dir::right:
             {
-                obj_texture->main_rect.x += PLAINLASER_VELOCITY;
-                if (obj_texture->main_rect.x > RIGHT_BORDER_X)
+                ElementaryObject::resetUpLeftCorner_x(PLAINLASER_VELOCITY);
+                if (GetLazer_x() > RIGHT_BORDER_X)
                     isOnScreen = false;
                 break;
             }
             case dir::left:
             {
-                obj_texture->main_rect.x -= PLAINLASER_VELOCITY;
-                if (LAZER_W < BORDER_THICKNESS)
+                ElementaryObject::resetUpLeftCorner_x(-PLAINLASER_VELOCITY);
+                if (GetLazerW() < BORDER_THICKNESS)
                     isOnScreen = false;
                 break;
             }
             default: {}
         }
     }
-    #undef LAZER_W
 }
 
 #ifdef SHOW_COL_R
-    void LongLazer::ShowColR(Sdl* sdl)
+    void LongLazer::ShowColR(const Sdl* sdl)
     {
         ElementaryObject::showCollisionMainRect(sdl);
     }
 #endif
+
+
+int LongLazer::GetLazer_x() const
+{
+    return ElementaryObject::GetMainRect_x();
+}
+
+int LongLazer::GetLazer_y() const
+{
+    return ElementaryObject::GetMainRect_y();
+}
+
+int LongLazer::GetLazerW() const
+{
+    return ElementaryObject::GetMainRectW();
+}
+
+int LongLazer::GetLazerH() const
+{
+    return ElementaryObject::GetMainRectH();
+}
+
+void LongLazer::Show(const Sdl* sdl) 
+{
+    ElementaryObject::ShowObj(sdl);
+}
+
+int LongLazer::GetLazer_w() const
+{
+    return ElementaryObject::GetMainRect_w();
+}
 

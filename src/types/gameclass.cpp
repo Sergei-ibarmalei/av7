@@ -52,6 +52,11 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
         gameClassStatus = false;
         return;
     }
+    objectsStore = new (std::nothrow) ObjectsStore(&collection);
+    if (objectsStore->Status() == false)
+    {
+        gameClassStatus = false; return;
+    }
     
 
 }
@@ -208,6 +213,7 @@ void GameClass::check_key_events()
                 case SDLK_SPACE:
                 {
                     //gameStore->MakeHeroLaser(temp_hero->LaserStart());
+                    objectsStore->MakeHeroLazer(nHero->LazerStart());
                 }
                  
                 default: {}
@@ -226,9 +232,10 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         //temp_hero->ShowObj(sdl_);
-        nHero->ShowObj(sdl_);
+        nHero->ShowHero(sdl_);
         gameInfo->ShowGameInfo(sdl_, status);
         //gameStore->ShowAllHeroLasers(sdl_);
+        objectsStore->ShowHeroLazers(sdl_);
         borderSky_show_moving();
         showPause();
 
@@ -268,7 +275,7 @@ void GameClass::showHeroIntro()
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
         //temp_hero->ShowObj(sdl_);
-        nHero->ShowObj(sdl_);
+        nHero->ShowHero(sdl_);
         #ifdef SHOW_COL_R
             //temp_hero->showColR(sdl_);
             

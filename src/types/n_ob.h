@@ -22,9 +22,10 @@ class ElementaryObject
     void resetUpLeftCorner();
     void resetUpLeftCorner_x(const int x);
     void resetUpLeftCorner_y(const int y);
+    void ShowObj(const Sdl* sdl);
 
 #ifdef SHOW_COL_R
-    void showCollisionMainRect(Sdl* sdl);
+    void showCollisionMainRect(const Sdl* sdl);
 #endif
 
     public:
@@ -34,13 +35,15 @@ class ElementaryObject
     bool operator==(const ElementaryObject& eo);
     bool operator==(const ElementaryObject* peo);
     virtual ~ElementaryObject();
-    void ShowObj(Sdl* sdl);
+    //void ShowObj(const Sdl* sdl);
     bool Status() const {return init;}
     virtual void Move() = 0;
     rect_& MainRect() const {return obj_texture->main_rect;}
     bool OnScreen() const {return isOnScreen;}
     int  GetMainRect_x() const {return obj_texture->main_rect.x;}
     int  GetMainRect_y() const {return obj_texture->main_rect.y;}
+    int  GetMainRect_w() const {return obj_texture->main_rect.w;}
+    int  GetMainRect_h() const {return obj_texture->main_rect.h;}
     int  GetMainRectW() const {return obj_texture->main_rect.x+
                                 obj_texture->main_rect.w;}
     int GetMainRectH()  const {return obj_texture->main_rect.y+
@@ -59,7 +62,7 @@ class ComplexObject: public ElementaryObject
     virtual void initLazerStart() = 0;
     virtual void recomputeLazerStart() = 0;
     #ifdef SHOW_COL_R
-        void ShowColR(Sdl* sdl, const int len);
+        void ShowColR(const Sdl* sdl, const int len);
     #endif
 
     public:
@@ -108,9 +111,11 @@ class NHero: public ComplexObject
     void HeroLeft();
     void HeroStop();
     void Move() override;
+    void ShowHero(const Sdl* sdl);
+    const plot* LazerStart() const {return lazerStart;}
     bool Status() const {return ElementaryObject::Status();}
     #ifdef SHOW_COL_R
-        void ShowColR(Sdl* sdl);
+        void ShowColR(const Sdl* sdl);
     #endif
 };
 
@@ -122,9 +127,18 @@ class LongLazer: public ElementaryObject
 
     public:
     LongLazer(const plot* start, dir::direction d, const texture_* t);
+    LongLazer& operator=(const LongLazer& ) = delete;
+    LongLazer(const LongLazer& ) = delete;
+    ~LongLazer() {}
     void Move();
+    int GetLazer_x() const;
+    int GetLazer_y() const;
+    int GetLazer_w() const;
+    int GetLazerW()  const;
+    int GetLazerH()  const;
+    void Show(const Sdl* sdl);
     #ifdef SHOW_COL_R
-        void ShowColR(Sdl* sdl);
+        void ShowColR(const Sdl* sdl);
     #endif
 };
 
@@ -139,7 +153,44 @@ class ObjectList
 
     public:
     ObjectList(const tc* collection);
+    ObjectList(const ObjectList& ) = delete;
+    ObjectList& operator=(const ObjectList& ) = delete;
+    virtual ~ObjectList();
+    std::list<ElementaryObject*>& getObjectList() {return objectList;}
     bool Status() const {return init;}
+    virtual void Show(const Sdl* sdl) = 0;
+};
+
+class HeroLazers: public ObjectList
+{
+    public:
+    HeroLazers(const tc* collection);
+    ~HeroLazers() {}
+    HeroLazers(const HeroLazers& ) = delete;
+    HeroLazers& operator=(const HeroLazers& ) = delete;
+
+    void Push(const plot* start);
+    void Show(const Sdl* sdl);
+    void Move();
+};
+
+class ObjectsStore
+{
+    private:
+    bool init {true};
+    HeroLazers*  heroLazers {nullptr};
+
+
+    public:
+    ObjectsStore(const tc* collection);
+    ~ObjectsStore();
+    ObjectsStore(const ObjectsStore& ) = delete;
+    ObjectsStore& operator=(const ObjectsStore& ) = delete;
+    bool Status() const {return init;}
+
+    void MakeHeroLazer(const plot* start);
+    void ShowHeroLazers(const Sdl* sdl);
+    void MoveHeroLazers();
 };
 
 

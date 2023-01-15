@@ -21,7 +21,9 @@ bool GameClass::partOne(log_::Log& log)
         nHero->Move();
         //gameStore->ShowAllHeroLasers(sdl_);
         //temp_hero->ShowObj(sdl_);
-        nHero->ShowObj(sdl_);
+        nHero->ShowHero(sdl_);
+        objectsStore->ShowHeroLazers(sdl_);
+        objectsStore->MoveHeroLazers();
         //gameStore->MoveAllHeroLasers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);

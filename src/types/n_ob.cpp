@@ -57,13 +57,13 @@ bool ElementaryObject::operator==(const ElementaryObject* peo)
     return obj_texture->main_rect == peo->obj_texture->main_rect;
 }
 
-void ElementaryObject::ShowObj(Sdl* sdl)
+void ElementaryObject::ShowObj(const Sdl* sdl)
 {
     sdl->TextureRender(obj_texture->texture, &obj_texture->main_rect);
 }
 
 #ifdef SHOW_COL_R
-void ElementaryObject::showCollisionMainRect(Sdl* sdl)
+void ElementaryObject::showCollisionMainRect(const Sdl* sdl)
 {
     SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
     SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
@@ -140,7 +140,7 @@ bool ComplexObject::operator==(const ComplexObject& co)
 }
 
 #ifdef SHOW_COL_R
-    void ComplexObject::ShowColR(Sdl* sdl, const int len)
+    void ComplexObject::ShowColR(const Sdl* sdl, const int len)
     {
         SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
         for (int r = 0; r < len; ++r)
@@ -172,6 +172,11 @@ void NHero::initHeroStopIntro()
     heroStopIntro->y = ElementaryObject::obj_texture->main_rect.y;
 
     #undef HERO_W
+}
+
+void NHero::ShowHero(const Sdl* sdl)
+{
+    ElementaryObject::ShowObj(sdl);
 }
 
 void NHero::setToStartPos()
@@ -380,7 +385,7 @@ bool NHero::isGonnaCrossLeft()
 }
 
 #ifdef SHOW_COL_R
-    void NHero::ShowColR(Sdl* sdl)
+    void NHero::ShowColR(const Sdl* sdl)
     {
         ComplexObject::ShowColR(sdl, re::heros::allR);
     }
