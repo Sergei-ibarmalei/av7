@@ -2,6 +2,7 @@
 
 E_listABC::E_listABC(const tc* collection)
 {
+    std::cout << "In E_listABC ctor.\n";
     tcollection = collection;
     first = nullptr;
     root  = nullptr;
@@ -10,6 +11,7 @@ E_listABC::E_listABC(const tc* collection)
 
 E_listABC::~E_listABC()
 {
+    std::cout << "In E_listABC dtor.\n";
     while (first)
     {
         obNode* tmp = first;

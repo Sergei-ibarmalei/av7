@@ -8,7 +8,7 @@
 #include "test.h"
 #include "texturescollection.h"
 
-
+/*Абстрактный класс - основа всех объектов*/
 class ElementaryObject
 {
     protected:
@@ -48,6 +48,7 @@ class ElementaryObject
     plot* Velocities() {return obj_velocities;}
 };
 
+/*Сложный класс для объектов с прямоугольниками пересечений*/
 class ComplexObject: public ElementaryObject
 {
     protected:
@@ -126,7 +127,10 @@ class LongLazer: public ElementaryObject
     LongLazer(const plot* start, dir::direction d, const texture_* t);
     LongLazer& operator=(const LongLazer& ) = delete;
     LongLazer(const LongLazer& ) = delete;
-    ~LongLazer() {}
+    ~LongLazer()
+    {
+        std::cout << "In LongLazer dtor.\n";
+    }
     void Move();
     int GetLazer_x() const;
     int GetLazer_y() const;
@@ -145,17 +149,22 @@ struct ObjectNode
 {
     ElementaryObject* object;
     struct ObjectNode* next;
-    ObjectNode(): object(nullptr), next(nullptr) {}
+    ObjectNode(): object(nullptr), next(nullptr) 
+    {
+        std::cout << "In ObjectNode ctor.\n";
+    }
     ObjectNode(const ObjectNode& ) = delete;
     ObjectNode& operator=(const ObjectNode& ) = delete;
     ~ObjectNode()
     {
+        std::cout << "In ObjectNode dtor.\n";
         delete object;
     }
 };
 
 using obNode = ObjectNode;
 
+/*Абстрактный класс - односвязный список объектов ElementaryObject*/
 class E_listABC
 {
     protected:
@@ -175,6 +184,7 @@ class E_listABC
 
 };
 
+/*Односвязный список для лазеров героя*/
 class HeroLazersList: public E_listABC
 {
     private:
@@ -182,9 +192,16 @@ class HeroLazersList: public E_listABC
     void moveLazer(obNode* first);
 
     public:
-    HeroLazersList(const tc* collection): E_listABC(collection) {}
+    HeroLazersList(const tc* collection): E_listABC(collection) 
+    {
+        std::cout << "In HeroLazerList ctor.\n";
+    }
     HeroLazersList(const HeroLazersList& ) = delete;
     HeroLazersList& operator=(const HeroLazersList& ) = delete;
+    ~HeroLazersList()
+    {
+        std::cout << "In HeroLazerList dtor.\n";
+    }
 
     void Show(const Sdl* sdl);
     void Push(const plot* start);
@@ -194,7 +211,7 @@ class HeroLazersList: public E_listABC
 
 
 
-
+/*Класс - хранилище списков объектов ElementaryObject*/
 class ObjectsStore
 {
     private:

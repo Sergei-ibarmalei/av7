@@ -144,8 +144,9 @@ GameClass::~GameClass()
     }
     delete[] pause;
 
-    //delete gameStore; gameStore = nullptr;
     delete nHero; nHero = nullptr;
+    delete objectsStore;
+    objectsStore = nullptr;
 }
 
 void GameClass::initStatus()

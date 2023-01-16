@@ -3,6 +3,7 @@
 LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
     ElementaryObject(t)
 {
+    std::cout << "In LongLazer ctor.\n";
     #define LAZER_HALF_H ElementaryObject::GetMainRect_h() / 2
 
     direct = d;
