@@ -24,3 +24,8 @@ bool hasCrossedLeft(const int mainrect_x)
 {
     return mainrect_x < LEFT_BORDER_X + LEFT_BORDER_W;
 }
+
+bool hasCrossedRight(const int mainrect_x)
+{
+    return mainrect_x < LEFT_BORDER_X;
+}

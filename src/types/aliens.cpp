@@ -13,6 +13,7 @@ PlainAlienABC::PlainAlienABC(const texture_* t,
     lazerMainRect->h = lazer->main_rect.h;
     setToStartPos(start->x, start->y);
     initLazerStart();
+    ElementaryObject::ResetOnScreen(false);
 }
 
 PlainAlienABC::~PlainAlienABC()
@@ -65,7 +66,7 @@ PlainAlien_t1::PlainAlien_t1(const texture_* t,
                              re::alien_t1::t1_allR, start, lazer)
 {
     //std::cout << "In PlainAlien_t1 ctor.\n";
-    ElementaryObject::Velocities()->x = -PLAINALIENLASER_VELOCITY;
+    ElementaryObject::Velocities()->x = -ALIENFLEET_1_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
 }
 
@@ -110,7 +111,7 @@ void PlainAlien_t1::setCr()
 
 void PlainAlien_t1::Move()
 {
-    if (ElementaryObject::OnScreen() == false) return;
+    //if (ElementaryObject::OnScreen() == false) return;
     ElementaryObject::resetUpLeftCorner();
     if (hasCrossedLeft(ElementaryObject::GetMainRect_x()))
     {

@@ -9,14 +9,14 @@ bool Alien_t1_fleetList::push(ElementaryObject* ob)
     if (!tmp) return false;
     tmp->object = ob;
     tmp->next = nullptr;
-    if (E_listABC::last)
+    if (last)
     {
-        E_listABC::last->next = tmp;
-        E_listABC::last = E_listABC::last->next;
+        Alien_t1_fleetList::last->next = tmp;
+        Alien_t1_fleetList::last = Alien_t1_fleetList::last->next;
     }
     else
     {
-        E_listABC::first = E_listABC::last;
+        Alien_t1_fleetList::Alien_t1_fleetList::first = Alien_t1_fleetList::last = tmp;
     }
     return true;
 }
@@ -29,12 +29,15 @@ bool Alien_t1_fleetList::Push(ElementaryObject* ob)
 
 void Alien_t1_fleetList::Show(const Sdl* sdl)
 {
-    showAlien(sdl, first);
+    showAlien(sdl, Alien_t1_fleetList::first);
 }
 
 void Alien_t1_fleetList::showAlien(const Sdl* sdl, obNode* first)
 {
-    if (!first) return;
+    if (!first)
+    {
+        return;
+    }
     static_cast<PlainAlien_t1*>(first->object)->Show(sdl);
     showAlien(sdl, first->next);
 }
@@ -82,6 +85,7 @@ bool Fleets::makeAlien_t1_fleet(const tc* collection)
         alien_start.x = RIGHT_SIDE + 
             (count * ALIENFLEET_1_SPACE_BETWEEN);
         alien_start.y = getRand(UP, DOWN);
+        //std::cout << "[" << alien_start.x << " , " << alien_start.y << "]" << std::endl;
         if (!(alien_t1_fleet->
             Push(new PlainAlien_t1{&collection->Pictures()[tn::alien_one],
             &alien_start, &collection->Pictures()[tn::alien_laser01]}))) 
@@ -102,5 +106,8 @@ obNode* Fleets::Alien_t1_fleet_first()
     return alien_t1_fleet->GetFirstForAction();
 }
 
-
+void Fleets::Alien_t1_Show(const Sdl* sdl)
+{
+    alien_t1_fleet->Show(sdl);
+}
 

@@ -18,6 +18,7 @@ set(SOURCES
     src/types/elist.cpp
     src/types/aliens.cpp
     src/types/fleets.cpp
+    src/types/movingfleets.cpp
     src/core/core.cpp
     src/core/rand.cpp
     src/core/checking.cpp

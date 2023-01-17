@@ -55,6 +55,8 @@ class GameClass
     bool Status() const {return gameClassStatus;}
 
     bool flow(log_::Log& log);
+
+    friend void Move_at1_fleet(GameClass* gc);
     
 };
 

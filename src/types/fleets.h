@@ -46,6 +46,7 @@ class Fleets
     Fleets& operator=(const Fleets& ) = delete;
     bool Status() const {return init;}
     obNode* Alien_t1_fleet_first();
+    void Alien_t1_Show(const Sdl* sdl);
 };
 
 
