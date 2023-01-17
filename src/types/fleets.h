@@ -12,13 +12,13 @@ class Alien_t1_fleetList: public E_listABC
     public:
     Alien_t1_fleetList(const tc* collection):E_listABC(collection)
     {
-        std::cout << "In Alien_t1_fleetList ctor.\n";
+        //std::cout << "In Alien_t1_fleetList ctor.\n";
     }
     Alien_t1_fleetList(const Alien_t1_fleetList&) = delete;
     Alien_t1_fleetList& operator=(const Alien_t1_fleetList&) = delete;
     ~Alien_t1_fleetList()
     {
-        std::cout << "In Alien_t1_fleetList dtor.\n";
+        //std::cout << "In Alien_t1_fleetList dtor.\n";
     }
     void Show(const Sdl* sdl) override;
     obNode* GetFirstForAction() {return Alien_t1_fleetList::first;}

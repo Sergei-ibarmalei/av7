@@ -22,17 +22,6 @@ E_listABC::~E_listABC()
 }
 
 
-
-/*void E_listABC::push(ElementaryObject* ob)
-{
-    obNode* tmp = new obNode;
-    tmp->object = ob;
-    tmp->next = first;
-    first = tmp;
-    root = first;
-
-}*/
-
 void HeroLazersList::Show(const Sdl* sdl)
 {
     showLazer(sdl, first);
@@ -54,9 +43,6 @@ void HeroLazersList::showLazer(const Sdl* sdl, obNode* first)
 {
     if (!first) return;
     static_cast<const LongLazer*>(first->object)->Show(sdl);
-    /*#ifdef SHOW_COL_R
-        static_cast<const LongLazer*>(first->object)->ShowColR(sdl);
-    #endif*/
     showLazer(sdl, first->next);
 }
 
@@ -71,8 +57,6 @@ bool HeroLazersList::Push(const plot* start)
     {
         if (PREVLAZER_X - start->x < LAZER_W * 3) return false;
     }
-    //E_listABC::push(new LongLazer(start, dir::right, 
-    //                &E_listABC::tcollection->Pictures()[tn::blue_laser]));
     if (!(push(new LongLazer(start, dir::right,
                         &E_listABC::tcollection->Pictures()[tn::blue_laser]))))
         return false;

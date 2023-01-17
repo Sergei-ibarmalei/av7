@@ -27,9 +27,7 @@ class GameClass
     status_t status;
     texture_* pause {nullptr};
     bool     gameClassStatus = true;
-    //GameStore* gameStore;
 
-    //Hero* temp_hero;
     NHero* nHero;
     ObjectsStore* objectsStore;
     Fleets*       gameFleets;

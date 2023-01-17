@@ -82,8 +82,10 @@ bool Fleets::makeAlien_t1_fleet(const tc* collection)
         alien_start.x = RIGHT_SIDE + 
             (count * ALIENFLEET_1_SPACE_BETWEEN);
         alien_start.y = getRand(UP, DOWN);
-        if (!(alien_t1_fleet->Push(new PlainAlien_t1{&collection->Pictures()[tn::alien_one],
-            &alien_start, &collection->Pictures()[tn::alien_laser01]}))) return false;
+        if (!(alien_t1_fleet->
+            Push(new PlainAlien_t1{&collection->Pictures()[tn::alien_one],
+            &alien_start, &collection->Pictures()[tn::alien_laser01]}))) 
+            return false;
     }
 
     #undef SHIP_MAINRECT_H

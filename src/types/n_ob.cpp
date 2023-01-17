@@ -197,14 +197,9 @@ void NHero::initHeroStopIntro()
     #undef HERO_W
 }
 
-/*void NHero::ShowHero(const Sdl* sdl)
-{
-    ElementaryObject::ShowObj(sdl);
-}*/
 
 void NHero::setToStartPos(const int startx, const int starty)
 {
-    //ElementaryObject::setUpLeftCorner(HEROSTART_X, HEROSTART_Y);
     ElementaryObject::setUpLeftCorner(startx, starty);
 }
 
@@ -219,8 +214,6 @@ void NHero::setCr()
     #define FOUR re::heros::four
     #define FIVE re::heros::five
 
-    //#define MAINR_UPLEFT_X ElementaryObject::obj_texture->main_rect.x
-    //#define MAINR_UPLEFT_Y ElementaryObject::obj_texture->main_rect.y
     #define MAINR_UPLEFT_X ElementaryObject::GetMainRect_x()
     #define MAINR_UPLEFT_Y ElementaryObject::GetMainRect_y()
 

@@ -51,13 +51,6 @@ void LongLazer::Move()
     }
 }
 
-/*#ifdef SHOW_COL_R
-    void LongLazer::ShowColR(const Sdl* sdl) const
-    {
-        ElementaryObject::showCollisionMainRect(sdl);
-    }
-#endif*/
-
 
 int LongLazer::GetLazer_x() const
 {

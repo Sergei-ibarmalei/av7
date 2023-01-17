@@ -199,22 +199,18 @@ void GameClass::check_key_events()
             {
                 case SDLK_UP:
                 {
-                    //temp_hero->HeroUp(); break;
                     nHero->HeroUp(); break;
                 }
                 case SDLK_DOWN:
                 {
-                    //temp_hero->HeroDown(); break;
                     nHero->HeroDown(); break;
                 }
                 case SDLK_RIGHT:
                 {
-                    //temp_hero->HeroRight(); break;
                     nHero->HeroRight(); break;
                 }
                 case SDLK_LEFT:
                 {
-                    //temp_hero->HeroLeft(); break;
                     nHero->HeroLeft(); break;
                 }
                 case SDLK_ESCAPE:
@@ -223,7 +219,6 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    //gameStore->MakeHeroLaser(temp_hero->LaserStart());
                     objectsStore->MakeHeroLazer(nHero->LazerStart());
                 }
                  
@@ -231,7 +226,6 @@ void GameClass::check_key_events()
             }
         }
         else if(sdl_->event().type == SDL_KEYUP)
-            //temp_hero->HeroStop();
             nHero->HeroStop();
 
     }
@@ -284,16 +278,11 @@ void GameClass::showHeroIntro()
     {
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
-        //temp_hero->ShowObj(sdl_);
-        //nHero->ShowHero(sdl_);
         nHero->Show(sdl_);
         #ifdef SHOW_COL_R
-            //temp_hero->showColR(sdl_);
-            
         #endif
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
-        //temp_hero->HeroMovesInIntro(status);
         nHero->HeroMovesInIntro(status);
 
         while (SDL_PollEvent(&sdl_->event()) != 0)

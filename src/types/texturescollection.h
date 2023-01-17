@@ -3,7 +3,6 @@
 
 
 #include "gamefonts.h"
-//#include "errs.h"
 #include "../loging/loging.h"
 #include "texturesnames.h"
 
