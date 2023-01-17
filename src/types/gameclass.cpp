@@ -44,8 +44,6 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
     initPause(collection);
 
-    //temp_hero = new Hero(&collection.Pictures()[tn::hero]);
-    //gameStore = new GameStore(&collection);
     nHero = new NHero(&collection.Pictures()[tn::hero]);
     if (nHero->Status() == false)
     {
@@ -57,6 +55,15 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     {
         gameClassStatus = false; return;
     }
+
+    gameFleets = new (std::nothrow) Fleets(&collection);
+    if (!gameFleets || !gameFleets->Status())
+    {
+        gameClassStatus = false; return;
+    }
+
+
+
     
 
 }
@@ -147,6 +154,9 @@ GameClass::~GameClass()
     delete nHero; nHero = nullptr;
     delete objectsStore;
     objectsStore = nullptr;
+
+    delete gameFleets;
+    gameFleets = nullptr;
 }
 
 void GameClass::initStatus()
@@ -232,12 +242,11 @@ void GameClass::pauseIsPressed()
     while (!status.gameQuit || !status.pause)
     {
         SDL_RenderClear(sdl_->Renderer());
-        //temp_hero->ShowObj(sdl_);
-        nHero->ShowHero(sdl_);
-        gameInfo->ShowGameInfo(sdl_, status);
-        //gameStore->ShowAllHeroLasers(sdl_);
+        nHero->Show(sdl_);
         objectsStore->ShowHeroLazers(sdl_);
         borderSky_show_moving();
+
+        gameInfo->ShowGameInfo(sdl_, status);
         showPause();
 
         while (SDL_PollEvent(&sdl_->event()) != 0)
@@ -276,7 +285,8 @@ void GameClass::showHeroIntro()
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
         //temp_hero->ShowObj(sdl_);
-        nHero->ShowHero(sdl_);
+        //nHero->ShowHero(sdl_);
+        nHero->Show(sdl_);
         #ifdef SHOW_COL_R
             //temp_hero->showColR(sdl_);
             

@@ -3,20 +3,21 @@
 
 ObjectsStore::ObjectsStore(const tc* collection)
 {
-    std::cout << "In ObjectsStore ctor.\n";
+    //std::cout << "In ObjectsStore ctor.\n";
     heroLazers = new (std::nothrow) HeroLazersList(collection);
 }
 
 ObjectsStore::~ObjectsStore()
 {
-    std::cout << "In ObjectsStore dtor.\n";
+    //std::cout << "In ObjectsStore dtor.\n";
     delete heroLazers;
     heroLazers = nullptr;
 }
 
 void ObjectsStore::MakeHeroLazer(const plot* start)
 {
-    heroLazers->Push(start);
+    //heroLazers->Push(start);
+    if (!heroLazers->Push(start)) return;
 }
 
 void ObjectsStore::ShowHeroLazers(const Sdl* sdl)

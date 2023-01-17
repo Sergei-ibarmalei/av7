@@ -2,7 +2,7 @@
 #define TEST_H
 
 /*Show collisions rects*/
-#define SHOW_COL_R
+//#define SHOW_COL_R
 
 
 #endif

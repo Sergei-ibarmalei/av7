@@ -9,7 +9,10 @@
 
 
 //#include "ob.h"
-#include "n_ob.h"
+//#include "n_ob.h"
+//#include "aliens.h"
+#include "fleets.h"
+
 
 class GameClass
 {
@@ -29,6 +32,10 @@ class GameClass
     //Hero* temp_hero;
     NHero* nHero;
     ObjectsStore* objectsStore;
+    Fleets*       gameFleets;
+    
+
+
 
     void initStatus();
     bool initBorder(log_::Log& log);

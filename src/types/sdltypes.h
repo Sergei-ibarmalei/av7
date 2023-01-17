@@ -6,9 +6,8 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <iostream>
+#include "../consts/graphconsts.h"
 
-#define S_W 1920
-#define S_H 1080
 
 struct Rect: public SDL_Rect
 {

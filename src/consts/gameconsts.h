@@ -1,6 +1,8 @@
 #ifndef GAMECONSTS_H
 #define GAMECONSTS_H
 
+#include "graphconsts.h"
+
 #define HERO_LIVES 3
 #define HERO_VELOCITY_X 3
 #define HERO_VELOCITY_Y 3
@@ -28,6 +30,12 @@
 
 #define PLAINLASER_VELOCITY 3
 #define PLAINLASER_OFFSET 20
+
+#define PLAINALIENLASER_OFFSET 5
+#define PLAINALIENLASER_VELOCITY 3
+
+#define ALIENFLEET_1_SIZE 20
+#define ALIENFLEET_1_SPACE_BETWEEN 30
 
 
 /*Направление движения*/

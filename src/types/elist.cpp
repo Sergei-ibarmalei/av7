@@ -2,16 +2,17 @@
 
 E_listABC::E_listABC(const tc* collection)
 {
-    std::cout << "In E_listABC ctor.\n";
+    //std::cout << "In E_listABC ctor.\n";
     tcollection = collection;
     first = nullptr;
+    last  = nullptr;
     root  = nullptr;
 }
 
 
 E_listABC::~E_listABC()
 {
-    std::cout << "In E_listABC dtor.\n";
+    //std::cout << "In E_listABC dtor.\n";
     while (first)
     {
         obNode* tmp = first;
@@ -20,7 +21,9 @@ E_listABC::~E_listABC()
     }
 }
 
-void E_listABC::push(ElementaryObject* ob)
+
+
+/*void E_listABC::push(ElementaryObject* ob)
 {
     obNode* tmp = new obNode;
     tmp->object = ob;
@@ -28,24 +31,36 @@ void E_listABC::push(ElementaryObject* ob)
     first = tmp;
     root = first;
 
-}
+}*/
 
 void HeroLazersList::Show(const Sdl* sdl)
 {
     showLazer(sdl, first);
 }
 
+//в начало списка
+bool HeroLazersList::push(ElementaryObject* ob)
+{
+    obNode* tmp = new(std::nothrow) obNode;
+    if (!tmp) return false;
+    tmp->object = ob;
+    tmp->next = first;
+    first = tmp;
+    root = first;
+    return true;
+}
+
 void HeroLazersList::showLazer(const Sdl* sdl, obNode* first)
 {
     if (!first) return;
     static_cast<const LongLazer*>(first->object)->Show(sdl);
-    #ifdef SHOW_COL_R
+    /*#ifdef SHOW_COL_R
         static_cast<const LongLazer*>(first->object)->ShowColR(sdl);
-    #endif
+    #endif*/
     showLazer(sdl, first->next);
 }
 
-void HeroLazersList::Push(const plot* start)
+bool HeroLazersList::Push(const plot* start)
 {
     #define PREVLAZER_X static_cast<LongLazer*>(E_listABC::\
                         GetFirst()->object)->GetLazer_x()
@@ -54,13 +69,17 @@ void HeroLazersList::Push(const plot* start)
 
     if (first)
     {
-        if (PREVLAZER_X - start->x < LAZER_W * 3) return;
+        if (PREVLAZER_X - start->x < LAZER_W * 3) return false;
     }
-    E_listABC::push(new LongLazer(start, dir::right, 
-                    &E_listABC::tcollection->Pictures()[tn::blue_laser]));
+    //E_listABC::push(new LongLazer(start, dir::right, 
+    //                &E_listABC::tcollection->Pictures()[tn::blue_laser]));
+    if (!(push(new LongLazer(start, dir::right,
+                        &E_listABC::tcollection->Pictures()[tn::blue_laser]))))
+        return false;
 
     #undef PREVLAZER_X
     #undef LAZER_W
+    return true;
 }
 
 void HeroLazersList::Move()

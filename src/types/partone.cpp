@@ -21,7 +21,8 @@ bool GameClass::partOne(log_::Log& log)
         nHero->Move();
         //gameStore->ShowAllHeroLasers(sdl_);
         //temp_hero->ShowObj(sdl_);
-        nHero->ShowHero(sdl_);
+        //nHero->ShowHero(sdl_);
+        nHero->Show(sdl_);
         objectsStore->ShowHeroLazers(sdl_);
         objectsStore->MoveHeroLazers();
         //gameStore->MoveAllHeroLasers();

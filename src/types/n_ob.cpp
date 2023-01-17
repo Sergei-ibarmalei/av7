@@ -1,8 +1,11 @@
 #include "n_ob.h"
+#include "../core/checking.h"
+
+
 
 ElementaryObject::~ElementaryObject()
 {
-    std::cout << "In ElementaryObject dtor.\n";
+    //std::cout << "In ElementaryObject dtor.\n";
     obj_texture->texture = nullptr;
     delete obj_texture;
     obj_texture = nullptr;
@@ -13,7 +16,7 @@ ElementaryObject::~ElementaryObject()
 
 ElementaryObject::ElementaryObject(const texture_* t)
 {
-    std::cout << "In ElementaryObject ctor.\n";
+    //std::cout << "In ElementaryObject ctor.\n";
     if (!t)
     {
         init = false;
@@ -107,6 +110,10 @@ ComplexObject::~ComplexObject()
 {
     delete cr;
     cr = nullptr;
+
+    //В этом конструкторе не удаляем lazerStart, поскольку
+    //lazerStart может быть массивом для нескольких точек
+    //Удаляем в конкретном классе
     
 }
 
@@ -117,13 +124,13 @@ ComplexObject::ComplexObject(const texture_* t, const int al): ElementaryObject(
 {
     if (al <= 0)
     {
-        init = false; return;
+        ElementaryObject::init = false; return;
     }
     collisionArrLen = al;
     cr = new (std::nothrow) CRC(collisionArrLen);
     if (cr->Status() == false)
     {
-        init = false; return;
+        ElementaryObject::init = false; return;
     }
 }
 
@@ -139,6 +146,11 @@ bool ComplexObject::operator==(const ComplexObject& co)
         return *cr == *co.cr;
     }
     return false;
+}
+
+void ComplexObject::Show(const Sdl* sdl)
+{
+    ElementaryObject::ShowObj(sdl);
 }
 
 #ifdef SHOW_COL_R
@@ -159,10 +171,19 @@ bool ComplexObject::operator==(const ComplexObject& co)
 NHero::NHero(const texture_* t): ComplexObject(t, re::heros::allR)
 {
     if (ComplexObject::init == false) return;
+
+    #define HEROSTART_X -BORDER_THICKNESS\
+             - ElementaryObject::obj_texture->main_rect.w
+    #define HEROSTART_Y S_H / 2\
+             - ElementaryObject::obj_texture->main_rect.h / 2
+
     initHeroStopIntro();
-    setToStartPos();
+    setToStartPos(HEROSTART_X, HEROSTART_Y);
     setCr();
     initLazerStart();
+    
+    #undef HEROSTART_X
+    #undef HEROSTART_Y
 }
 
 void NHero::initHeroStopIntro()
@@ -176,22 +197,15 @@ void NHero::initHeroStopIntro()
     #undef HERO_W
 }
 
-void NHero::ShowHero(const Sdl* sdl)
+/*void NHero::ShowHero(const Sdl* sdl)
 {
     ElementaryObject::ShowObj(sdl);
-}
+}*/
 
-void NHero::setToStartPos()
+void NHero::setToStartPos(const int startx, const int starty)
 {
-    #define HEROSTART_X -BORDER_THICKNESS\
-             - ElementaryObject::obj_texture->main_rect.w
-    #define HEROSTART_Y S_H / 2\
-             - ElementaryObject::obj_texture->main_rect.h / 2
-
-    ElementaryObject::setUpLeftCorner(HEROSTART_X, HEROSTART_Y);
-
-    #undef HEROSTART_X
-    #undef HEROSTART_Y
+    //ElementaryObject::setUpLeftCorner(HEROSTART_X, HEROSTART_Y);
+    ElementaryObject::setUpLeftCorner(startx, starty);
 }
 
 
@@ -205,8 +219,10 @@ void NHero::setCr()
     #define FOUR re::heros::four
     #define FIVE re::heros::five
 
-    #define MAINR_UPLEFT_X ElementaryObject::obj_texture->main_rect.x
-    #define MAINR_UPLEFT_Y ElementaryObject::obj_texture->main_rect.y
+    //#define MAINR_UPLEFT_X ElementaryObject::obj_texture->main_rect.x
+    //#define MAINR_UPLEFT_Y ElementaryObject::obj_texture->main_rect.y
+    #define MAINR_UPLEFT_X ElementaryObject::GetMainRect_x()
+    #define MAINR_UPLEFT_Y ElementaryObject::GetMainRect_y()
 
     CR[ONE].x = MAINR_UPLEFT_X + 2;
     CR[ONE].y = MAINR_UPLEFT_Y + 4;
@@ -262,11 +278,9 @@ void NHero::initLazerStart()
 
 void NHero::recomputeLazerStart()
 {
-    #define HERO_W ComplexObject::obj_texture->main_rect.x+\
-                    ComplexObject::obj_texture->main_rect.w
+    #define HERO_W ElementaryObject::GetMainRectW()
 
-    #define HERO_H_HALF ComplexObject::obj_texture->main_rect.y+\
-                        ComplexObject::obj_texture->main_rect.h / 2
+    #define HERO_H_HALF ElementaryObject::GetMainRectH_Half()
 
     lazerStart->x = HERO_W + PLAINLASER_OFFSET;
     lazerStart->y = HERO_H_HALF;
@@ -344,7 +358,7 @@ bool NHero::isGonnaCrossUp()
     #define MAIN_RECT_UP ElementaryObject::GetMainRect_y()
     #define VELOCITY_Y ElementaryObject::Velocities()->y
 
-    return (MAIN_RECT_UP + VELOCITY_Y) < UP_BORDER_Y + BORDER_THICKNESS;
+    return isGonnaCrossUp_check(MAIN_RECT_UP, VELOCITY_Y);
 
     #undef MAIN_RECT_UP
     #undef VELOCITY_Y
@@ -353,12 +367,12 @@ bool NHero::isGonnaCrossUp()
 
 bool NHero::isGonnaCrossDown()
 {
-    #define MAIN_RECT_DOWN ElementaryObject::GetMainRectH()
+    #define MAIN_RECT_HEIGHT ElementaryObject::GetMainRectH()
     #define VELOCITY_Y ElementaryObject::Velocities()->y
 
-    return (MAIN_RECT_DOWN + VELOCITY_Y) > DOWN_BORDER_Y;
+    return isGonnaCrossDown_check(MAIN_RECT_HEIGHT, VELOCITY_Y);
 
-    #undef MAIN_RECT_DOWN
+    #undef MAIN_RECT_HEIGHT
     #undef VELOCITY_Y
 
 }
@@ -368,7 +382,7 @@ bool NHero::isGonnaCrossRight()
     #define MAIN_RECT_WIDTH ElementaryObject::GetMainRectW()
     #define VELOCITY_X ElementaryObject::Velocities()->x
 
-    return (MAIN_RECT_WIDTH + VELOCITY_X) > RIGHT_BORDER_X;
+    return isGonnaCrossRight_check(MAIN_RECT_WIDTH, VELOCITY_X);
 
     #undef MAIN_RECT_WIDTH 
     #undef VELOCITY_X 
@@ -380,7 +394,7 @@ bool NHero::isGonnaCrossLeft()
     #define MAIN_RECT_LEFT ElementaryObject::GetMainRect_x()
     #define VELOCITY_X ElementaryObject::Velocities()->x
 
-    return (MAIN_RECT_LEFT + VELOCITY_X) < LEFT_BORDER_X + LEFT_BORDER_W;
+    return isGonnaCrossLeft_check(MAIN_RECT_LEFT, VELOCITY_X);
 
     #undef MAIN_RECT_LEFT 
     #undef VELOCITY_X 

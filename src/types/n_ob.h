@@ -37,6 +37,7 @@ class ElementaryObject
     virtual void Move() = 0;
     rect_& MainRect() const {return obj_texture->main_rect;}
     bool OnScreen() const {return isOnScreen;}
+    void ResetOnScreen(bool visibility) {isOnScreen = visibility;}
     int  GetMainRect_x() const {return obj_texture->main_rect.x;}
     int  GetMainRect_y() const {return obj_texture->main_rect.y;}
     int  GetMainRect_w() const {return obj_texture->main_rect.w;}
@@ -45,6 +46,8 @@ class ElementaryObject
                                 obj_texture->main_rect.w;}
     int GetMainRectH()  const {return obj_texture->main_rect.y+
                                 obj_texture->main_rect.h;}
+    int GetMainRectH_Half() const {return obj_texture->main_rect.y+
+                                obj_texture->main_rect.h / 2;}
     plot* Velocities() {return obj_velocities;}
 };
 
@@ -55,7 +58,7 @@ class ComplexObject: public ElementaryObject
     CRC* cr;
     plot* lazerStart {nullptr};
     int collisionArrLen;
-    virtual void setToStartPos() = 0;
+    virtual void setToStartPos(const int x, const int y) = 0;
     virtual void setCr() = 0;
     virtual void initLazerStart() = 0;
     virtual void recomputeLazerStart() = 0;
@@ -70,7 +73,10 @@ class ComplexObject: public ElementaryObject
     bool operator==(const ComplexObject& co);
     ~ComplexObject();
     ComplexObject(const ComplexObject& co);
+    plot* GetLazerStart() const {return lazerStart;}
     virtual void Move() = 0;
+
+    void Show(const Sdl* sdl);
 
 };
 
@@ -78,7 +84,10 @@ class ComplexObject: public ElementaryObject
 namespace re
 {
     /*прям. пересечений героя*/
-    enum heros {one, two, three, four, five, allR};
+    enum  heros {one, two, three, four, five, allR};
+
+    /*алиен тип первый*/
+    enum  alien_t1 {t1_one, t1_two, t1_three, t1_allR};
 }
 
 class NHero: public ComplexObject
@@ -88,7 +97,7 @@ class NHero: public ComplexObject
     void    initHeroStopIntro();
     void    initLazerStart();
     void    recomputeLazerStart();
-    void    setToStartPos(); 
+    void    setToStartPos(const int x, const int y); 
     void    setCr() override;
 
     bool    isGonnaCrossUp();
@@ -109,8 +118,7 @@ class NHero: public ComplexObject
     void HeroLeft();
     void HeroStop();
     void Move() override;
-    void ShowHero(const Sdl* sdl);
-    const plot* LazerStart() const {return lazerStart;}
+    const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
     #ifdef SHOW_COL_R
         void ShowColR(const Sdl* sdl);
@@ -129,7 +137,7 @@ class LongLazer: public ElementaryObject
     LongLazer(const LongLazer& ) = delete;
     ~LongLazer()
     {
-        std::cout << "In LongLazer dtor.\n";
+        //std::cout << "In LongLazer dtor.\n";
     }
     void Move();
     int GetLazer_x() const;
@@ -138,9 +146,6 @@ class LongLazer: public ElementaryObject
     int GetLazerW()  const;
     int GetLazerH()  const;
     void Show(const Sdl* sdl) const;
-    #ifdef SHOW_COL_R
-        void ShowColR(const Sdl* sdl) const;
-    #endif
 };
 
 
@@ -151,13 +156,13 @@ struct ObjectNode
     struct ObjectNode* next;
     ObjectNode(): object(nullptr), next(nullptr) 
     {
-        std::cout << "In ObjectNode ctor.\n";
+        //std::cout << "In ObjectNode ctor.\n";
     }
     ObjectNode(const ObjectNode& ) = delete;
     ObjectNode& operator=(const ObjectNode& ) = delete;
     ~ObjectNode()
     {
-        std::cout << "In ObjectNode dtor.\n";
+        //std::cout << "In ObjectNode dtor.\n";
         delete object;
     }
 };
@@ -169,16 +174,20 @@ class E_listABC
 {
     protected:
     obNode* first;
+    obNode* last;
     obNode* root;
     const tc* tcollection;
 
-    void push(ElementaryObject* ob);
+    //void push(ElementaryObject* ob);
+    virtual bool push(ElementaryObject* ob) = 0;
+    
 
     public:
     E_listABC(const tc* collection);
     E_listABC(const E_listABC& ) = delete;
     E_listABC& operator=(const E_listABC& ) = delete;
     const obNode* GetFirst() const {return first;}
+    
     virtual ~E_listABC();
     virtual void Show(const Sdl* sdl) = 0;
 
@@ -190,24 +199,27 @@ class HeroLazersList: public E_listABC
     private:
     void showLazer(const Sdl* sdl, obNode* first);
     void moveLazer(obNode* first);
+    bool push(ElementaryObject* ob) override;
 
     public:
     HeroLazersList(const tc* collection): E_listABC(collection) 
     {
-        std::cout << "In HeroLazerList ctor.\n";
+        //std::cout << "In HeroLazerList ctor.\n";
     }
     HeroLazersList(const HeroLazersList& ) = delete;
     HeroLazersList& operator=(const HeroLazersList& ) = delete;
     ~HeroLazersList()
     {
-        std::cout << "In HeroLazerList dtor.\n";
+        //std::cout << "In HeroLazerList dtor.\n";
     }
 
-    void Show(const Sdl* sdl);
-    void Push(const plot* start);
+    void Show(const Sdl* sdl) override;
+    bool Push(const plot* start);
     void Move();
 
 };
+
+
 
 
 

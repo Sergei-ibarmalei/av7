@@ -5,7 +5,7 @@ namespace tn
 {
     enum {MainMenu, MainMenuBright, Scores, ScoresBanner,
               Pause, PressEsc, LiveMult, allGameFonts};
-    enum {hero, hero_scale_mult, alien_one, blue_laser, red_laser, star, 
+    enum {hero, hero_scale_mult, alien_one, blue_laser, alien_laser01, star, 
             moon_one, all_pics};
 
     enum {

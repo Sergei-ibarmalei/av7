@@ -3,7 +3,7 @@
 LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
     ElementaryObject(t)
 {
-    std::cout << "In LongLazer ctor.\n";
+    //std::cout << "In LongLazer ctor.\n";
     #define LAZER_HALF_H ElementaryObject::GetMainRect_h() / 2
 
     direct = d;
@@ -51,12 +51,12 @@ void LongLazer::Move()
     }
 }
 
-#ifdef SHOW_COL_R
+/*#ifdef SHOW_COL_R
     void LongLazer::ShowColR(const Sdl* sdl) const
     {
         ElementaryObject::showCollisionMainRect(sdl);
     }
-#endif
+#endif*/
 
 
 int LongLazer::GetLazer_x() const
@@ -82,6 +82,9 @@ int LongLazer::GetLazerH() const
 void LongLazer::Show(const Sdl* sdl) const 
 {
     ElementaryObject::ShowObj(sdl);
+    #ifdef SHOW_COL_R
+        ElementaryObject::showCollisionMainRect(sdl);
+    #endif
 }
 
 int LongLazer::GetLazer_w() const
