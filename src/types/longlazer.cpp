@@ -75,9 +75,6 @@ int LongLazer::GetLazerH() const
 void LongLazer::Show(const Sdl* sdl) const 
 {
     ElementaryObject::ShowObj(sdl);
-    #ifdef SHOW_COL_R
-        ElementaryObject::showCollisionMainRect(sdl);
-    #endif
 }
 
 int LongLazer::GetLazer_w() const

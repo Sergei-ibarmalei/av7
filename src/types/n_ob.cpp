@@ -65,16 +65,21 @@ bool ElementaryObject::operator==(const ElementaryObject* peo)
 void ElementaryObject::ShowObj(const Sdl* sdl) const
 {
     sdl->TextureRender(obj_texture->texture, &obj_texture->main_rect);
+    #ifdef SHOW_COL_R
+        SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
+        SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
+        SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
+    #endif
 }
 
-#ifdef SHOW_COL_R
+/*#ifdef SHOW_COL_R
 void ElementaryObject::showCollisionMainRect(const Sdl* sdl) const
 {
     SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
     SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
     SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
 }
-#endif
+#endif*/
 
 void ElementaryObject::resetUpLeftCorner()
 {
@@ -148,22 +153,17 @@ bool ComplexObject::operator==(const ComplexObject& co)
     return false;
 }
 
-void ComplexObject::Show(const Sdl* sdl)
+void ComplexObject::Show(const Sdl* sdl) const
 {
     ElementaryObject::ShowObj(sdl);
-}
-
-#ifdef SHOW_COL_R
-    void ComplexObject::ShowColR(const Sdl* sdl, const int len)
-    {
+    #ifdef SHOW_COL_R
         SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
-        for (int r = 0; r < len; ++r)
+        for (int r = 0; r < collisionArrLen; ++r)
         {
             SDL_RenderDrawRect(sdl->Renderer(), &cr->Array()[r]);
         }
-        ElementaryObject::showCollisionMainRect(sdl);
-    }
-#endif
+    #endif
+}
 
 
 
@@ -393,9 +393,9 @@ bool NHero::isGonnaCrossLeft()
     #undef VELOCITY_X 
 }
 
-#ifdef SHOW_COL_R
+/*#ifdef SHOW_COL_R
     void NHero::ShowColR(const Sdl* sdl)
     {
         ComplexObject::ShowColR(sdl, re::heros::allR);
     }
-#endif
+#endif*/

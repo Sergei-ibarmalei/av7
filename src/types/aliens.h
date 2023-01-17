@@ -12,6 +12,7 @@ class PlainAlienABC: public ComplexObject
     virtual void setCr() = 0;
     void initLazerStart()      override;
     void recomputeLazerStart() override;
+    void show(const Sdl* sdl) const;
 
     public:
     PlainAlienABC(const texture_* t, const int arrLen, const plot* start,
@@ -20,7 +21,6 @@ class PlainAlienABC: public ComplexObject
     ~PlainAlienABC();
     PlainAlienABC& operator=(const PlainAlienABC&) = delete;
     virtual void Move() = 0;
-    void Show(const Sdl* sdl) const;
 
 };
 
@@ -37,6 +37,7 @@ class PlainAlien_t1: public PlainAlienABC
     PlainAlien_t1(const PlainAlien_t1&) = delete;
     PlainAlien_t1& operator=(const PlainAlien_t1&) = delete;
     void Move() override;
+    void Show(const Sdl* sdl);
 
 
 };

@@ -22,9 +22,9 @@ class ElementaryObject
     void resetUpLeftCorner_y(const int y);
     void ShowObj(const Sdl* sdl) const;
 
-#ifdef SHOW_COL_R
+/*#ifdef SHOW_COL_R
     void showCollisionMainRect(const Sdl* sdl) const;
-#endif
+#endif*/
 
     public:
     ElementaryObject(const texture_* t);
@@ -62,9 +62,9 @@ class ComplexObject: public ElementaryObject
     virtual void setCr() = 0;
     virtual void initLazerStart() = 0;
     virtual void recomputeLazerStart() = 0;
-    #ifdef SHOW_COL_R
+    /*#ifdef SHOW_COL_R
         void ShowColR(const Sdl* sdl, const int len);
-    #endif
+    #endif*/
 
     public:
     ComplexObject(const texture_* t, const int arrLen);
@@ -76,7 +76,7 @@ class ComplexObject: public ElementaryObject
     plot* GetLazerStart() const {return lazerStart;}
     virtual void Move() = 0;
 
-    void Show(const Sdl* sdl);
+    void Show(const Sdl* sdl) const;
 
 };
 
@@ -120,9 +120,9 @@ class NHero: public ComplexObject
     void Move() override;
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
-    #ifdef SHOW_COL_R
+    /*#ifdef SHOW_COL_R
         void ShowColR(const Sdl* sdl);
-    #endif
+    #endif*/
 };
 
 

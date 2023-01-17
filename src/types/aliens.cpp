@@ -49,12 +49,9 @@ void PlainAlienABC::recomputeLazerStart()
     #undef  PLAINALIEN_H_HALF
 }
 
-void PlainAlienABC::Show(const Sdl* sdl) const
+void PlainAlienABC::show(const Sdl* sdl) const
 {
-    ElementaryObject::ShowObj(sdl);
-    #ifdef SHOW_COL_R
-        ElementaryObject::showCollisionMainRect(sdl);
-    #endif
+    ComplexObject::Show(sdl);
 }
 
 
@@ -76,6 +73,11 @@ PlainAlien_t1::~PlainAlien_t1()
 
 }
 
+void PlainAlien_t1::Show(const Sdl* sdl)
+{
+    PlainAlienABC::Show(sdl);
+}
+
 void PlainAlien_t1::setCr()
 {
     #define CR ComplexObject::cr->Array()
@@ -87,7 +89,7 @@ void PlainAlien_t1::setCr()
 
 
     CR[ONE].x = MAINR_UPLEFT_X + 32;
-    CR[ONE].y = 0;
+    CR[ONE].y = MAINR_UPLEFT_Y;
     CR[ONE].w = 39;
     CR[ONE].h = 31;
 
@@ -113,6 +115,7 @@ void PlainAlien_t1::Move()
 {
     //if (ElementaryObject::OnScreen() == false) return;
     ElementaryObject::resetUpLeftCorner();
+    setCr();
     if (hasCrossedLeft(ElementaryObject::GetMainRect_x()))
     {
         ElementaryObject::ResetOnScreen(false);

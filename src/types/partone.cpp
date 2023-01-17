@@ -25,9 +25,9 @@ bool GameClass::partOne(log_::Log& log)
         objectsStore->MoveHeroLazers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
-        #ifdef SHOW_COL_R
+        /*#ifdef SHOW_COL_R
             nHero->ShowColR(sdl_);
-        #endif
+        #endif*/
 
 
         if (status.pause) pauseIsPressed();
