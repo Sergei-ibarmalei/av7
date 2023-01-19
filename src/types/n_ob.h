@@ -153,6 +153,8 @@ class ArrStorageABC
 
     public:
     ArrStorageABC(const int capacity);
+    ArrStorageABC(const ArrStorageABC&) = delete;
+    ArrStorageABC& operator=(const ArrStorageABC&) = delete;
     virtual ~ArrStorageABC() {}
     bool Status() const {return init;}
     void Clear();
@@ -162,6 +164,17 @@ class ArrStorageABC
     int GetCounter()  const {return counter;}
     bool Remove(const int index);
 
+};
+
+class HeroLazerStorage: public ArrStorageABC
+{
+    public:
+    explicit HeroLazerStorage(const int capacity);
+    ~HeroLazerStorage();
+    HeroLazerStorage(const HeroLazerStorage&) = delete;
+    HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
+    LongLazer* operator[](const int index) const;
+    bool Push(ElementaryObject* ob) override;
 };
 
 

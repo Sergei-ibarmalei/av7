@@ -454,4 +454,36 @@ bool ArrStorageABC::Remove(const int index)
 
 
 
+HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
+{
+    if (init == false) return;
+    storage = new ElementaryObject*[capacity];
+}
+
+HeroLazerStorage::~HeroLazerStorage()
+{
+    for (int i = 0; i < counter; ++i)
+    {
+        delete storage[i];
+        storage[i] = nullptr;
+    }
+    delete [] storage;
+    storage = nullptr;
+}
+
+LongLazer* HeroLazerStorage::operator[](const int index) const
+{
+    if (index < 0 || index >= counter) return nullptr;
+    return static_cast<LongLazer*>(storage[index]);
+}
+
+bool HeroLazerStorage::Push(ElementaryObject* ob)
+{
+    if (counter >= storageCapacity) return false;
+    storage[counter++] = static_cast<LongLazer*>(ob);
+    return true;
+}
+
+
+
 
