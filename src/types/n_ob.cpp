@@ -403,3 +403,55 @@ bool NHero::isGonnaCrossLeft()
 }
 
 
+
+
+ArrStorageABC::ArrStorageABC(const int capacity)
+{
+    if (capacity <= 0)
+    {
+        init = false; return;
+    }
+    storageCapacity = capacity;
+    counter = 0;
+}
+
+
+/*Полная очистка storage*/
+void ArrStorageABC::Clear()
+{
+    if (counter >= storageCapacity) counter = storageCapacity-1;
+    if (counter < 0) counter = 0;
+    for (int i = 0; i < counter; ++i)
+    {
+        delete storage[i];
+        storage[i] = nullptr;
+    }
+    counter = 0;
+}
+
+/*Смещение всех значений storage после удаления элем. под номером indexClean*/
+bool ArrStorageABC::cleaning(const int indexClean)
+{
+    if (indexClean < 0 || indexClean >= storageCapacity) return false;
+    if (indexClean == (storageCapacity - 1)) return true;
+
+    for (int i = indexClean; i < (storageCapacity-1); ++i)
+    {
+        storage[i] = storage[i+1];
+        storage[i+1] = nullptr;
+    }
+    counter -= 1;
+    return true;
+}
+
+bool ArrStorageABC::Remove(const int index)
+{
+    if (index < 0 || index >= storageCapacity) return false;
+    delete storage[index];
+    storage[index] = nullptr;
+    return cleaning(index);
+}
+
+
+
+

@@ -142,14 +142,29 @@ class LongLazer: public ElementaryObject
 };
 
 
-class ArrStorage_ABC
+class ArrStorageABC
 {
     protected:
-    int storage_capacity;
-    
+    bool init {true};
+    int storageCapacity;
+    int counter;
+    ElementaryObject** storage;
+    bool cleaning(const int indexClean);
 
     public:
+    ArrStorageABC(const int capacity);
+    virtual ~ArrStorageABC() {}
+    bool Status() const {return init;}
+    void Clear();
+    virtual bool Push(ElementaryObject* ob) = 0;
+
+    int GetCapacity() const {return storageCapacity;}
+    int GetCounter()  const {return counter;}
+    bool Remove(const int index);
+
 };
+
+
 
 
 
