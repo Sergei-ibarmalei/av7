@@ -1,5 +1,5 @@
-#ifndef CHECKING_H
-#define CHECKING_H
+#ifndef CHECKCROSSING_H
+#define CHECKCROSSING_H
 
 
 #include "../consts/gameconsts.h"

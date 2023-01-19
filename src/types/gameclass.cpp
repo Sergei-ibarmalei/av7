@@ -50,17 +50,17 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
         gameClassStatus = false;
         return;
     }
-    objectsStore = new (std::nothrow) ObjectsStore(&collection);
+    /*objectsStore = new (std::nothrow) ObjectsStore(&collection);
     if (objectsStore->Status() == false)
     {
         gameClassStatus = false; return;
-    }
+    }*/
 
-    gameFleets = new (std::nothrow) Fleets(&collection);
+    /*gameFleets = new (std::nothrow) Fleets(&collection);
     if (!gameFleets || !gameFleets->Status())
     {
         gameClassStatus = false; return;
-    }
+    }*/
 
 
 
@@ -152,11 +152,11 @@ GameClass::~GameClass()
     delete[] pause;
 
     delete nHero; nHero = nullptr;
-    delete objectsStore;
-    objectsStore = nullptr;
+    //delete objectsStore;
+    //objectsStore = nullptr;
 
-    delete gameFleets;
-    gameFleets = nullptr;
+    //delete gameFleets;
+    //gameFleets = nullptr;
 }
 
 void GameClass::initStatus()
@@ -219,7 +219,7 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    objectsStore->MakeHeroLazer(nHero->LazerStart());
+                    //objectsStore->MakeHeroLazer(nHero->LazerStart());
                 }
                  
                 default: {}
@@ -237,7 +237,7 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         nHero->Show(sdl_);
-        objectsStore->ShowHeroLazers(sdl_);
+        //objectsStore->ShowHeroLazers(sdl_);
         borderSky_show_moving();
 
         gameInfo->ShowGameInfo(sdl_, status);

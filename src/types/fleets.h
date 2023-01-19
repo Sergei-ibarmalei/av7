@@ -3,11 +3,11 @@
 
 #include "aliens.h"
 
-class Alien_t1_fleetList: public E_listABC
+/*class Alien_t1_fleetList: public E_listABC
 {
     private:
-    bool push(ElementaryObject* ob) override;
     void showAlien(const Sdl* sdl, obNode* first);
+    void moveNode(obNode* first) override;
 
     public:
     Alien_t1_fleetList(const tc* collection):E_listABC(collection)
@@ -21,17 +21,15 @@ class Alien_t1_fleetList: public E_listABC
         //std::cout << "In Alien_t1_fleetList dtor.\n";
     }
     void Show(const Sdl* sdl) override;
-    obNode* GetFirstForAction() {return Alien_t1_fleetList::first;}
     bool Push(ElementaryObject* ob);
-    //void Move() - 
-    // не определяем, воспользуемся позже при помощи
-    // obNode* GetfirstForAction()
+    obNode* GetFirstForAction() {return Alien_t1_fleetList::first;}
+    void Move() override;
 
-};
-
+};*/
 
 
-class Fleets
+
+/*class Fleets
 {
     protected:
     bool init {true};
@@ -47,7 +45,8 @@ class Fleets
     bool Status() const {return init;}
     obNode* Alien_t1_fleet_first();
     void Alien_t1_Show(const Sdl* sdl);
-};
+    void FleetMove();
+};*/
 
 
 

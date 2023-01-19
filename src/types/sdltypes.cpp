@@ -77,11 +77,11 @@ CRC::CRC(const CRC& crc)
 
 
 
-bool CRC::comparison(rect_* f, const int len, rect_* s)
+bool CRC::comparison(const rect_* f, const int len, const rect_* s) const
 {
     for (int rect = 0; rect < len; ++rect)
     {
-        if (f[rect] ==s[rect]) return true;
+        if (f[rect] == s[rect]) return true;
     }
     return false;
 }
@@ -90,6 +90,16 @@ bool CRC::operator==(const CRC& crc)
 {
     return (arrLen < crc.arrLen)? comparison(array, arrLen, crc.array):
                                   comparison(crc.array, crc.arrLen, array);
+}
+
+bool CRC::operator==(rect_* r)
+{
+    return comparison(r, 1, array);
+}
+
+bool CRC::operator==(const rect_ r)
+{
+    return comparison(&r, 1, array);
 }
 
 CRC& CRC::operator=(const CRC& crc)

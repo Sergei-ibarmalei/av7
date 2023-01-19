@@ -18,16 +18,15 @@ bool GameClass::partOne(log_::Log& log)
         check_key_events();
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();
-        Move_at1_fleet(this);
         nHero->Show(sdl_);
-        gameFleets->Alien_t1_Show(sdl_); 
-        objectsStore->ShowHeroLazers(sdl_);
-        objectsStore->MoveHeroLazers();
+        //gameFleets->Alien_t1_Show(sdl_);
+        //gameFleets->FleetMove(); 
+        //objectsStore->ShowHeroLazers(sdl_);
+        //objectsStore->MoveHeroLazers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
-        /*#ifdef SHOW_COL_R
-            nHero->ShowColR(sdl_);
-        #endif*/
+
+        //Checks_lazer_plainAlien(this);
 
 
         if (status.pause) pauseIsPressed();

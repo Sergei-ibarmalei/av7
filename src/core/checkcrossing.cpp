@@ -1,4 +1,4 @@
-#include "checking.h"
+#include "checkcrossing.h"
 
 bool isGonnaCrossUp_check(const int mainrect_up_y, const int velocity_y)
 {
@@ -27,5 +27,5 @@ bool hasCrossedLeft(const int mainrect_x)
 
 bool hasCrossedRight(const int mainrect_x)
 {
-    return mainrect_x < LEFT_BORDER_X;
+    return mainrect_x < RIGHT_BORDER_X;
 }

@@ -1,6 +1,9 @@
 #include "n_ob.h"
 
-E_listABC::E_listABC(const tc* collection)
+#define toLongLazer static_cast<LongLazer*>
+
+
+/*E_listABC::E_listABC(const tc* collection)
 {
     //std::cout << "In E_listABC ctor.\n";
     tcollection = collection;
@@ -19,16 +22,22 @@ E_listABC::~E_listABC()
         first = first->next;
         delete tmp;
     }
-}
+}*/
 
-
-void HeroLazersList::Show(const Sdl* sdl)
+/*obNode* E_listABC::deleteItem(obNode* first, obNode* root)
 {
-    showLazer(sdl, first);
+    obNode* temp;
+    temp = root;
+    while (temp->next != first)
+    {
+        temp = temp->next;
+    }
+    temp->next = first->next;
+    delete first;
+    return temp;
 }
 
-//в начало списка
-bool HeroLazersList::push(ElementaryObject* ob)
+bool E_listABC::push(ElementaryObject* ob)
 {
     obNode* tmp = new(std::nothrow) obNode;
     if (!tmp) return false;
@@ -37,20 +46,29 @@ bool HeroLazersList::push(ElementaryObject* ob)
     first = tmp;
     root = first;
     return true;
+}*/
+
+
+
+/*void HeroLazersList::Show(const Sdl* sdl)
+{
+    showLazer(sdl, first);
 }
+
+
 
 void HeroLazersList::showLazer(const Sdl* sdl, obNode* first)
 {
     if (!first) return;
-    static_cast<const LongLazer*>(first->object)->Show(sdl);
+    toLongLazer(first->object)->Show(sdl);
     showLazer(sdl, first->next);
 }
 
 bool HeroLazersList::Push(const plot* start)
 {
-    #define PREVLAZER_X static_cast<LongLazer*>(E_listABC::\
+    #define PREVLAZER_X toLongLazer(E_listABC::\
                         GetFirst()->object)->GetLazer_x()
-    #define LAZER_W static_cast<LongLazer*>(E_listABC::\
+    #define LAZER_W toLongLazer(E_listABC::\
                         GetFirst()->object)->GetLazer_w()
 
     if (first)
@@ -68,38 +86,30 @@ bool HeroLazersList::Push(const plot* start)
 
 void HeroLazersList::Move()
 {
-    moveLazer(first);
+    moveNode(first);
 }
 
-obNode* deletelem(obNode* first, obNode* root)
-{
-    obNode* temp;
-    temp = root;
-    while (temp->next != first)
-    {
-        temp = temp->next;
-    }
-    temp->next = first->next;
-    delete first;
-    return temp;
-}
 
-void HeroLazersList::moveLazer(obNode* first)
+
+void HeroLazersList::moveNode(obNode* first)
 {
     while (first)
     {
-        static_cast<LongLazer*>(first->object)->Move();
-        if (static_cast<LongLazer*>(first->object)->OnScreen() == false)
+        toLongLazer(first->object)->Move();
+        if ( (first->IsAlive == false) || (first->object)->OnScreen() == false)
         {
-            if (first == root)
+            if (HeroLazersList::first == HeroLazersList::root)
             {
+                std::cout << "by delet lazer first: " << (void*)first << std::endl;
                 delete E_listABC::first;
                 E_listABC::root = E_listABC::first = nullptr;
                 return;
             }
-            first = deletelem(first, root);
+            first = deleteItem(first, root);
             continue;
         }
         first = first->next;
     }
-}
+}*/
+
+#undef toLongLazer

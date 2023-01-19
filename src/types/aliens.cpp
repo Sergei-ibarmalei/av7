@@ -1,5 +1,5 @@
 #include "aliens.h"
-#include "../core/checking.h"
+#include "../core/checkcrossing.h"
 
 
 PlainAlienABC::PlainAlienABC(const texture_* t, 
@@ -113,12 +113,17 @@ void PlainAlien_t1::setCr()
 
 void PlainAlien_t1::Move()
 {
-    //if (ElementaryObject::OnScreen() == false) return;
     ElementaryObject::resetUpLeftCorner();
     setCr();
-    if (hasCrossedLeft(ElementaryObject::GetMainRect_x()))
+    //Если вышла на экран
+    if (hasCrossedRight(ElementaryObject::GetMainRect_x()))
+    {
+        ElementaryObject::ResetOnScreen(true);
+    }
+    //Если вышли за левую границу экрана, то удаляемся
+    if (hasCrossedLeft(ElementaryObject::GetMainRectW()))
     {
         ElementaryObject::ResetOnScreen(false);
-        return;
+        Gone() = true;
     }
 }

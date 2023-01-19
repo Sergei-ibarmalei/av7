@@ -1,11 +1,12 @@
 #include "n_ob.h"
-#include "../core/checking.h"
+#include "../core/checkcrossing.h"
 
 
 
 ElementaryObject::~ElementaryObject()
 {
     //std::cout << "In ElementaryObject dtor.\n";
+
     obj_texture->texture = nullptr;
     delete obj_texture;
     obj_texture = nullptr;
@@ -72,14 +73,6 @@ void ElementaryObject::ShowObj(const Sdl* sdl) const
     #endif
 }
 
-/*#ifdef SHOW_COL_R
-void ElementaryObject::showCollisionMainRect(const Sdl* sdl) const
-{
-    SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
-    SDL_RenderDrawRect(sdl->Renderer(), &obj_texture->main_rect);
-    SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);
-}
-#endif*/
 
 void ElementaryObject::resetUpLeftCorner()
 {
@@ -113,6 +106,7 @@ ComplexObject::ComplexObject(const ComplexObject& co): ElementaryObject(co)
 
 ComplexObject::~ComplexObject()
 {
+    //std::cout << "In ComplexObject dtor.\n";
     delete cr;
     cr = nullptr;
 
@@ -127,6 +121,7 @@ ComplexObject::~ComplexObject()
 
 ComplexObject::ComplexObject(const texture_* t, const int al): ElementaryObject(t)
 {
+    //std::cout << "In ComplexObject ctor.\n";
     if (al <= 0)
     {
         ElementaryObject::init = false; return;
@@ -141,7 +136,21 @@ ComplexObject::ComplexObject(const texture_* t, const int al): ElementaryObject(
 
 bool ComplexObject::operator==(const ElementaryObject& eo)
 {
-    return ElementaryObject::obj_texture->main_rect == eo.MainRect();
+    //return ElementaryObject::obj_texture->main_rect == eo.MainRect();
+    if (ElementaryObject::obj_texture->main_rect ==eo.MainRect())
+    {
+        return *cr == &eo.MainRect();
+    }
+    return false;
+}
+
+bool ComplexObject::operator==(const ElementaryObject* eo)
+{
+    if (ElementaryObject::obj_texture->main_rect == eo->MainRect())
+    {
+        return *cr == eo->MainRect();
+    }
+    return false;
 }
 
 bool ComplexObject::operator==(const ComplexObject& co)
@@ -393,9 +402,4 @@ bool NHero::isGonnaCrossLeft()
     #undef VELOCITY_X 
 }
 
-/*#ifdef SHOW_COL_R
-    void NHero::ShowColR(const Sdl* sdl)
-    {
-        ComplexObject::ShowColR(sdl, re::heros::allR);
-    }
-#endif*/
+

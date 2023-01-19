@@ -7,6 +7,7 @@ class PlainAlienABC: public ComplexObject
 {
     protected:
     rect_* lazerMainRect;
+    bool isGone {false};
 
     void setToStartPos(const int x, const int y) override;
     virtual void setCr() = 0;
@@ -38,6 +39,8 @@ class PlainAlien_t1: public PlainAlienABC
     PlainAlien_t1& operator=(const PlainAlien_t1&) = delete;
     void Move() override;
     void Show(const Sdl* sdl);
+
+    bool& Gone() {return isGone;} 
 
 
 };

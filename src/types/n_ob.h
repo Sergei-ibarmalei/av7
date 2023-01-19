@@ -22,9 +22,6 @@ class ElementaryObject
     void resetUpLeftCorner_y(const int y);
     void ShowObj(const Sdl* sdl) const;
 
-/*#ifdef SHOW_COL_R
-    void showCollisionMainRect(const Sdl* sdl) const;
-#endif*/
 
     public:
     ElementaryObject(const texture_* t);
@@ -49,6 +46,7 @@ class ElementaryObject
     int GetMainRectH_Half() const {return obj_texture->main_rect.y+
                                 obj_texture->main_rect.h / 2;}
     plot* Velocities() {return obj_velocities;}
+    rect_* GetMainRect() const {return &obj_texture->main_rect;}
 };
 
 /*Сложный класс для объектов с прямоугольниками пересечений*/
@@ -62,14 +60,12 @@ class ComplexObject: public ElementaryObject
     virtual void setCr() = 0;
     virtual void initLazerStart() = 0;
     virtual void recomputeLazerStart() = 0;
-    /*#ifdef SHOW_COL_R
-        void ShowColR(const Sdl* sdl, const int len);
-    #endif*/
 
     public:
     ComplexObject(const texture_* t, const int arrLen);
     ComplexObject& operator=(const ComplexObject& ) = delete;
     bool operator==(const ElementaryObject& eo);
+    bool operator==(const ElementaryObject* eo);
     bool operator==(const ComplexObject& co);
     ~ComplexObject();
     ComplexObject(const ComplexObject& co);
@@ -120,9 +116,6 @@ class NHero: public ComplexObject
     void Move() override;
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
-    /*#ifdef SHOW_COL_R
-        void ShowColR(const Sdl* sdl);
-    #endif*/
 };
 
 
@@ -149,99 +142,17 @@ class LongLazer: public ElementaryObject
 };
 
 
-
-struct ObjectNode
-{
-    ElementaryObject* object;
-    struct ObjectNode* next;
-    ObjectNode(): object(nullptr), next(nullptr) 
-    {
-        //std::cout << "In ObjectNode ctor.\n";
-    }
-    ObjectNode(const ObjectNode& ) = delete;
-    ObjectNode& operator=(const ObjectNode& ) = delete;
-    ~ObjectNode()
-    {
-        //std::cout << "In ObjectNode dtor.\n";
-        delete object;
-    }
-};
-
-using obNode = ObjectNode;
-
-/*Абстрактный класс - односвязный список объектов ElementaryObject*/
-class E_listABC
+class ArrStorage_ABC
 {
     protected:
-    obNode* first;
-    obNode* last;
-    obNode* root;
-    const tc* tcollection;
-
-    //void push(ElementaryObject* ob);
-    virtual bool push(ElementaryObject* ob) = 0;
+    int storage_capacity;
     
 
     public:
-    E_listABC(const tc* collection);
-    E_listABC(const E_listABC& ) = delete;
-    E_listABC& operator=(const E_listABC& ) = delete;
-    const obNode* GetFirst() const {return first;}
-    
-    virtual ~E_listABC();
-    virtual void Show(const Sdl* sdl) = 0;
-
-};
-
-/*Односвязный список для лазеров героя*/
-class HeroLazersList: public E_listABC
-{
-    private:
-    void showLazer(const Sdl* sdl, obNode* first);
-    void moveLazer(obNode* first);
-    bool push(ElementaryObject* ob) override;
-
-    public:
-    HeroLazersList(const tc* collection): E_listABC(collection) 
-    {
-        //std::cout << "In HeroLazerList ctor.\n";
-    }
-    HeroLazersList(const HeroLazersList& ) = delete;
-    HeroLazersList& operator=(const HeroLazersList& ) = delete;
-    ~HeroLazersList()
-    {
-        //std::cout << "In HeroLazerList dtor.\n";
-    }
-
-    void Show(const Sdl* sdl) override;
-    bool Push(const plot* start);
-    void Move();
-
 };
 
 
 
-
-
-/*Класс - хранилище списков объектов ElementaryObject*/
-class ObjectsStore
-{
-    private:
-    bool init {true};
-    HeroLazersList* heroLazers {nullptr};
-
-
-    public:
-    ObjectsStore(const tc* collection);
-    ~ObjectsStore();
-    ObjectsStore(const ObjectsStore& ) = delete;
-    ObjectsStore& operator=(const ObjectsStore& ) = delete;
-    bool Status() const {return init;}
-
-    void MakeHeroLazer(const plot* start);
-    void ShowHeroLazers(const Sdl* sdl);
-    void MoveHeroLazers();
-};
 
 
 #endif

@@ -14,14 +14,14 @@ set(SOURCES
     src/types/gameInfoClass.cpp
     src/types/longlazer.cpp
     src/types/n_ob.cpp
-    src/types/n_oblist.cpp
-    src/types/elist.cpp
-    src/types/aliens.cpp
-    src/types/fleets.cpp
-    src/types/movingfleets.cpp
+    #src/types/n_oblist.cpp
+    #src/types/elist.cpp
+    #src/types/aliens.cpp
+    #src/types/fleets.cpp
     src/core/core.cpp
     src/core/rand.cpp
-    src/core/checking.cpp
+    src/core/checkcrossing.cpp
+    #src/core/checklazercollision.cpp
     src/main.cpp)
 
 
@@ -36,4 +36,4 @@ target_link_libraries(${PROJECT_NAME}
     SDL2_ttf)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-$<$<NOT:$<C_COMPILER_ID:MSVC>>:  -Wall -Wextra -Wpedantic>)
+$<$<NOT:$<C_COMPILER_ID:MSVC>>:-O3  -Wall -Wextra -Wpedantic>)

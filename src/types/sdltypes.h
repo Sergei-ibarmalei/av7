@@ -12,12 +12,30 @@
 struct Rect: public SDL_Rect
 {
     Rect() {x = y = w = h = 0;}
-    bool operator==(const struct Rect& r)
+    bool operator==(const struct Rect& r) const
     {
         if ((y+h) <= r.y)      return false;
         if (y >= (r.y+r.h))    return false;
         if ((x+w) <= r.x)      return false;
         if (x>= (r.x+r.w))     return false;
+        return true;
+    }
+
+    bool operator==(struct Rect& r) const
+    {
+        if ((y+h) <= r.y)      return false;
+        if (y >= (r.y+r.h))    return false;
+        if ((x+w) <= r.x)      return false;
+        if (x>= (r.x+r.w))     return false;
+        return true;
+    }
+
+    bool operator==(struct Rect* r)
+    {
+        if ((y+h) <= r->y)       return false;
+        if (y >= (r->y + r->h))  return false;
+        if ((x+w) <= r->x)       return false;
+        if (x>= (r->x + r->w))   return false;
         return true;
     }
 };
@@ -64,13 +82,20 @@ class CRC
     rect_* array;
     int    arrLen;
     bool   init {true};
-    bool   comparison(rect_* first, const int len, rect_* second);
+    bool   comparison(const rect_* first, const int len, const rect_* second) const;
 
     public:
     CRC(const int len);
     CRC(const CRC& crc);
     CRC& operator=(const CRC& crc);
     bool operator==(const CRC& crc);
+    bool operator==(rect_* r);
+
+
+    bool operator==(const rect_ r);
+
+
+    
     rect_* Array() {return array;}
     bool Status() const {return init;}
 

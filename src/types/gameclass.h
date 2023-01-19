@@ -29,8 +29,8 @@ class GameClass
     bool     gameClassStatus = true;
 
     NHero* nHero;
-    ObjectsStore* objectsStore;
-    Fleets*       gameFleets;
+    //ObjectsStore* objectsStore;
+    //Fleets*       gameFleets;
     
 
 
@@ -56,7 +56,8 @@ class GameClass
 
     bool flow(log_::Log& log);
 
-    friend void Move_at1_fleet(GameClass* gc);
+    //friend void Checks_lazer_plainAlien(GameClass* gc);
+
     
 };
 
