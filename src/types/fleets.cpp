@@ -1,8 +1,25 @@
 #include "fleets.h"
 #include "../core/rand.h"
 
-#define toPlainAlien_t1 static_cast<PlainAlien_t1*>
+/* AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity): 
+                                                ArrStorageABC(capacity)
+{
+    if (init == false) return;
+    //storage = new ElementaryObject*[capacity] {nullptr};
+}
 
+PlainAlien_t1* AlienFleet_oneStorage::operator[](const int index)
+{
+    if (index < 0 || index >= counter) return nullptr;
+    return static_cast<PlainAlien_t1*>(storage[index]);
+}
+
+bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
+{
+    if (counter >= storageCapacity) return false;
+    storage[counter++] = static_cast<PlainAlien_t1*>(ob);
+    return true;
+} */
 
 
 /*bool Alien_t1_fleetList::Push(ElementaryObject* ob)
@@ -127,5 +144,3 @@ void Fleets::FleetMove()
     alien_t1_fleet->Move();
 }*/
 
-
-#undef toPlainAlien_t1

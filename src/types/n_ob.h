@@ -32,7 +32,10 @@ class ElementaryObject
     virtual ~ElementaryObject();
     bool Status() const {return init;}
     virtual void Move() = 0;
+
     rect_& MainRect() const {return obj_texture->main_rect;}
+    rect_* GetMainRect() const {return &obj_texture->main_rect;}
+
     bool OnScreen() const {return isOnScreen;}
     void ResetOnScreen(bool visibility) {isOnScreen = visibility;}
     int  GetMainRect_x() const {return obj_texture->main_rect.x;}
@@ -46,7 +49,6 @@ class ElementaryObject
     int GetMainRectH_Half() const {return obj_texture->main_rect.y+
                                 obj_texture->main_rect.h / 2;}
     plot* Velocities() {return obj_velocities;}
-    rect_* GetMainRect() const {return &obj_texture->main_rect;}
 };
 
 /*Сложный класс для объектов с прямоугольниками пересечений*/
@@ -118,6 +120,48 @@ class NHero: public ComplexObject
     bool Status() const {return ElementaryObject::Status();}
 };
 
+class PlainAlienABC: public ComplexObject
+{
+    protected:
+    rect_* lazerMainRect;
+    bool isGone {false};
+
+    void setToStartPos(const int x, const int y) override;
+    virtual void setCr() = 0;
+    void initLazerStart()      override;
+    void recomputeLazerStart() override;
+    void show(const Sdl* sdl) const;
+
+    public:
+    PlainAlienABC(const texture_* t, const int arrLen, const plot* start,
+                  const texture_* lazer);
+    PlainAlienABC(const PlainAlienABC&) = delete;
+    ~PlainAlienABC();
+    PlainAlienABC& operator=(const PlainAlienABC&) = delete;
+    virtual void Move() = 0;
+
+};
+
+
+
+class PlainAlien_t1: public PlainAlienABC
+{
+    private:
+    void setCr();
+
+    public:
+    PlainAlien_t1(const texture_* t, const plot* start, const texture_* lazer);
+    ~PlainAlien_t1();
+    PlainAlien_t1(const PlainAlien_t1&) = delete;
+    PlainAlien_t1& operator=(const PlainAlien_t1&) = delete;
+    void Move() override;
+    void Show(const Sdl* sdl);
+
+    bool& Gone() {return isGone;} 
+
+
+};
+
 
 class LongLazer: public ElementaryObject
 {
@@ -128,10 +172,7 @@ class LongLazer: public ElementaryObject
     LongLazer(const plot* start, dir::direction d, const texture_* t);
     LongLazer& operator=(const LongLazer& ) = delete;
     LongLazer(const LongLazer& ) = delete;
-    ~LongLazer()
-    {
-        //std::cout << "In LongLazer dtor.\n";
-    }
+    ~LongLazer(){}
     void Move();
     int GetLazer_x() const;
     int GetLazer_y() const;
@@ -155,14 +196,15 @@ class ArrStorageABC
     ArrStorageABC(const int capacity);
     ArrStorageABC(const ArrStorageABC&) = delete;
     ArrStorageABC& operator=(const ArrStorageABC&) = delete;
-    virtual ~ArrStorageABC() {}
+    virtual ~ArrStorageABC();
     bool Status() const {return init;}
     void Clear();
     virtual bool Push(ElementaryObject* ob) = 0;
 
     int GetCapacity() const {return storageCapacity;}
-    int GetCounter()  const {return counter;}
+    int& GetCounter()   {return counter;}
     bool Remove(const int index);
+    void Sort(const int arrLen, int& counter);
 
 };
 
@@ -170,14 +212,54 @@ class HeroLazerStorage: public ArrStorageABC
 {
     public:
     explicit HeroLazerStorage(const int capacity);
-    ~HeroLazerStorage();
+    ~HeroLazerStorage() {}
     HeroLazerStorage(const HeroLazerStorage&) = delete;
     HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
-    LongLazer* operator[](const int index) const;
+    LongLazer* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
+    void Move(bool& flag_toStartSort);
+    void Show(const Sdl* sdl) const;
 };
 
 
+class AlienFleet_oneStorage: public ArrStorageABC
+{
+    protected:
+    public:
+    explicit AlienFleet_oneStorage(const int capacity);
+    ~AlienFleet_oneStorage() {}
+    AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
+    AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
+    PlainAlien_t1* operator[](const int index);
+    bool Push(ElementaryObject* ob) override;
+
+};
+
+
+
+class ObjectsStore
+{
+    private:
+    bool init {true};
+    const tc* tcollection;
+    HeroLazerStorage* heroLazerStorage;
+    
+    
+
+    public:
+    ObjectsStore(const tc* collection);
+    ~ObjectsStore();
+    ObjectsStore(const ObjectsStore&) = delete;
+    ObjectsStore& operator=(const ObjectsStore&) = delete;
+    bool MakeHeroLazer(const plot* start);
+    void MoveHeroLazers();
+    void ShowHeroLazers(const Sdl* sdl) const;
+
+
+    bool Status() const {return init;}
+
+
+};
 
 
 

@@ -1,9 +1,9 @@
 #ifndef ALIENS_H
 #define ALIENS_H
 
-#include "n_ob.h"
+//#include "n_ob.h"
 
-class PlainAlienABC: public ComplexObject
+/* class PlainAlienABC: public ComplexObject
 {
     protected:
     rect_* lazerMainRect;
@@ -44,5 +44,5 @@ class PlainAlien_t1: public PlainAlienABC
 
 
 };
-
+ */
 #endif

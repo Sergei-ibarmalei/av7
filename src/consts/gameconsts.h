@@ -6,6 +6,7 @@
 #define HERO_LIVES 3
 #define HERO_VELOCITY_X 3
 #define HERO_VELOCITY_Y 3
+#define HERO_LAZERSTORAGE_CAP 5
 
 #define BORDER_THICKNESS 5
 #define UP_BORDER_X 0

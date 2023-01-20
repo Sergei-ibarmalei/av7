@@ -9,9 +9,9 @@
 
 
 //#include "ob.h"
-//#include "n_ob.h"
+#include "n_ob.h"
 //#include "aliens.h"
-#include "fleets.h"
+//#include "fleets.h"
 
 
 class GameClass
@@ -29,8 +29,7 @@ class GameClass
     bool     gameClassStatus = true;
 
     NHero* nHero;
-    //ObjectsStore* objectsStore;
-    //Fleets*       gameFleets;
+    ObjectsStore* objectsStore;
     
 
 
@@ -56,7 +55,6 @@ class GameClass
 
     bool flow(log_::Log& log);
 
-    //friend void Checks_lazer_plainAlien(GameClass* gc);
 
     
 };

@@ -2,7 +2,7 @@
 #include "../core/checkcrossing.h"
 
 
-PlainAlienABC::PlainAlienABC(const texture_* t, 
+/* PlainAlienABC::PlainAlienABC(const texture_* t, 
                              const int arrLen, 
                              const plot* start,
                              const texture_* lazer): ComplexObject(t, arrLen)
@@ -116,14 +116,14 @@ void PlainAlien_t1::Move()
     ElementaryObject::resetUpLeftCorner();
     setCr();
     //Если вышла на экран
-    if (hasCrossedRight(ElementaryObject::GetMainRect_x()))
+    if (hasCrossedRight_fromOut(ElementaryObject::GetMainRect_x()))
     {
         ElementaryObject::ResetOnScreen(true);
     }
     //Если вышли за левую границу экрана, то удаляемся
-    if (hasCrossedLeft(ElementaryObject::GetMainRectW()))
+    if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
     {
         ElementaryObject::ResetOnScreen(false);
         Gone() = true;
     }
-}
+} */

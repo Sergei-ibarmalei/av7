@@ -20,12 +20,22 @@ bool isGonnaCrossLeft_check(const int mainrect_left, const int velocity_x)
     return (mainrect_left + velocity_x) < LEFT_BORDER_X + LEFT_BORDER_W;
 }
 
-bool hasCrossedLeft(const int mainrect_x)
+
+/*Пересечение ЛЕВОЙ границы с внутренней стороны*/
+bool hasCrossedLeft_fromScreen(const int x)
 {
-    return mainrect_x < LEFT_BORDER_X + LEFT_BORDER_W;
+    return x < LEFT_BORDER_X + LEFT_BORDER_W;
 }
 
-bool hasCrossedRight(const int mainrect_x)
+
+/*Пересечение ПРАВОЙ границы с внешней стороны*/
+bool hasCrossedRight_fromOut(const int x)
 {
-    return mainrect_x < RIGHT_BORDER_X;
+    return x < RIGHT_BORDER_X;
+}
+
+/*Пересечение ПРАВОЙ границы с внутренней стороын*/
+bool hasCrossedRight_fromScreen(const int x)
+{
+    return x > RIGHT_BORDER_X;
 }

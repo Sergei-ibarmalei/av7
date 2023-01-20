@@ -3,6 +3,20 @@
 
 #include "aliens.h"
 
+
+/* class AlienFleet_oneStorage: public ArrStorageABC
+{
+    protected:
+    public:
+    explicit AlienFleet_oneStorage(const int capacity);
+    ~AlienFleet_oneStorage() {}
+    AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
+    AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
+    PlainAlien_t1* operator[](const int index);
+    bool Push(ElementaryObject* ob) override;
+
+}; */
+
 /*class Alien_t1_fleetList: public E_listABC
 {
     private:

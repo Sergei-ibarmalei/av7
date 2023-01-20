@@ -1,13 +1,14 @@
 #include "n_ob.h"
+#include "../core/checkcrossing.h"
 
 LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
     ElementaryObject(t)
 {
-    //std::cout << "In LongLazer ctor.\n";
     #define LAZER_HALF_H ElementaryObject::GetMainRect_h() / 2
 
     direct = d;
     isOnScreen = true;
+
     switch (direct)
     {
         case dir::left:
@@ -35,15 +36,15 @@ void LongLazer::Move()
             case dir::right:
             {
                 ElementaryObject::resetUpLeftCorner_x(PLAINLASER_VELOCITY);
-                if (GetLazer_x() > RIGHT_BORDER_X)
-                    isOnScreen = false;
+                if (hasCrossedRight_fromScreen(GetLazer_x()))
+                    ElementaryObject::ResetOnScreen(false);
                 break;
             }
             case dir::left:
             {
                 ElementaryObject::resetUpLeftCorner_x(-PLAINLASER_VELOCITY);
-                if (GetLazerW() < BORDER_THICKNESS)
-                    isOnScreen = false;
+                if (hasCrossedLeft_fromScreen(GetLazerW()))
+                    ElementaryObject::ResetOnScreen(false);
                 break;
             }
             default: {}
