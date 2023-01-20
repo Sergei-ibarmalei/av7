@@ -467,14 +467,13 @@ PlainAlien_t1::PlainAlien_t1(const texture_* t,
                              re::alien_t1::t1_allR, start, lazer)
 {
     //std::cout << "In PlainAlien_t1 ctor.\n";
-    ElementaryObject::Velocities()->x = -ALIENFLEET_1_VELOCITY;
+    ElementaryObject::Velocities()->x = -ALIENFLEET_ONE_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
 }
 
 PlainAlien_t1::~PlainAlien_t1()
 {
     //std::cout << "In PlainAlien_t1 dtor.\n";
-
 }
 
 void PlainAlien_t1::Show(const Sdl* sdl)
@@ -699,7 +698,22 @@ ObjectsStore::ObjectsStore(const tc* collection)
         init = false; return;
     }
     tcollection = collection;
-    heroLazerStorage = new HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
+    heroLazerStorage = new (std::nothrow) 
+                                        HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
+    if (!heroLazerStorage)
+    {
+        init = false; return;
+    }
+    alienFleetOneStorage = new (std::nothrow) 
+                                    AlienFleet_oneStorage{ALIENFLEET_ONE_CAP};
+    if (!alienFleetOneStorage)
+    {
+        init = false; return;
+    }
+    if (!makeAlienFleetOne(collection))
+    {
+        init = false; return;
+    }
 }
 
 ObjectsStore::~ObjectsStore()
@@ -707,6 +721,8 @@ ObjectsStore::~ObjectsStore()
     tcollection = nullptr;
     delete heroLazerStorage;
     heroLazerStorage = nullptr;
+    delete alienFleetOneStorage;
+    alienFleetOneStorage = nullptr;
 }
 
 void ObjectsStore::MoveHeroLazers()

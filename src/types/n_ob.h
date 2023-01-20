@@ -243,6 +243,9 @@ class ObjectsStore
     bool init {true};
     const tc* tcollection;
     HeroLazerStorage* heroLazerStorage;
+    AlienFleet_oneStorage* alienFleetOneStorage;
+
+    bool makeAlienFleetOne(const tc* collection);
     
     
 

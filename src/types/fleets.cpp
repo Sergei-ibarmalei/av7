@@ -1,5 +1,33 @@
-#include "fleets.h"
+#include "n_ob.h"
 #include "../core/rand.h"
+
+bool ObjectsStore::makeAlienFleetOne(const tc* collection)
+{
+    #define RIGHT_SIDE RIGHT_BORDER_X+RIGHT_BORDER_W
+    #define SHIP_MAINRECT_H collection->Pictures()[tn::alien_one].main_rect.h
+    #define UP (UP_BORDER_Y+UP_BORDER_H)+SHIP_MAINRECT_H
+    #define DOWN DOWN_BORDER_Y-SHIP_MAINRECT_H
+    #define ALIEN_TEXTURE &collection->Pictures()[tn::alien_one]
+    #define ALIEN_LASER_TEXTURE &collection->Pictures()[tn::alien_laser01]
+
+    plot alien_start;
+    for (int count = 0; count < ALIENFLEET_ONE_CAP; ++count)
+    {
+        alien_start.x = RIGHT_SIDE +
+            (count * ALIENFLEET_ONE_SPACE_BETWEEN);
+        alien_start.y = getRand(UP, DOWN);
+        if (!alienFleetOneStorage->
+            Push(new PlainAlien_t1{ALIEN_TEXTURE, &alien_start, 
+                                   ALIEN_LASER_TEXTURE})) return false;
+    }
+    return true;
+
+    #undef ALIEN_TEXTURE
+    #undef ALIEN_LASER_TEXTURE
+    #undef RIGHT_SIDE
+    #undef SHIP_MAINRECT_H
+    #undef DOWN
+}
 
 /* AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity): 
                                                 ArrStorageABC(capacity)

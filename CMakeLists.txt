@@ -17,7 +17,7 @@ set(SOURCES
     #src/types/n_oblist.cpp
     #src/types/elist.cpp
     #src/types/aliens.cpp
-    #src/types/fleets.cpp
+    src/types/fleets.cpp
     src/core/core.cpp
     src/core/rand.cpp
     src/core/checkcrossing.cpp
