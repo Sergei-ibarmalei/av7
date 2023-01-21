@@ -144,7 +144,7 @@ class PlainAlienABC: public ComplexObject
 };
 
 
-
+/// @brief Plain alien type one
 class PlainAlien_t1: public PlainAlienABC
 {
     private:
@@ -231,18 +231,30 @@ class AlienFleet_oneStorage: public ArrStorageABC
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
     PlainAlien_t1* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
+};
 
+//All aliens lazers storage
+class AliensLazersStorage: public ArrStorageABC
+{
+    public:
+    explicit AliensLazersStorage(const int capacity);
+    ~AliensLazersStorage() {}
+    AliensLazersStorage(const AliensLazersStorage&) = delete;
+    AliensLazersStorage& operator=(const AliensLazersStorage&) = delete;
+    ElementaryObject* operator[](const int index);
+    bool Push(ElementaryObject* ob) override;
 
 };
 
 
-
+/*Место для хранения объектов*/
 class ObjectsStore
 {
     private:
     bool init {true};
     const tc* tcollection;
     HeroLazerStorage* heroLazerStorage;
+    AliensLazersStorage* aliensLazerStorage;
     AlienFleet_oneStorage* alienFleetOneStorage;
 
     bool makeAlienFleetOne(const tc* collection);

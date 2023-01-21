@@ -39,6 +39,8 @@
 #define ALIENFLEET_ONE_VELOCITY 2
 #define ALIENFLEET_ONE_SPACE_BETWEEN 550
 
+#define ALIENS_LAZER_STORAGE_CAP 10
+
 
 /*Направление движения*/
 namespace dir

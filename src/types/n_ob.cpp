@@ -600,12 +600,10 @@ void ArrStorageABC::Sort(const int arrLen)
         for (int i = 0; i <= len; ++i)
         {
             if (IS_PRESENSE && IS_ON_SCREEN && IS_ALIVE) continue;
-            //if (storage[i] && storage[i]->OnScreen() && storage[i]->IsItGone() == false) continue;
             if (storage[i])
             {
                 delete storage[i];
                 storage[i] = nullptr;
-                //if (counter) *counter -= 1;
                 counter--;
             }
             if (i < arrLen - 1)
@@ -639,12 +637,7 @@ ArrStorageABC::~ArrStorageABC()
 
 HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
 {
-    if (init == false) 
-    {
-        return;
-    }
-    //counter = 0;
-    //storage = new ElementaryObject*[capacity] {nullptr};
+    if (init == false) return;
 }
 
 
@@ -685,11 +678,10 @@ void HeroLazerStorage::Show(const Sdl* sdl) const
 AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity): 
                                                 ArrStorageABC(capacity)
 {
-    if (init == false) return;
-    //counter = ALIENFLEET_ONE_CAP;
-    /*counter равен максимальному числу*/
-    //storage = new ElementaryObject*[capacity] {nullptr};
+    if (!init) return;
 }
+
+
 
 PlainAlien_t1* AlienFleet_oneStorage::operator[](const int index)
 {
@@ -703,6 +695,27 @@ bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
     storage[counter++] = static_cast<PlainAlien_t1*>(ob);
     return true;
 }
+
+
+AliensLazersStorage::AliensLazersStorage(const int capacity):
+                                                ArrStorageABC(capacity)
+{
+    if (!init) return;
+}
+
+ElementaryObject* AliensLazersStorage::operator[](const int index)
+{
+    if (index < 0 || index >= counter) return nullptr;
+    return storage[index];
+}
+
+bool AliensLazersStorage::Push(ElementaryObject* ob)
+{
+    if (counter >= storageCapacity) return false;
+    storage[counter++] = ob;
+    return true;
+}
+
 
 
 
@@ -728,9 +741,15 @@ ObjectsStore::ObjectsStore(const tc* collection)
     }
     if (!makeAlienFleetOne(collection))
     {
-        init = false; 
-        return;
+        init = false; return;
     }
+    aliensLazerStorage = new (std::nothrow) 
+                                AliensLazersStorage{ALIENS_LAZER_STORAGE_CAP};
+    if (!aliensLazerStorage)
+    {
+        init = false; return;
+    }
+
 }
 
 ObjectsStore::~ObjectsStore()
@@ -740,6 +759,8 @@ ObjectsStore::~ObjectsStore()
     heroLazerStorage = nullptr;
     delete alienFleetOneStorage;
     alienFleetOneStorage = nullptr;
+    delete aliensLazerStorage;
+    aliensLazerStorage = nullptr;
 }
 
 void ObjectsStore::MoveHeroLazers()
