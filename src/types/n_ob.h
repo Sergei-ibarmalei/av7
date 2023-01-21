@@ -14,6 +14,7 @@ class ElementaryObject
     protected:
     bool init {true};
     bool isOnScreen {false};
+    bool isGone {false};
     texture_*  obj_texture    {nullptr};
     plot*      obj_velocities {nullptr};
     void setUpLeftCorner(const int x, const int y);
@@ -49,6 +50,8 @@ class ElementaryObject
     int GetMainRectH_Half() const {return obj_texture->main_rect.y+
                                 obj_texture->main_rect.h / 2;}
     plot* Velocities() {return obj_velocities;}
+    bool IsItGone() {return isGone;} 
+    void ItIsGoneNow() {isGone = true;}
 };
 
 /*Сложный класс для объектов с прямоугольниками пересечений*/
@@ -124,7 +127,6 @@ class PlainAlienABC: public ComplexObject
 {
     protected:
     rect_* lazerMainRect;
-    bool isGone {false};
 
     void setToStartPos(const int x, const int y) override;
     virtual void setCr() = 0;
@@ -138,7 +140,6 @@ class PlainAlienABC: public ComplexObject
     PlainAlienABC(const PlainAlienABC&) = delete;
     ~PlainAlienABC();
     PlainAlienABC& operator=(const PlainAlienABC&) = delete;
-    virtual void Move() = 0;
 
 };
 
@@ -154,10 +155,9 @@ class PlainAlien_t1: public PlainAlienABC
     ~PlainAlien_t1();
     PlainAlien_t1(const PlainAlien_t1&) = delete;
     PlainAlien_t1& operator=(const PlainAlien_t1&) = delete;
-    void Move() override;
+    void Move();
     void Show(const Sdl* sdl);
 
-    bool& Gone() {return isGone;} 
 
 
 };
@@ -202,9 +202,9 @@ class ArrStorageABC
     virtual bool Push(ElementaryObject* ob) = 0;
 
     int GetCapacity() const {return storageCapacity;}
-    int& GetCounter()   {return counter;}
-    bool Remove(const int index);
-    void Sort(const int arrLen, int& counter);
+    int GetCounter()   {return counter;}
+    void  Remove(const int index);
+    void Sort(const int arrLen);
 
 };
 
@@ -224,7 +224,6 @@ class HeroLazerStorage: public ArrStorageABC
 
 class AlienFleet_oneStorage: public ArrStorageABC
 {
-    protected:
     public:
     explicit AlienFleet_oneStorage(const int capacity);
     ~AlienFleet_oneStorage() {}
@@ -232,6 +231,7 @@ class AlienFleet_oneStorage: public ArrStorageABC
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
     PlainAlien_t1* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
+
 
 };
 
@@ -257,6 +257,8 @@ class ObjectsStore
     bool MakeHeroLazer(const plot* start);
     void MoveHeroLazers();
     void ShowHeroLazers(const Sdl* sdl) const;
+    void MoveAlienFleetOne();
+    void ShowAlienFleetOne(const Sdl* sdl) const;
 
 
     bool Status() const {return init;}

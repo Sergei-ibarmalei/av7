@@ -20,7 +20,9 @@ bool GameClass::partOne(log_::Log& log)
         nHero->Move();
         nHero->Show(sdl_);
         //gameFleets->Alien_t1_Show(sdl_);
-        //gameFleets->FleetMove(); 
+        //gameFleets->FleetMove();
+        objectsStore->ShowAlienFleetOne(sdl_);
+        objectsStore->MoveAlienFleetOne(); 
         objectsStore->ShowHeroLazers(sdl_);
         objectsStore->MoveHeroLazers();
         borderSky_show_moving();

@@ -518,16 +518,19 @@ void PlainAlien_t1::Move()
 {
     ElementaryObject::resetUpLeftCorner();
     setCr();
+
+
     //Если вышла на экран
     if (hasCrossedRight_fromOut(ElementaryObject::GetMainRect_x()))
     {
-        ElementaryObject::ResetOnScreen(true);
+        if (!OnScreen())
+            ResetOnScreen(true);
     }
     //Если вышли за левую границу экрана, то удаляемся
     if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
     {
-        ElementaryObject::ResetOnScreen(false);
-        Gone() = true;
+        ResetOnScreen(false);
+        ItIsGoneNow();
     }
 }
 
@@ -575,17 +578,20 @@ bool ArrStorageABC::cleaning(const int indexClean)
     return true;
 }
 
-bool ArrStorageABC::Remove(const int index)
+void ArrStorageABC::Remove(const int index)
 {
-    if (index < 0 || index >= storageCapacity) return false;
+    if (index < 0 || index >= storageCapacity) return;
     delete storage[index];
     storage[index] = nullptr;
-    return cleaning(index);
 }
 
-void ArrStorageABC::Sort(const int arrLen, int& counter)
+
+
+void ArrStorageABC::Sort(const int arrLen)
 {
-    #define OBJECT_ON_SCREEN storage[i] && storage[i]->OnScreen()
+    #define IS_PRESENSE storage[i]
+    #define IS_ON_SCREEN storage[i]->OnScreen()
+    #define IS_ALIVE !storage[i]->IsItGone()
 
     int len = arrLen;
     while (len--)
@@ -593,11 +599,13 @@ void ArrStorageABC::Sort(const int arrLen, int& counter)
         bool swaps = false;
         for (int i = 0; i <= len; ++i)
         {
-            if (OBJECT_ON_SCREEN) continue;
+            if (IS_PRESENSE && IS_ON_SCREEN && IS_ALIVE) continue;
+            //if (storage[i] && storage[i]->OnScreen() && storage[i]->IsItGone() == false) continue;
             if (storage[i])
             {
                 delete storage[i];
                 storage[i] = nullptr;
+                //if (counter) *counter -= 1;
                 counter--;
             }
             if (i < arrLen - 1)
@@ -610,7 +618,10 @@ void ArrStorageABC::Sort(const int arrLen, int& counter)
         }
         if (!swaps) break;
     }
-    #undef OBJECT_ON_SCREEN
+
+    #undef IS_PRESENSE
+    #undef IS_ON_SCREEN
+    #undef IS_ALIVE
 }
 
 ArrStorageABC::~ArrStorageABC()
@@ -628,7 +639,11 @@ ArrStorageABC::~ArrStorageABC()
 
 HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
 {
-    if (init == false) return;
+    if (init == false) 
+    {
+        return;
+    }
+    //counter = 0;
     //storage = new ElementaryObject*[capacity] {nullptr};
 }
 
@@ -671,6 +686,8 @@ AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity):
                                                 ArrStorageABC(capacity)
 {
     if (init == false) return;
+    //counter = ALIENFLEET_ONE_CAP;
+    /*counter равен максимальному числу*/
     //storage = new ElementaryObject*[capacity] {nullptr};
 }
 
@@ -686,7 +703,6 @@ bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
     storage[counter++] = static_cast<PlainAlien_t1*>(ob);
     return true;
 }
-
 
 
 
@@ -712,7 +728,8 @@ ObjectsStore::ObjectsStore(const tc* collection)
     }
     if (!makeAlienFleetOne(collection))
     {
-        init = false; return;
+        init = false; 
+        return;
     }
 }
 
@@ -731,7 +748,8 @@ void ObjectsStore::MoveHeroLazers()
     heroLazerStorage->Move(flag_StartSort);
     if (flag_StartSort)
     {
-        heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP, heroLazerStorage->GetCounter());
+        //heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP, heroLazerStorage->GetCounter());
+        heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
     }
 }
 
@@ -739,6 +757,8 @@ void ObjectsStore::ShowHeroLazers(const Sdl* sdl) const
 {
     heroLazerStorage->Show(sdl);
 }
+
+
 
 bool ObjectsStore::MakeHeroLazer(const plot* start)
 {
@@ -764,3 +784,5 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     #undef PREVLAZER
     #undef COUNTER
 }
+
+
