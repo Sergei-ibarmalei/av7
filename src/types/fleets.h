@@ -12,7 +12,7 @@
     ~AlienFleet_oneStorage() {}
     AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
-    PlainAlien_t1* operator[](const int index);
+    Alien* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
 
 }; */

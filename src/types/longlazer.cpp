@@ -1,7 +1,7 @@
 #include "n_ob.h"
 #include "../core/checkcrossing.h"
 
-LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
+/*LongLazer::LongLazer(const plot* start, dir::direction d, const texture_* t):
     ElementaryObject(t)
 {
     #define LAZER_HALF_H ElementaryObject::GetMainRect_h() / 2
@@ -83,3 +83,4 @@ int LongLazer::GetLazer_w() const
     return ElementaryObject::GetMainRect_w();
 }
 
+*/

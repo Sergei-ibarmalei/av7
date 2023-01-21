@@ -13,6 +13,7 @@ set(SOURCES
     src/types/partone.cpp
     src/types/gameInfoClass.cpp
     src/types/longlazer.cpp
+    src/types/nlazer.cpp
     src/types/n_ob.cpp
     #src/types/n_oblist.cpp
     #src/types/elist.cpp

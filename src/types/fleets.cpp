@@ -17,7 +17,7 @@ bool ObjectsStore::makeAlienFleetOne(const tc* collection)
             (count * ALIENFLEET_ONE_SPACE_BETWEEN);
         alien_start.y = getRand(UP, DOWN);
         if (!alienFleetOneStorage->
-            Push(new PlainAlien_t1{ALIEN_TEXTURE, &alien_start, 
+            Push(new Alien{ALIEN_TEXTURE, &alien_start, 
                                    ALIEN_LASER_TEXTURE})) return false;
     }
     return true;

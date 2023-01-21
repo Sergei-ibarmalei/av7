@@ -123,7 +123,7 @@ class NHero: public ComplexObject
     bool Status() const {return ElementaryObject::Status();}
 };
 
-class PlainAlienABC: public ComplexObject
+class AlienABC: public ComplexObject
 {
     protected:
     rect_* lazerMainRect;
@@ -135,26 +135,26 @@ class PlainAlienABC: public ComplexObject
     void show(const Sdl* sdl) const;
 
     public:
-    PlainAlienABC(const texture_* t, const int arrLen, const plot* start,
+    AlienABC(const texture_* t, const int arrLen, const plot* start,
                   const texture_* lazer);
-    PlainAlienABC(const PlainAlienABC&) = delete;
-    ~PlainAlienABC();
-    PlainAlienABC& operator=(const PlainAlienABC&) = delete;
+    AlienABC(const AlienABC&) = delete;
+    ~AlienABC();
+    AlienABC& operator=(const AlienABC&) = delete;
 
 };
 
 
 /// @brief Plain alien type one
-class PlainAlien_t1: public PlainAlienABC
+class Alien: public AlienABC
 {
     private:
     void setCr();
 
     public:
-    PlainAlien_t1(const texture_* t, const plot* start, const texture_* lazer);
-    ~PlainAlien_t1();
-    PlainAlien_t1(const PlainAlien_t1&) = delete;
-    PlainAlien_t1& operator=(const PlainAlien_t1&) = delete;
+    Alien(const texture_* t, const plot* start, const texture_* lazer);
+    ~Alien();
+    Alien(const Alien&) = delete;
+    Alien& operator=(const Alien&) = delete;
     void Move();
     void Show(const Sdl* sdl);
 
@@ -163,7 +163,33 @@ class PlainAlien_t1: public PlainAlienABC
 };
 
 
-class LongLazer: public ElementaryObject
+class BaseLazer: public ElementaryObject
+{
+    protected:
+    dir::direction direct;
+
+    public:
+    BaseLazer(const plot* start, dir::direction d, const texture_* t);
+    BaseLazer(const BaseLazer&) = delete;
+    BaseLazer& operator=(const BaseLazer&) = delete;
+    virtual ~BaseLazer() {}
+    void Move();
+    int Lazer_x() const;
+    int Lazer_y() const;
+    int Lazer_w() const;
+    void ShowLazer(const Sdl* sdl) const;
+};
+
+class HeroLazer: public BaseLazer
+{
+    public:
+    HeroLazer(const plot* start, const texture_* t);
+};
+
+
+
+
+/*class LongLazer: public ElementaryObject
 {
     private:
     dir::direction direct;
@@ -180,7 +206,10 @@ class LongLazer: public ElementaryObject
     int GetLazerW()  const;
     int GetLazerH()  const;
     void Show(const Sdl* sdl) const;
-};
+};*/
+
+
+
 
 
 class ArrStorageABC
@@ -215,7 +244,9 @@ class HeroLazerStorage: public ArrStorageABC
     ~HeroLazerStorage() {}
     HeroLazerStorage(const HeroLazerStorage&) = delete;
     HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
-    LongLazer* operator[](const int index);
+
+    //LongLazer* operator[](const int index);
+    HeroLazer* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
     void Move(bool& flag_toStartSort);
     void Show(const Sdl* sdl) const;
@@ -229,7 +260,7 @@ class AlienFleet_oneStorage: public ArrStorageABC
     ~AlienFleet_oneStorage() {}
     AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
-    PlainAlien_t1* operator[](const int index);
+    Alien* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
 };
 

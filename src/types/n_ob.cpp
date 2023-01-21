@@ -406,12 +406,12 @@ bool NHero::isGonnaCrossLeft()
 }
 
 
-PlainAlienABC::PlainAlienABC(const texture_* t, 
+AlienABC::AlienABC(const texture_* t, 
                              const int arrLen, 
                              const plot* start,
                              const texture_* lazer): ComplexObject(t, arrLen)
 {
-    //std::cout << "In PlainAlienABC ctor.\n";
+    //std::cout << "In AlienABC ctor.\n";
     lazerMainRect = new rect_;
     lazerMainRect->w = lazer->main_rect.w;
     lazerMainRect->h = lazer->main_rect.h;
@@ -420,27 +420,27 @@ PlainAlienABC::PlainAlienABC(const texture_* t,
     ElementaryObject::ResetOnScreen(false);
 }
 
-PlainAlienABC::~PlainAlienABC()
+AlienABC::~AlienABC()
 {
-    //std::cout << "In PlainAlienABC dtor.\n";
+    //std::cout << "In AlienABC dtor.\n";
     delete lazerMainRect;
     lazerMainRect = nullptr;
     delete lazerStart;
     lazerStart = nullptr;
 }
 
-void PlainAlienABC::setToStartPos(const int x, const int y)
+void AlienABC::setToStartPos(const int x, const int y)
 {
     ElementaryObject::setUpLeftCorner(x, y);
 }
 
-void PlainAlienABC::initLazerStart()
+void AlienABC::initLazerStart()
 {
     ComplexObject::lazerStart = new plot;
     recomputeLazerStart();
 }
 
-void PlainAlienABC::recomputeLazerStart()
+void AlienABC::recomputeLazerStart()
 {
     #define PLAINALIEN_X ElementaryObject::GetMainRect_x()
     #define PLAINALIEN_H_HALF ElementaryObject::GetMainRectH_Half()
@@ -453,7 +453,7 @@ void PlainAlienABC::recomputeLazerStart()
     #undef  PLAINALIEN_H_HALF
 }
 
-void PlainAlienABC::show(const Sdl* sdl) const
+void AlienABC::show(const Sdl* sdl) const
 {
     ComplexObject::Show(sdl);
 }
@@ -461,27 +461,27 @@ void PlainAlienABC::show(const Sdl* sdl) const
 
 
 
-PlainAlien_t1::PlainAlien_t1(const texture_* t,
+Alien::Alien(const texture_* t,
                              const plot* start,
-                             const texture_* lazer):PlainAlienABC(t,
+                             const texture_* lazer):AlienABC(t,
                              re::alien_t1::t1_allR, start, lazer)
 {
-    //std::cout << "In PlainAlien_t1 ctor.\n";
+    //std::cout << "In Alien ctor.\n";
     ElementaryObject::Velocities()->x = -ALIENFLEET_ONE_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
 }
 
-PlainAlien_t1::~PlainAlien_t1()
+Alien::~Alien()
 {
-    //std::cout << "In PlainAlien_t1 dtor.\n";
+    //std::cout << "In Alien dtor.\n";
 }
 
-void PlainAlien_t1::Show(const Sdl* sdl)
+void Alien::Show(const Sdl* sdl)
 {
-    PlainAlienABC::Show(sdl);
+    AlienABC::Show(sdl);
 }
 
-void PlainAlien_t1::setCr()
+void Alien::setCr()
 {
     #define CR ComplexObject::cr->Array()
     #define ONE re::alien_t1::t1_one
@@ -514,7 +514,7 @@ void PlainAlien_t1::setCr()
     #undef THREE
 }
 
-void PlainAlien_t1::Move()
+void Alien::Move()
 {
     ElementaryObject::resetUpLeftCorner();
     setCr();
@@ -642,16 +642,22 @@ HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
 
 
 
-LongLazer* HeroLazerStorage::operator[](const int index)
+/*LongLazer* HeroLazerStorage::operator[](const int index)
 {
     if (index < 0 || index >= counter) return nullptr;
     return static_cast<LongLazer*>(storage[index]);
+}*/
+HeroLazer* HeroLazerStorage::operator[](const int index)
+{
+    if (index < 0 || index >= counter) return nullptr;
+    return static_cast<HeroLazer*>(storage[index]);
 }
 
 bool HeroLazerStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    storage[counter++] = static_cast<LongLazer*>(ob);
+    //storage[counter++] = static_cast<LongLazer*>(ob);
+    storage[counter++] = static_cast<HeroLazer*>(ob);
     return true;
 }
 
@@ -659,8 +665,10 @@ void HeroLazerStorage::Move(bool& flag_toStartSort)
 {
     for (int i = 0; i < counter; ++i)
     {
-        static_cast<LongLazer*>(storage[i])->Move();
-        if (static_cast<LongLazer*>(storage[i])->OnScreen() == false)
+        //static_cast<LongLazer*>(storage[i])->Move();
+        static_cast<HeroLazer*>(storage[i])->Move();
+        //if (static_cast<LongLazer*>(storage[i])->OnScreen() == false)
+        if (static_cast<HeroLazer*>(storage[i])->OnScreen() == false)
             flag_toStartSort = true;
     }
 }
@@ -670,7 +678,8 @@ void HeroLazerStorage::Show(const Sdl* sdl) const
     for (int i = 0; i < counter; ++i)
     {
         if (storage[i])
-            static_cast<LongLazer*>(storage[i])->Show(sdl);
+            //static_cast<LongLazer*>(storage[i])->Show(sdl);
+            static_cast<HeroLazer*>(storage[i])->ShowLazer(sdl);
     }
 }
 
@@ -683,16 +692,16 @@ AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity):
 
 
 
-PlainAlien_t1* AlienFleet_oneStorage::operator[](const int index)
+Alien* AlienFleet_oneStorage::operator[](const int index)
 {
     if (index < 0 || index >= counter) return nullptr;
-    return static_cast<PlainAlien_t1*>(storage[index]);
+    return static_cast<Alien*>(storage[index]);
 }
 
 bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    storage[counter++] = static_cast<PlainAlien_t1*>(ob);
+    storage[counter++] = static_cast<Alien*>(ob);
     return true;
 }
 
@@ -786,17 +795,23 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
-        return heroLazerStorage->Push(new LongLazer{start, dir::right,
-                                    &tcollection->Pictures()[tn::blue_laser]});
+        //return heroLazerStorage->Push(new LongLazer{start, dir::right,
+                                    //&tcollection->Pictures()[tn::blue_laser]});
+        return heroLazerStorage->Push(new HeroLazer{start, 
+                                      &tcollection->Pictures()[tn::blue_laser]});
     }
   
     #define COUNTER heroLazerStorage->GetCounter()
     #define PREVLAZER heroLazerStorage->operator[](COUNTER - 1)
-    #define PREVLAZER_X PREVLAZER->GetLazer_x()
-    #define PREVLAZER_W PREVLAZER->GetLazer_w()
+    //#define PREVLAZER_X PREVLAZER->GetLazer_x()
+    #define PREVLAZER_X PREVLAZER->Lazer_x()
+    //#define PREVLAZER_W PREVLAZER->GetLazer_w()
+    #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
     if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return false;
-    return heroLazerStorage->Push(new LongLazer{start, dir::right,
+    //return heroLazerStorage->Push(new LongLazer{start, dir::right,
+                                    //&tcollection->Pictures()[tn::blue_laser]});
+    return heroLazerStorage->Push(new HeroLazer{start,
                                     &tcollection->Pictures()[tn::blue_laser]});
 
 
