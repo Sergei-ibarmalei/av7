@@ -12,6 +12,7 @@
 struct Rect: public SDL_Rect
 {
     Rect() {x = y = w = h = 0;}
+
     bool operator==(const struct Rect& r) const
     {
         if ((y+h) <= r.y)      return false;
@@ -21,23 +22,6 @@ struct Rect: public SDL_Rect
         return true;
     }
 
-    bool operator==(struct Rect& r) const
-    {
-        if ((y+h) <= r.y)      return false;
-        if (y >= (r.y+r.h))    return false;
-        if ((x+w) <= r.x)      return false;
-        if (x>= (r.x+r.w))     return false;
-        return true;
-    }
-
-    bool operator==(struct Rect* r)
-    {
-        if ((y+h) <= r->y)       return false;
-        if (y >= (r->y + r->h))  return false;
-        if ((x+w) <= r->x)       return false;
-        if (x>= (r->x + r->w))   return false;
-        return true;
-    }
 };
 
 using rect_ = Rect;
@@ -57,24 +41,7 @@ struct plot_
 
 using plot = plot_;
 
-/*Collision compare arrays*/
-class Cca
-{
-    private:
-    rect_* arr;
-    int    length;
-    bool init {true};
-    bool comparis(rect_* first, const int len, 
-                  rect_* second);
 
-    public:
-    Cca(): arr(nullptr), length(0) {}
-    bool operator==(const Cca& ca);
-    Cca& operator=(const Cca& ca);
-    void Set(rect_* a, const int len);
-    ~Cca();
-    bool Status() const {return init;}
-};
 
 class CRC 
 {

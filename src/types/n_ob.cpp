@@ -58,10 +58,7 @@ bool ElementaryObject::operator==(const ElementaryObject& eo)
     return obj_texture->main_rect == eo.obj_texture->main_rect;
 }
 
-bool ElementaryObject::operator==(const ElementaryObject* peo)
-{
-    return obj_texture->main_rect == peo->obj_texture->main_rect;
-}
+
 
 void ElementaryObject::ShowObj(const Sdl* sdl) const
 {
@@ -139,22 +136,14 @@ ComplexObject::ComplexObject(const texture_* t, const int arrLen):
 
 bool ComplexObject::operator==(const ElementaryObject& eo)
 {
-    //return ElementaryObject::obj_texture->main_rect == eo.MainRect();
-    if (ElementaryObject::obj_texture->main_rect ==eo.MainRect())
+    if (obj_texture->main_rect ==eo.MainRect())
     {
         return *cr == &eo.MainRect();
     }
     return false;
 }
 
-bool ComplexObject::operator==(const ElementaryObject* eo)
-{
-    if (ElementaryObject::obj_texture->main_rect == eo->MainRect())
-    {
-        return *cr == eo->MainRect();
-    }
-    return false;
-}
+
 
 bool ComplexObject::operator==(const ComplexObject& co)
 {
@@ -642,11 +631,8 @@ HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
 
 
 
-/*LongLazer* HeroLazerStorage::operator[](const int index)
-{
-    if (index < 0 || index >= counter) return nullptr;
-    return static_cast<LongLazer*>(storage[index]);
-}*/
+
+
 HeroLazer* HeroLazerStorage::operator[](const int index)
 {
     if (index < 0 || index >= counter) return nullptr;
@@ -656,7 +642,6 @@ HeroLazer* HeroLazerStorage::operator[](const int index)
 bool HeroLazerStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    //storage[counter++] = static_cast<LongLazer*>(ob);
     storage[counter++] = static_cast<HeroLazer*>(ob);
     return true;
 }
@@ -665,9 +650,7 @@ void HeroLazerStorage::Move(bool& flag_toStartSort)
 {
     for (int i = 0; i < counter; ++i)
     {
-        //static_cast<LongLazer*>(storage[i])->Move();
         static_cast<HeroLazer*>(storage[i])->Move();
-        //if (static_cast<LongLazer*>(storage[i])->OnScreen() == false)
         if (static_cast<HeroLazer*>(storage[i])->OnScreen() == false)
             flag_toStartSort = true;
     }
@@ -678,7 +661,6 @@ void HeroLazerStorage::Show(const Sdl* sdl) const
     for (int i = 0; i < counter; ++i)
     {
         if (storage[i])
-            //static_cast<LongLazer*>(storage[i])->Show(sdl);
             static_cast<HeroLazer*>(storage[i])->ShowLazer(sdl);
     }
 }
@@ -694,14 +676,18 @@ AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity):
 
 Alien* AlienFleet_oneStorage::operator[](const int index)
 {
-    if (index < 0 || index >= counter) return nullptr;
+    if (index < 0 || index >= counter)
+    {
+        return nullptr;
+    }
     return static_cast<Alien*>(storage[index]);
 }
 
 bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    storage[counter++] = static_cast<Alien*>(ob);
+    storage[counter] = static_cast<Alien*>(ob);
+    counter += 1;
     return true;
 }
 
@@ -795,8 +781,6 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
-        //return heroLazerStorage->Push(new LongLazer{start, dir::right,
-                                    //&tcollection->Pictures()[tn::blue_laser]});
         return heroLazerStorage->Push(new HeroLazer{start, 
                                       &tcollection->Pictures()[tn::blue_laser]});
     }
@@ -809,8 +793,6 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
     if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return false;
-    //return heroLazerStorage->Push(new LongLazer{start, dir::right,
-                                    //&tcollection->Pictures()[tn::blue_laser]});
     return heroLazerStorage->Push(new HeroLazer{start,
                                     &tcollection->Pictures()[tn::blue_laser]});
 
@@ -821,4 +803,45 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     #undef COUNTER
 }
 
+
+void  ObjectsStore::Checks_herolazer_plainAlien()
+{
+    #define HEROLAZER *heroLazerStorage->operator[](l)
+
+    #define ALIEN *(static_cast<ComplexObject*>(alienFleetOneStorage->operator[](a)))
+    #define HEROLAZER_ABSENT heroLazerStorage->operator[](0) == nullptr
+    #define CURRENT_HEROLAZER_ABSENT heroLazerStorage->operator[](l) == nullptr
+    #define ALIEN_ABSENT alienFleetOneStorage->operator[](a) == nullptr
+    #define ALIEN_outSCREEN !alienFleetOneStorage->operator[](a)->OnScreen()
+
+
+
+    if ( HEROLAZER_ABSENT ) return;
+    for (int l = 0; l < heroLazerStorage->GetCounter(); ++l)
+    {
+        if ( CURRENT_HEROLAZER_ABSENT ) break;
+        for (int a = 0; a < alienFleetOneStorage->GetCapacity(); ++a)
+        {
+            if ( ALIEN_ABSENT ) continue;
+            if (ALIEN_outSCREEN) goto toexit;
+
+            if (ALIEN == HEROLAZER)// Сравнение ComplexObject vs ElementaryObject
+            {
+                alienFleetOneStorage->operator[](a)->ItIsGoneNow();
+                heroLazerStorage->operator[](l)->ResetOnScreen(false);
+                heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
+                break;
+            }
+        }
+    }
+    
+
+    #undef HEROLAZER
+    #undef ALIEN
+    #undef HEROLAZER_ABSENT
+    #undef CURRENT_HEROLAZER_ABSENT
+    #undef ALIEN_ABSENT
+    #undef ALIEN_outSCREEN
+    toexit: return;
+}
 

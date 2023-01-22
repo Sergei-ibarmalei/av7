@@ -27,6 +27,7 @@ bool GameClass::partOne(log_::Log& log)
         objectsStore->MoveHeroLazers();
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
+        objectsStore->Checks_herolazer_plainAlien();
 
         //Checks_lazer_plainAlien(this);
 

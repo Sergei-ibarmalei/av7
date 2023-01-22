@@ -29,7 +29,6 @@ class ElementaryObject
     ElementaryObject(const ElementaryObject& eo);
     ElementaryObject& operator=(const ElementaryObject& eo);
     bool operator==(const ElementaryObject& eo);
-    bool operator==(const ElementaryObject* peo);
     virtual ~ElementaryObject();
     bool Status() const {return init;}
     virtual void Move() = 0;
@@ -70,7 +69,6 @@ class ComplexObject: public ElementaryObject
     ComplexObject(const texture_* t, const int arrLen);
     ComplexObject& operator=(const ComplexObject& ) = delete;
     bool operator==(const ElementaryObject& eo);
-    bool operator==(const ElementaryObject* eo);
     bool operator==(const ComplexObject& co);
     ~ComplexObject();
     ComplexObject(const ComplexObject& co);
@@ -189,29 +187,6 @@ class HeroLazer: public BaseLazer
 
 
 
-/*class LongLazer: public ElementaryObject
-{
-    private:
-    dir::direction direct;
-
-    public:
-    LongLazer(const plot* start, dir::direction d, const texture_* t);
-    LongLazer& operator=(const LongLazer& ) = delete;
-    LongLazer(const LongLazer& ) = delete;
-    ~LongLazer(){}
-    void Move();
-    int GetLazer_x() const;
-    int GetLazer_y() const;
-    int GetLazer_w() const;
-    int GetLazerW()  const;
-    int GetLazerH()  const;
-    void Show(const Sdl* sdl) const;
-};*/
-
-
-
-
-
 class ArrStorageABC
 {
     protected:
@@ -245,7 +220,6 @@ class HeroLazerStorage: public ArrStorageABC
     HeroLazerStorage(const HeroLazerStorage&) = delete;
     HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
 
-    //LongLazer* operator[](const int index);
     HeroLazer* operator[](const int index);
     bool Push(ElementaryObject* ob) override;
     void Move(bool& flag_toStartSort);
@@ -305,6 +279,8 @@ class ObjectsStore
 
 
     bool Status() const {return init;}
+    void  Checks_herolazer_plainAlien();
+
 
 
 };

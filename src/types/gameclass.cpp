@@ -241,6 +241,7 @@ void GameClass::pauseIsPressed()
         nHero->Show(sdl_);
         objectsStore->ShowHeroLazers(sdl_);
         borderSky_show_moving();
+        objectsStore->ShowAlienFleetOne(sdl_);
 
         gameInfo->ShowGameInfo(sdl_, status);
         showPause();

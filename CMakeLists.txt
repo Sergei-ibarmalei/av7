@@ -12,7 +12,7 @@ set(SOURCES
     src/types/skyclass.cpp
     src/types/partone.cpp
     src/types/gameInfoClass.cpp
-    src/types/longlazer.cpp
+    #src/types/longlazer.cpp
     src/types/nlazer.cpp
     src/types/n_ob.cpp
     #src/types/n_oblist.cpp
