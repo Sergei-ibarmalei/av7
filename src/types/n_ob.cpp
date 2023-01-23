@@ -93,8 +93,8 @@ void ElementaryObject::resetUpLeftCorner_y(const int y)
 ComplexObject::~ComplexObject()
 {
     //std::cout << "In ComplexObject dtor.\n";
-    delete cr;
-    cr = nullptr;
+    //delete cr;
+    //cr = nullptr;
 
     //В этом конструкторе не удаляем lazerStart, поскольку
     //lazerStart может быть массивом для нескольких точек
@@ -121,6 +121,7 @@ ComplexObject::ComplexObject(const texture_* t, const int arrLen):
     {
         init = false; return;
     }
+    //cr = nullptr;
 }
 
 
@@ -148,7 +149,11 @@ NHero::NHero(const texture_* t): ComplexObject(t, re::heros::allR)
              - ElementaryObject::obj_texture->main_rect.w
     #define HEROSTART_Y S_H / 2\
              - ElementaryObject::obj_texture->main_rect.h / 2
-
+    /*cr = new (std::nothrow) CRC{re::allR};
+    if (!cr)
+    {
+        init = false; return;
+    }*/
     initHeroStopIntro();
     setToStartPos(HEROSTART_X, HEROSTART_Y);
     setCr();
@@ -429,6 +434,7 @@ Alien::Alien(const texture_* t,
     //std::cout << "In Alien ctor.\n";
     ElementaryObject::Velocities()->x = -ALIENFLEET_ONE_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
+    scoreWeight = scores::plainAlien;
 }
 
 Alien::~Alien()
@@ -443,12 +449,12 @@ void Alien::Show(const Sdl* sdl)
 
 void Alien::setCr()
 {
-    #define CR ComplexObject::cr->Array()
+    #define CR cr->Array()
     #define ONE re::alien_t1::t1_one
     #define TWO re::alien_t1::t1_two
     #define THREE re::alien_t1::t1_three
-    #define MAINR_UPLEFT_X ElementaryObject::GetMainRect_x()
-    #define MAINR_UPLEFT_Y ElementaryObject::GetMainRect_y()
+    #define MAINR_UPLEFT_X GetMainRect_x()
+    #define MAINR_UPLEFT_Y GetMainRect_y()
 
 
     CR[ONE].x = MAINR_UPLEFT_X + 32;
@@ -499,7 +505,7 @@ bool Alien::operator==(const HeroLazer& hl)
     if (obj_texture->main_rect == *hl.GetMainRect())
     {
         //return true;
-        return *cr == hl.GetMainRect();
+        return *Alien::cr == hl.GetMainRect();
     }
     return false;
 }
@@ -561,7 +567,7 @@ void ArrStorageABC::Sort(const int arrLen)
 {
     #define IS_PRESENSE storage[i]
     #define IS_ON_SCREEN storage[i]->OnScreen()
-    #define IS_ALIVE !storage[i]->IsItGone()
+    //#define IS_ALIVE !storage[i]->IsItGone()
 
     int len = arrLen;
     while (len--)
@@ -569,7 +575,7 @@ void ArrStorageABC::Sort(const int arrLen)
         bool swaps = false;
         for (int i = 0; i <= len; ++i)
         {
-            if (IS_PRESENSE && IS_ON_SCREEN && IS_ALIVE) continue;
+            if (IS_PRESENSE && IS_ON_SCREEN) continue;
             if (storage[i])
             {
                 delete storage[i];
@@ -589,7 +595,7 @@ void ArrStorageABC::Sort(const int arrLen)
 
     #undef IS_PRESENSE
     #undef IS_ON_SCREEN
-    #undef IS_ALIVE
+    //#undef IS_ALIVE
 }
 
 ArrStorageABC::~ArrStorageABC()
@@ -601,6 +607,14 @@ ArrStorageABC::~ArrStorageABC()
     }
     delete [] storage;
     storage = nullptr;
+}
+
+bool ArrStorageABC::Push(ElementaryObject* ob)
+{
+    if (!ob) return false;
+    if (counter >= storageCapacity) return false;
+    storage[counter++] = ob;
+    return true;
 }
 
 
@@ -620,12 +634,13 @@ HeroLazer* HeroLazerStorage::operator[](const int index)
     return static_cast<HeroLazer*>(storage[index]);
 }
 
-bool HeroLazerStorage::Push(ElementaryObject* ob)
+/*bool HeroLazerStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    storage[counter++] = static_cast<HeroLazer*>(ob);
+    //storage[counter++] = static_cast<HeroLazer*>(ob);
+    storage[counter++] = ob;
     return true;
-}
+}*/
 
 void HeroLazerStorage::Move(bool& flag_toStartSort)
 {
@@ -664,13 +679,14 @@ Alien* AlienFleet_oneStorage::operator[](const int index)
     return static_cast<Alien*>(storage[index]);
 }
 
-bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
+/*bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
-    storage[counter] = static_cast<Alien*>(ob);
-    counter += 1;
+    //storage[counter] = static_cast<Alien*>(ob);
+    //counter += 1;
+    storage[counter++] = ob;
     return true;
-}
+}*/
 
 
 AliensLazersStorage::AliensLazersStorage(const int capacity):
@@ -685,12 +701,12 @@ ElementaryObject* AliensLazersStorage::operator[](const int index)
     return storage[index];
 }
 
-bool AliensLazersStorage::Push(ElementaryObject* ob)
+/*bool AliensLazersStorage::Push(ElementaryObject* ob)
 {
     if (counter >= storageCapacity) return false;
     storage[counter++] = ob;
     return true;
-}
+}*/
 
 
 
@@ -785,20 +801,20 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
 }
 
 
-void  ObjectsStore::Checks_herolazer_plainAlien()
+bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
 {
     #define HEROLAZER *heroLazerStorage->operator[](l)
 
-    //#define ALIEN *(static_cast<ComplexObject*>(alienFleetOneStorage->operator[](a)))
     #define ALIEN *alienFleetOneStorage->operator[](a)
     #define HEROLAZER_ABSENT heroLazerStorage->operator[](0) == nullptr
     #define CURRENT_HEROLAZER_ABSENT heroLazerStorage->operator[](l) == nullptr
     #define ALIEN_ABSENT alienFleetOneStorage->operator[](a) == nullptr
     #define ALIEN_outSCREEN !alienFleetOneStorage->operator[](a)->OnScreen()
+    #define ALIEN_SCORE alienFleetOneStorage->operator[](a)->GetScoreWeight()
 
 
-
-    if ( HEROLAZER_ABSENT ) return;
+    bool score_changed {false};
+    if ( HEROLAZER_ABSENT ) return false;
     for (int l = 0; l < heroLazerStorage->GetCounter(); ++l)
     {
         if ( CURRENT_HEROLAZER_ABSENT ) break;
@@ -807,15 +823,18 @@ void  ObjectsStore::Checks_herolazer_plainAlien()
             if ( ALIEN_ABSENT ) continue;
             if (ALIEN_outSCREEN) break;
 
-            if (ALIEN == HEROLAZER)// Сравнение Alien vs HeroLazer(Alien.operator==)
+            if (ALIEN == HEROLAZER)
             {
                 alienFleetOneStorage->operator[](a)->ItIsGoneNow();
                 heroLazerStorage->operator[](l)->ResetOnScreen(false);
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
+                status.gameScore += ALIEN_SCORE;
+                score_changed = true;
                 break;
             }
         }
     }
+
     
 
     #undef HEROLAZER
@@ -824,5 +843,7 @@ void  ObjectsStore::Checks_herolazer_plainAlien()
     #undef CURRENT_HEROLAZER_ABSENT
     #undef ALIEN_ABSENT
     #undef ALIEN_outSCREEN
+    #undef ALIEN_SCORE
+    return score_changed;
 }
 

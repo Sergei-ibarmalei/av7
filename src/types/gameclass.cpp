@@ -58,21 +58,12 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
         gameClassStatus = false; return;
     }
 
-    /*gameFleets = new (std::nothrow) Fleets(&collection);
-    if (!gameFleets || !gameFleets->Status())
-    {
-        gameClassStatus = false; return;
-    }*/
-
-
-
-    
+   
 
 }
 
 void GameClass::initPause(tc& collection)
 {
-    //enum {pause_, pressEscape};
 
     pause[pause_] = collection.Strings()[tn::pause];
     pause[pressEscape] = collection.Strings()[tn::pressEscape];
@@ -157,8 +148,6 @@ GameClass::~GameClass()
     delete objectsStore;
     objectsStore = nullptr;
 
-    //delete gameFleets;
-    //gameFleets = nullptr;
 }
 
 void GameClass::initStatus()
@@ -170,6 +159,7 @@ void GameClass::initStatus()
     status.partOne = false;
     status.partTwo = false;
     status.HeroLives = HERO_LIVES;
+    status.gameScore = 0;
 }
 
 bool GameClass::flow(log_::Log& log)

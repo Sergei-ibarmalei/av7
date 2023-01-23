@@ -27,7 +27,7 @@ GameInfoClass::GameInfoClass(tc& collection, log_::Log& log)
 
 GameInfoClass::~GameInfoClass()
 {
-    for (int t = 0; t < scoreBannerLen; ++t)
+    for (int t = 0; t < allDigits; ++t)
     {
         heap_scoreBanner[t].texture = nullptr;
     }
@@ -154,17 +154,19 @@ void GameInfoClass::ShowGameInfo(Sdl* sdl, status_t& gameStatus)
 
 }
 
+/*Куча текстур цифр для отображения счета*/
 bool GameInfoClass::initScoreBanner_heap(tc& collection, log_::Log& log)
 {
     int offSet = tn::zeroScoreB;
-    heap_scoreBanner = new (std::nothrow) texture_[scoreBannerLen];
+    heap_scoreBanner = new (std::nothrow) texture_[allDigits];
     if (!heap_scoreBanner)
     {
         log.log_info = "Cannot allocate memory for score banner_heap.\n";
         log.push(log.log_info); 
         return false;
     }
-    for (int t = 0; t < scoreBannerLen; ++t)
+    /*Кидаем в кучу текстуры цифр от 0 до 9*/
+    for (int t = 0; t < allDigits; ++t)
     {
         heap_scoreBanner[t] = collection.Strings()[t+offSet];
     }
@@ -190,3 +192,48 @@ bool GameInfoClass::initHeroLives_heap(tc& collection, log_::Log& log)
     }
     return true;
 }
+
+/*Изменение счета на велечину delta*/
+void GameInfoClass::ChangeScore(status_t& status)
+{
+    int segment;
+    int count {100'000};
+    int first;
+    int remainder; //остаток
+    clearScoreBanner();
+
+    #define SCORE status.gameScore
+
+    first = SCORE / count;
+    remainder = SCORE % count;
+    for (segment = 0; segment < scoreBannerLen; ++segment)
+    {
+        count /= 10;
+        if (heap_scoreBanner[first].texture == nullptr)
+        {
+            std::cout << "nullptr\n";
+        }
+        scoreBanner[segment].texture = heap_scoreBanner[first].texture;
+        if (count)
+        {
+            first = remainder / count;
+            remainder %= count;
+        }
+        else first = remainder;
+    } 
+
+    #undef SCORE
+
+}
+
+
+/*Очистка текстур в ScoreBanner*/
+void GameInfoClass::clearScoreBanner()
+{
+    //if (!scoreBanner) return;
+    for (int segment = 0; segment < scoreBannerLen; ++segment)
+    {
+        scoreBanner[segment].texture = nullptr;
+    }
+}
+

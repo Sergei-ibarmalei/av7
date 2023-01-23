@@ -46,7 +46,7 @@ bool Sdl::Init(const char* appName, log_::Log& log)
 
     gRenderer = SDL_CreateRenderer(gWindow,
                                     -1,
-                                    SDL_RENDERER_SOFTWARE);//SDL_RENDERER_ACCELERATED);
+                                    SDL_RENDERER_SOFTWARE/*SDL_RENDERER_ACCELERATED*/);
     if (!gRenderer)
     {
         log.log_info = "Renderer could not be created.";

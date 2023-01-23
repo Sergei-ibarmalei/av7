@@ -16,6 +16,7 @@ class GameInfoClass
     enum {heroLivesLen = 3};
     enum {textureOfZero};
     enum {x1, x2, x3, all_x};
+    enum {allDigits = 10,};
     texture_*  heap_scoreBanner {nullptr};
     texture_*  heap_heroLivesMult   {nullptr};
     texture_*  hero_texture {nullptr};
@@ -28,6 +29,7 @@ class GameInfoClass
     void       initHeroLives(tc& collection);
     void       setScoreBannerCoords();
     void       setHeroLivesCoords();
+    void       clearScoreBanner();
 
     public:
     explicit GameInfoClass(tc& collection, log_::Log& log);
@@ -36,6 +38,7 @@ class GameInfoClass
     ~GameInfoClass();
     bool Status() const {return init;}
     void ShowGameInfo(Sdl* sdl, status_t& gameStatus);
+    void ChangeScore(status_t& status);
 };
 
 

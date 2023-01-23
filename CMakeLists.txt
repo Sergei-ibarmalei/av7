@@ -12,17 +12,12 @@ set(SOURCES
     src/types/skyclass.cpp
     src/types/partone.cpp
     src/types/gameInfoClass.cpp
-    #src/types/longlazer.cpp
     src/types/nlazer.cpp
     src/types/n_ob.cpp
-    #src/types/n_oblist.cpp
-    #src/types/elist.cpp
-    #src/types/aliens.cpp
     src/types/fleets.cpp
     src/core/core.cpp
     src/core/rand.cpp
     src/core/checkcrossing.cpp
-    #src/core/checklazercollision.cpp
     src/main.cpp)
 
 

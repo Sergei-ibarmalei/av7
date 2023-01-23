@@ -12,6 +12,8 @@ typedef struct
     bool partTwo;
     int  HeroLives;
     bool gameQuit;
+
+    int  gameScore;
 } status_t;
 
 enum borderSides {borderUp,

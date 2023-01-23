@@ -231,6 +231,7 @@ TexturesCollection::~TexturesCollection()
     delete[] pictures;
     pictures = nullptr;
 
+
     for (object = tn::new_game; object < tn::allStringTextures; ++object)
     {
         if(strings[object].texture)

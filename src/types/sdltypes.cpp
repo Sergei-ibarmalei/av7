@@ -17,6 +17,7 @@ CRC::CRC(const int len)
     {
         init = false; return;
     }
+    arrLen = len;
 }
 
 
@@ -54,7 +55,10 @@ bool CRC::cmp_oneTomany(const rect_* one)
 {
     for (int rect = 0; rect < arrLen; ++rect)
     {
-        if (*one == array[rect]) return true;
+        if (*one == array[rect])
+        {
+            return true;
+        }
     }
     return false;
 }

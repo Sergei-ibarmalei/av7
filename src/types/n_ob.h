@@ -87,6 +87,11 @@ namespace re
     enum  alien_t1 {t1_one, t1_two, t1_three, t1_allR};
 }
 
+namespace scores
+{
+    enum weight {plainAlien = 5,};
+}
+
 class NHero: public ComplexObject
 {
     private:
@@ -148,6 +153,7 @@ class HeroLazer: public BaseLazer
 class AlienABC: public ComplexObject
 {
     protected:
+    int scoreWeight;
     rect_* lazerMainRect;
 
     void setToStartPos(const int x, const int y) override;
@@ -162,6 +168,7 @@ class AlienABC: public ComplexObject
     AlienABC(const AlienABC&) = delete;
     ~AlienABC();
     AlienABC& operator=(const AlienABC&) = delete;
+    int GetScoreWeight() const {return scoreWeight;}
 
 };
 
@@ -199,10 +206,11 @@ class ArrStorageABC
     ArrStorageABC(const int capacity);
     ArrStorageABC(const ArrStorageABC&) = delete;
     ArrStorageABC& operator=(const ArrStorageABC&) = delete;
-    virtual ~ArrStorageABC();
+    virtual ~ArrStorageABC() = 0;
     bool Status() const {return init;}
     void Clear();
-    virtual bool Push(ElementaryObject* ob) = 0;
+    //virtual bool Push(ElementaryObject* ob) = 0;
+    bool Push(ElementaryObject* ob);
 
     int GetCapacity() const {return storageCapacity;}
     int GetCounter()   {return counter;}
@@ -220,7 +228,7 @@ class HeroLazerStorage: public ArrStorageABC
     HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
 
     HeroLazer* operator[](const int index);
-    bool Push(ElementaryObject* ob) override;
+    //bool Push(ElementaryObject* ob) override;
     void Move(bool& flag_toStartSort);
     void Show(const Sdl* sdl) const;
 };
@@ -234,7 +242,7 @@ class AlienFleet_oneStorage: public ArrStorageABC
     AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
     Alien* operator[](const int index);
-    bool Push(ElementaryObject* ob) override;
+    //bool Push(ElementaryObject* ob) override;
 };
 
 //All aliens lazers storage
@@ -246,7 +254,7 @@ class AliensLazersStorage: public ArrStorageABC
     AliensLazersStorage(const AliensLazersStorage&) = delete;
     AliensLazersStorage& operator=(const AliensLazersStorage&) = delete;
     ElementaryObject* operator[](const int index);
-    bool Push(ElementaryObject* ob) override;
+    //bool Push(ElementaryObject* ob) override;
 
 };
 
@@ -278,7 +286,7 @@ class ObjectsStore
 
 
     bool Status() const {return init;}
-    void  Checks_herolazer_plainAlien();
+    bool  Checks_herolazer_plainAlien(status_t& status);
 
 
 
