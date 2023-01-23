@@ -22,6 +22,8 @@ struct Rect: public SDL_Rect
         return true;
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const  Rect& r);
+
 };
 
 using rect_ = Rect;
@@ -49,17 +51,18 @@ class CRC
     rect_* array;
     int    arrLen;
     bool   init {true};
+    bool   cmp_oneTomany(const rect_* r);
     bool   comparison(const rect_* first, const int len, const rect_* second) const;
 
     public:
     CRC(const int len);
-    CRC(const CRC& crc);
-    CRC& operator=(const CRC& crc);
+    CRC(const CRC&) = delete;
+    CRC& operator=(const CRC&) = delete;
     bool operator==(const CRC& crc);
+    bool operator==(const CRC* crc);
     bool operator==(rect_* r);
 
 
-    bool operator==(const rect_ r);
 
 
     

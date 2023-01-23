@@ -1,6 +1,10 @@
 #include "sdltypes.h"
 
-
+std::ostream& operator<<(std::ostream& os, const Rect& r)
+{
+    os << "[x: " << r.x << ", y: " << r.y << ", w: " << r.w << ", h: " << r.h << "]\n";
+    return os;
+}
 
 CRC::CRC(const int len)
 {
@@ -15,28 +19,6 @@ CRC::CRC(const int len)
     }
 }
 
-
-
-
-CRC::CRC(const CRC& crc)
-{
-    if (crc.arrLen <= 0)
-    {
-        init = false; 
-        return;
-    }
-    array = new (std::nothrow) rect_[crc.arrLen];
-    if (!array)
-    {
-        init = false; return;
-    }
-    arrLen = crc.arrLen;
-    for (int i = 0; i < arrLen; ++i)
-    {
-        array[i] = crc.array[i];
-    } 
-
-}
 
 
 
@@ -55,26 +37,24 @@ bool CRC::operator==(const CRC& crc)
                                   comparison(crc.array, crc.arrLen, array);
 }
 
+bool CRC::operator==(const CRC* crc)
+{
+    return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array):
+                                    comparison(crc->array, crc->arrLen, array);
+}
+
 bool CRC::operator==(rect_* r)
 {
-    //return comparison(r, 1, array);
-    return comparison(r, arrLen, array);
+    return cmp_oneTomany(r);
 }
 
-bool CRC::operator==(const rect_ r)
-{
-    return comparison(&r, 1, array);
-}
 
-CRC& CRC::operator=(const CRC& crc)
+
+bool CRC::cmp_oneTomany(const rect_* one)
 {
-    if (this == &crc) return *this;
-    delete array;
-    array = new (std::nothrow) rect_[crc.arrLen];
-    arrLen = crc.arrLen;
-    for (int i = 0; i < arrLen; ++i)
+    for (int rect = 0; rect < arrLen; ++rect)
     {
-        array[i] = crc.array[i];
+        if (*one == array[rect]) return true;
     }
-    return *this;
+    return false;
 }

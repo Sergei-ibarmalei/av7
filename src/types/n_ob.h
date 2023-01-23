@@ -28,7 +28,7 @@ class ElementaryObject
     ElementaryObject(const texture_* t);
     ElementaryObject(const ElementaryObject& eo);
     ElementaryObject& operator=(const ElementaryObject& eo);
-    bool operator==(const ElementaryObject& eo);
+    //bool operator==(const ElementaryObject& eo);
     virtual ~ElementaryObject();
     bool Status() const {return init;}
     virtual void Move() = 0;
@@ -68,10 +68,8 @@ class ComplexObject: public ElementaryObject
     public:
     ComplexObject(const texture_* t, const int arrLen);
     ComplexObject& operator=(const ComplexObject& ) = delete;
-    bool operator==(const ElementaryObject& eo);
-    bool operator==(const ComplexObject& co);
     ~ComplexObject();
-    ComplexObject(const ComplexObject& co);
+    ComplexObject(const ComplexObject& co) = delete;
     plot* GetLazerStart() const {return lazerStart;}
     virtual void Move() = 0;
 
@@ -121,6 +119,32 @@ class NHero: public ComplexObject
     bool Status() const {return ElementaryObject::Status();}
 };
 
+
+
+class BaseLazer: public ElementaryObject
+{
+    protected:
+    dir::direction direct;
+
+    public:
+    BaseLazer(const plot* start, dir::direction d, const texture_* t);
+    BaseLazer(const BaseLazer&) = delete;
+    BaseLazer& operator=(const BaseLazer&) = delete;
+    virtual ~BaseLazer() {}
+    void Move();
+    int Lazer_x() const;
+    int Lazer_y() const;
+    int Lazer_w() const;
+    void ShowLazer(const Sdl* sdl) const;
+};
+
+class HeroLazer: public BaseLazer
+{
+    public:
+    HeroLazer(const plot* start, const texture_* t);
+};
+
+
 class AlienABC: public ComplexObject
 {
     protected:
@@ -153,38 +177,13 @@ class Alien: public AlienABC
     ~Alien();
     Alien(const Alien&) = delete;
     Alien& operator=(const Alien&) = delete;
+    bool operator==(const HeroLazer& hl);
     void Move();
     void Show(const Sdl* sdl);
 
 
 
 };
-
-
-class BaseLazer: public ElementaryObject
-{
-    protected:
-    dir::direction direct;
-
-    public:
-    BaseLazer(const plot* start, dir::direction d, const texture_* t);
-    BaseLazer(const BaseLazer&) = delete;
-    BaseLazer& operator=(const BaseLazer&) = delete;
-    virtual ~BaseLazer() {}
-    void Move();
-    int Lazer_x() const;
-    int Lazer_y() const;
-    int Lazer_w() const;
-    void ShowLazer(const Sdl* sdl) const;
-};
-
-class HeroLazer: public BaseLazer
-{
-    public:
-    HeroLazer(const plot* start, const texture_* t);
-};
-
-
 
 
 class ArrStorageABC

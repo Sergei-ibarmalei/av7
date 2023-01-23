@@ -28,7 +28,7 @@ void Border::ShowBorder(Sdl* sdl)
     SDL_RenderFillRect(sdl->Renderer(), &border[borderDown]);
     SDL_RenderFillRect(sdl->Renderer(), &border[borderLeft]);
     SDL_RenderFillRect(sdl->Renderer(), &border[borderRight]);
-    SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0);   
+    SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0xFF);   
     SDL_RenderFillRect(sdl->Renderer(), &border[blackBanner]);
 }
 

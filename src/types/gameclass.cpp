@@ -282,8 +282,6 @@ void GameClass::showHeroIntro()
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
         nHero->Show(sdl_);
-        #ifdef SHOW_COL_R
-        #endif
         borderSky_show_moving();
         gameInfo->ShowGameInfo(sdl_, status);
         nHero->HeroMovesInIntro(status);

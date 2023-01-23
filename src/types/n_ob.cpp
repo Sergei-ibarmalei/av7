@@ -53,11 +53,6 @@ ElementaryObject& ElementaryObject::operator=(const ElementaryObject& eo)
     return *this;
 }
 
-bool ElementaryObject::operator==(const ElementaryObject& eo)
-{
-    return obj_texture->main_rect == eo.obj_texture->main_rect;
-}
-
 
 
 void ElementaryObject::ShowObj(const Sdl* sdl) const
@@ -94,12 +89,6 @@ void ElementaryObject::resetUpLeftCorner_y(const int y)
 }
 
 
-ComplexObject::ComplexObject(const ComplexObject& co): ElementaryObject(co)
-{
-    delete cr;
-    cr = new (std::nothrow) CRC(co.collisionArrLen);
-    *cr = *co.cr;
-}
 
 ComplexObject::~ComplexObject()
 {
@@ -124,35 +113,16 @@ ComplexObject::ComplexObject(const texture_* t, const int arrLen):
     //std::cout << "In ComplexObject ctor.\n";
     if (arrLen <= 0)
     {
-        ElementaryObject::init = false; return;
+        init = false; return;
     }
     collisionArrLen = arrLen;
     cr = new (std::nothrow) CRC(collisionArrLen);
     if (cr->Status() == false)
     {
-        ElementaryObject::init = false; return;
+        init = false; return;
     }
 }
 
-bool ComplexObject::operator==(const ElementaryObject& eo)
-{
-    if (obj_texture->main_rect ==eo.MainRect())
-    {
-        return *cr == &eo.MainRect();
-    }
-    return false;
-}
-
-
-
-bool ComplexObject::operator==(const ComplexObject& co)
-{
-    if (ElementaryObject::obj_texture->main_rect == co.MainRect())
-    {
-        return *cr == *co.cr;
-    }
-    return false;
-}
 
 void ComplexObject::Show(const Sdl* sdl) const
 {
@@ -163,6 +133,7 @@ void ComplexObject::Show(const Sdl* sdl) const
         {
             SDL_RenderDrawRect(sdl->Renderer(), &cr->Array()[r]);
         }
+        SDL_SetRenderDrawColor(sdl->Renderer(), 0, 0, 0, 0xFF);
     #endif
 }
 
@@ -523,6 +494,16 @@ void Alien::Move()
     }
 }
 
+bool Alien::operator==(const HeroLazer& hl)
+{
+    if (obj_texture->main_rect == *hl.GetMainRect())
+    {
+        //return true;
+        return *cr == hl.GetMainRect();
+    }
+    return false;
+}
+
 
 
 
@@ -808,7 +789,8 @@ void  ObjectsStore::Checks_herolazer_plainAlien()
 {
     #define HEROLAZER *heroLazerStorage->operator[](l)
 
-    #define ALIEN *(static_cast<ComplexObject*>(alienFleetOneStorage->operator[](a)))
+    //#define ALIEN *(static_cast<ComplexObject*>(alienFleetOneStorage->operator[](a)))
+    #define ALIEN *alienFleetOneStorage->operator[](a)
     #define HEROLAZER_ABSENT heroLazerStorage->operator[](0) == nullptr
     #define CURRENT_HEROLAZER_ABSENT heroLazerStorage->operator[](l) == nullptr
     #define ALIEN_ABSENT alienFleetOneStorage->operator[](a) == nullptr
@@ -823,9 +805,9 @@ void  ObjectsStore::Checks_herolazer_plainAlien()
         for (int a = 0; a < alienFleetOneStorage->GetCapacity(); ++a)
         {
             if ( ALIEN_ABSENT ) continue;
-            if (ALIEN_outSCREEN) goto toexit;
+            if (ALIEN_outSCREEN) break;
 
-            if (ALIEN == HEROLAZER)// Сравнение ComplexObject vs ElementaryObject
+            if (ALIEN == HEROLAZER)// Сравнение Alien vs HeroLazer(Alien.operator==)
             {
                 alienFleetOneStorage->operator[](a)->ItIsGoneNow();
                 heroLazerStorage->operator[](l)->ResetOnScreen(false);
@@ -842,6 +824,5 @@ void  ObjectsStore::Checks_herolazer_plainAlien()
     #undef CURRENT_HEROLAZER_ABSENT
     #undef ALIEN_ABSENT
     #undef ALIEN_outSCREEN
-    toexit: return;
 }
 
