@@ -17,11 +17,13 @@ class ElementaryObject
     bool isGone {false};
     texture_*  obj_texture    {nullptr};
     plot*      obj_velocities {nullptr};
+    plot*      obj_center     {nullptr};
     void setUpLeftCorner(const int x, const int y);
     void resetUpLeftCorner();
     void resetUpLeftCorner_x(const int x);
     void resetUpLeftCorner_y(const int y);
     void ShowObj(const Sdl* sdl) const;
+    void resetCenter();
 
 
     public:
@@ -71,6 +73,7 @@ class ComplexObject: public ElementaryObject
     ~ComplexObject();
     ComplexObject(const ComplexObject& co) = delete;
     plot* GetLazerStart() const {return lazerStart;}
+    plot* GetCenter() const {return obj_center;}
     virtual void Move() = 0;
 
     void Show(const Sdl* sdl) const;
@@ -209,7 +212,6 @@ class ArrStorageABC
     virtual ~ArrStorageABC() = 0;
     bool Status() const {return init;}
     void Clear();
-    //virtual bool Push(ElementaryObject* ob) = 0;
     bool Push(ElementaryObject* ob);
 
     int GetCapacity() const {return storageCapacity;}
@@ -228,7 +230,6 @@ class HeroLazerStorage: public ArrStorageABC
     HeroLazerStorage& operator=(const HeroLazerStorage&) = delete;
 
     HeroLazer* operator[](const int index);
-    //bool Push(ElementaryObject* ob) override;
     void Move(bool& flag_toStartSort);
     void Show(const Sdl* sdl) const;
 };
@@ -242,7 +243,6 @@ class AlienFleet_oneStorage: public ArrStorageABC
     AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
     AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
     Alien* operator[](const int index);
-    //bool Push(ElementaryObject* ob) override;
 };
 
 //All aliens lazers storage
@@ -254,9 +254,162 @@ class AliensLazersStorage: public ArrStorageABC
     AliensLazersStorage(const AliensLazersStorage&) = delete;
     AliensLazersStorage& operator=(const AliensLazersStorage&) = delete;
     ElementaryObject* operator[](const int index);
-    //bool Push(ElementaryObject* ob) override;
 
 };
+
+class DieScoresObject: public ElementaryObject
+{
+    
+   private:
+   enum {pathLength = 40,};
+   int stepsCount;
+   void move_object();
+
+   public:
+   DieScoresObject(const texture_* t);
+   ~DieScoresObject() {}
+   DieScoresObject(const DieScoresObject&) = delete;
+   DieScoresObject& operator=(const DieScoresObject&) = delete;
+   void Move();
+   void Show(const Sdl* sdl) const;
+
+};
+
+class DieScoresComplex
+{
+    private:
+    enum {firstTexture, secondTexture, maxTexture,};
+    bool init {true};
+    int arrLen;
+    DieScoresObject** complex;
+
+    public:
+    DieScoresComplex(const plot* ship_center, const texture_* first, 
+                     const texture_* second = nullptr);
+    DieScoresComplex(const DieScoresComplex&) = delete;
+    DieScoresComplex& operator=(const DieScoresComplex&) = delete;
+    ~DieScoresComplex();
+    bool Status() const {return init;}
+    void Move();
+    void Show(const Sdl* sdl) const;
+    bool IsItGone() const {return complex[firstTexture]->IsItGone();}
+    
+};
+
+
+template<class T>
+class ObjectsList
+{
+    private:
+    template<class N>
+    struct Node
+    {
+        N* data;
+        struct Node* next;
+        ~Node()
+        {
+            delete data;
+            data = nullptr;
+        }
+    };
+    struct Node<T>* first;
+    struct Node<T>** current;
+
+    public:
+    ObjectsList();
+    ~ObjectsList();
+    ObjectsList(const ObjectsList&) = delete;
+    ObjectsList& operator=(const ObjectsList&) = delete;
+    void Push(T* data);
+    void Show(const Sdl* sdl) const;
+    void Check();
+    void Move();
+
+
+};
+
+template<class T>
+ObjectsList<T>::ObjectsList()
+{
+    first = nullptr;
+}
+
+template<class T>
+ObjectsList<T>::~ObjectsList()
+{
+    while (first)
+    {
+        struct Node<T>* tmp = first;
+        first = first->next;
+        delete tmp;
+        tmp = nullptr;
+    }
+}
+
+template<class T>
+void ObjectsList<T>::Push(T* data)
+{
+    if (!data) return;
+    struct Node<T>* tmp = new (std::nothrow) Node<T>;
+    if (!tmp) return;
+    tmp->data = data;
+    if (!first)
+    {
+        tmp->next = nullptr;
+        first = tmp;
+        return; 
+    }
+    tmp->next = first;
+    first = tmp;
+    return;
+}
+
+template<class T>
+void ObjectsList<T>::Show(const Sdl* sdl) const
+{
+    if (!first) 
+    {
+        return;
+    }
+    struct Node<T>* tmp = first;
+    while (tmp)
+    {
+        tmp->data->Show(sdl);
+        tmp = tmp->next;
+    }
+
+}
+
+template<class T>
+void ObjectsList<T>::Check()
+{
+    current = &first;
+    while (*current)
+    {
+        if ( (*current)->data->IsItGone())
+        { 
+            struct Node<T>* tmp = *current;
+            *current = (*current)->next;
+            delete tmp;
+        }
+        else current = &(*current)->next;
+    }
+}
+
+template<class T>
+void ObjectsList<T>::Move()
+{
+    if (!first) return;
+    struct Node<T>* tmp = first;
+    while(tmp)
+    {
+        tmp->data->Move();
+        tmp = tmp->next;
+    }
+}
+
+
+
 
 
 /*Место для хранения объектов*/
@@ -265,16 +418,21 @@ class ObjectsStore
     private:
     bool init {true};
     const tc* tcollection;
+    const texture_* digits;
     HeroLazerStorage* heroLazerStorage;
     AliensLazersStorage* aliensLazerStorage;
     AlienFleet_oneStorage* alienFleetOneStorage;
+
+    ObjectsList<DieScoresComplex>* dieScores;
+    DieScoresComplex* make_scoreComplex(const plot* ship_center, 
+                                        const int score);
 
     bool makeAlienFleetOne(const tc* collection);
     
     
 
     public:
-    ObjectsStore(const tc* collection);
+    ObjectsStore(const tc* collection, const texture_* heap_digits);
     ~ObjectsStore();
     ObjectsStore(const ObjectsStore&) = delete;
     ObjectsStore& operator=(const ObjectsStore&) = delete;
@@ -287,6 +445,9 @@ class ObjectsStore
 
     bool Status() const {return init;}
     bool  Checks_herolazer_plainAlien(status_t& status);
+    void ShowDieScores(const Sdl* sdl) const;
+    void MoveDieScores();
+    void ClearDieScores();
 
 
 

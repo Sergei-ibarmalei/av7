@@ -24,11 +24,24 @@ ElementaryObject::ElementaryObject(const texture_* t)
         return;
     }
     obj_texture = new (std::nothrow) texture_;
+    if (!obj_texture)
+    {
+        init = false; return;
+    }
+    obj_center = new (std::nothrow) plot;
+    if (!obj_center)
+    {
+        init = false; return;
+    }
     obj_texture->texture = t->texture;
     obj_texture->main_rect.w = t->main_rect.w;
     obj_texture->main_rect.h = t->main_rect.h;
     obj_texture->main_rect.x = obj_texture->main_rect.y = 0;
+
+    obj_center->x = obj_texture->main_rect.w / 2;
+    obj_center->y = obj_texture->main_rect.h / 2;
     obj_velocities = new plot{0, 0};
+    if (!obj_velocities) init = false;
 
 }
 
@@ -47,9 +60,14 @@ ElementaryObject& ElementaryObject::operator=(const ElementaryObject& eo)
     if (this == &eo) return *this;
     obj_texture->texture = nullptr;
     delete obj_texture;
+    delete obj_center;
+    delete obj_velocities;
     obj_texture = new (std::nothrow) texture_;
     obj_texture->texture = eo.obj_texture->texture;
     obj_texture->main_rect = eo.obj_texture->main_rect;
+    obj_center = new (std::nothrow) plot;
+    obj_center = eo.obj_center;
+    obj_velocities = eo.obj_velocities;
     return *this;
 }
 
@@ -65,27 +83,37 @@ void ElementaryObject::ShowObj(const Sdl* sdl) const
     #endif
 }
 
+void ElementaryObject::resetCenter()
+{
+    obj_center->x = obj_texture->main_rect.x + obj_texture->main_rect.w / 2;
+    obj_center->y = obj_texture->main_rect.y + obj_texture->main_rect.h / 2;
+}
 
 void ElementaryObject::resetUpLeftCorner()
 {
     obj_texture->main_rect.x += obj_velocities->x;
     obj_texture->main_rect.y += obj_velocities->y;
+    resetCenter();
 }
 
 void ElementaryObject::setUpLeftCorner(const int x, const int y)
 {
     obj_texture->main_rect.x = x;
     obj_texture->main_rect.y = y;
+    resetCenter();
+
 }
 
 void ElementaryObject::resetUpLeftCorner_x(const int x)
 {
     obj_texture->main_rect.x += x;
+    resetCenter();
 }
 
 void ElementaryObject::resetUpLeftCorner_y(const int y)
 {
     obj_texture->main_rect.y += y;
+    resetCenter();
 }
 
 
@@ -154,6 +182,7 @@ NHero::NHero(const texture_* t): ComplexObject(t, re::heros::allR)
     {
         init = false; return;
     }*/
+    Velocities()->x = Velocities()->y = 0;
     initHeroStopIntro();
     setToStartPos(HEROSTART_X, HEROSTART_Y);
     setCr();
@@ -634,13 +663,7 @@ HeroLazer* HeroLazerStorage::operator[](const int index)
     return static_cast<HeroLazer*>(storage[index]);
 }
 
-/*bool HeroLazerStorage::Push(ElementaryObject* ob)
-{
-    if (counter >= storageCapacity) return false;
-    //storage[counter++] = static_cast<HeroLazer*>(ob);
-    storage[counter++] = ob;
-    return true;
-}*/
+
 
 void HeroLazerStorage::Move(bool& flag_toStartSort)
 {
@@ -679,15 +702,6 @@ Alien* AlienFleet_oneStorage::operator[](const int index)
     return static_cast<Alien*>(storage[index]);
 }
 
-/*bool AlienFleet_oneStorage::Push(ElementaryObject* ob)
-{
-    if (counter >= storageCapacity) return false;
-    //storage[counter] = static_cast<Alien*>(ob);
-    //counter += 1;
-    storage[counter++] = ob;
-    return true;
-}*/
-
 
 AliensLazersStorage::AliensLazersStorage(const int capacity):
                                                 ArrStorageABC(capacity)
@@ -701,24 +715,147 @@ ElementaryObject* AliensLazersStorage::operator[](const int index)
     return storage[index];
 }
 
-/*bool AliensLazersStorage::Push(ElementaryObject* ob)
+
+DieScoresObject::DieScoresObject(const texture_* textures):
+    ElementaryObject(textures)
 {
-    if (counter >= storageCapacity) return false;
-    storage[counter++] = ob;
-    return true;
-}*/
+    Velocities()->x = 0;
+    Velocities()->y = DIESCORE_VELOCITY;
+    stepsCount = 0;
+}
+
+void DieScoresObject::move_object()
+{
+    if (IsItGone()) return;
+    resetUpLeftCorner();
+    stepsCount++;
+    if (stepsCount == pathLength) ItIsGoneNow();
+}
+
+void DieScoresObject::Move()
+{
+    move_object();
+}
+
+void DieScoresObject::Show(const Sdl* sdl) const
+{
+    ShowObj(sdl);
+}
+
+
+DieScoresComplex::DieScoresComplex(const plot* ship_center, const texture_* f,       
+                                    const texture_* s)
+{
+    if ( (!f && !s) || !f)
+    {
+        init = false; return;
+    }
+    if (f && s)
+    {
+        arrLen = maxTexture;
+        complex = new (std::nothrow) DieScoresObject* [maxTexture] {nullptr};
+        complex[firstTexture] = new (std::nothrow) DieScoresObject(f);
+        if (!complex[firstTexture])
+        {
+            init = false; return;
+        }
+        complex[firstTexture]->GetMainRect()->x = 
+            ship_center->x - complex[firstTexture]->GetMainRect()->w;
+        complex[firstTexture]->GetMainRect()->y =
+            ship_center->y - complex[firstTexture]->GetMainRect()->h / 2;
+        complex[secondTexture] = new (std::nothrow) DieScoresObject(s);
+        if (!complex[secondTexture])
+        {
+            init = false; return;
+        }
+        complex[secondTexture]->GetMainRect()->x = ship_center->x;
+        complex[secondTexture]->GetMainRect()->y = 
+            complex[firstTexture]->GetMainRect()->y;
+    }
+    else
+    {
+        arrLen = 1;
+        complex = new (std::nothrow) DieScoresObject* [1] {nullptr};
+        complex[firstTexture] = new (std::nothrow) DieScoresObject(f);
+        if (!complex[firstTexture])
+        {
+            init = false; return;
+        }
+        complex[firstTexture]->GetMainRect()->x =
+            ship_center->x - complex[firstTexture]->GetMainRect()->w / 2;
+        complex[firstTexture]->GetMainRect()->y = 
+            ship_center->y - complex[firstTexture]->GetMainRect()->h / 2;
+    }
+}
+
+DieScoresComplex::~DieScoresComplex()
+{
+    for (int t = firstTexture; t < arrLen; ++t)
+    {
+        delete complex[t];
+        complex[t] = nullptr;
+    }
+    delete complex;
+    complex = nullptr;
+    /*if (arrLen == maxTexture)
+    {
+        for (int t = firstTexture; t < maxTexture; ++t)
+        {
+            delete complex[t];
+            complex[t] = nullptr;
+        }
+        delete complex;
+        complex = nullptr;
+    }
+    else
+    {
+        delete *complex;
+        *complex = nullptr;
+    }*/
+}
+
+void DieScoresComplex::Move()
+{
+    if (arrLen == maxTexture)
+    {
+        for (int t = firstTexture; t < maxTexture; ++t)
+        {
+            complex[t]->Move();
+        }
+        return;
+    }
+    complex[firstTexture]->Move();
+}
+
+void DieScoresComplex::Show(const Sdl* sdl) const
+{
+    if (arrLen == maxTexture)
+    {
+        for (int t = firstTexture; t < maxTexture; ++t)
+        {
+            complex[t]->Show(sdl);
+        }
+        return;
+    }
+    complex[firstTexture]->Show(sdl);
+
+}
 
 
 
 
-
-ObjectsStore::ObjectsStore(const tc* collection)
+ObjectsStore::ObjectsStore(const tc* collection, const texture_* heap_digits)
 {
     if (!collection)
     {
         init = false; return;
     }
     tcollection = collection;
+    if (!heap_digits)
+    {
+        init = false; return;
+    }
+    digits = heap_digits;
     heroLazerStorage = new (std::nothrow) 
                                         HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
     if (!heroLazerStorage)
@@ -742,6 +879,12 @@ ObjectsStore::ObjectsStore(const tc* collection)
         init = false; return;
     }
 
+    dieScores = new (std::nothrow) ObjectsList<DieScoresComplex>();
+    if (!dieScores)
+    {
+        init = false; return;
+    }
+
 }
 
 ObjectsStore::~ObjectsStore()
@@ -753,6 +896,8 @@ ObjectsStore::~ObjectsStore()
     alienFleetOneStorage = nullptr;
     delete aliensLazerStorage;
     aliensLazerStorage = nullptr;
+    delete dieScores;
+    dieScores = nullptr;
 }
 
 void ObjectsStore::MoveHeroLazers()
@@ -761,7 +906,6 @@ void ObjectsStore::MoveHeroLazers()
     heroLazerStorage->Move(flag_StartSort);
     if (flag_StartSort)
     {
-        //heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP, heroLazerStorage->GetCounter());
         heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
     }
 }
@@ -784,9 +928,7 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
   
     #define COUNTER heroLazerStorage->GetCounter()
     #define PREVLAZER heroLazerStorage->operator[](COUNTER - 1)
-    //#define PREVLAZER_X PREVLAZER->GetLazer_x()
     #define PREVLAZER_X PREVLAZER->Lazer_x()
-    //#define PREVLAZER_W PREVLAZER->GetLazer_w()
     #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
     if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return false;
@@ -804,13 +946,13 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
 bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
 {
     #define HEROLAZER *heroLazerStorage->operator[](l)
-
     #define ALIEN *alienFleetOneStorage->operator[](a)
     #define HEROLAZER_ABSENT heroLazerStorage->operator[](0) == nullptr
     #define CURRENT_HEROLAZER_ABSENT heroLazerStorage->operator[](l) == nullptr
     #define ALIEN_ABSENT alienFleetOneStorage->operator[](a) == nullptr
     #define ALIEN_outSCREEN !alienFleetOneStorage->operator[](a)->OnScreen()
     #define ALIEN_SCORE alienFleetOneStorage->operator[](a)->GetScoreWeight()
+    #define ALIEN_CENTER alienFleetOneStorage->operator[](a)->GetCenter()
 
 
     bool score_changed {false};
@@ -830,6 +972,7 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
                 status.gameScore += ALIEN_SCORE;
                 score_changed = true;
+                dieScores->Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
                 break;
             }
         }
@@ -837,6 +980,7 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
 
     
 
+    #undef ALIEN_CENTER
     #undef HEROLAZER
     #undef ALIEN
     #undef HEROLAZER_ABSENT
@@ -844,6 +988,57 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
     #undef ALIEN_ABSENT
     #undef ALIEN_outSCREEN
     #undef ALIEN_SCORE
+    
     return score_changed;
+}
+
+DieScoresComplex* ObjectsStore::make_scoreComplex(const plot* ship_center,
+                                                    const int score)
+{
+    if (score <= 0) return nullptr;
+
+    int complexLength = score / 10;
+    int hi, low;
+    if (complexLength < 1) complexLength = 1;
+    else complexLength = 2;
+
+
+    switch (complexLength)
+    {
+        case 1:
+        {
+            DieScoresComplex* dsc = 
+            new (std::nothrow) DieScoresComplex{ship_center, &digits[score]};
+            if (!dsc || (dsc->Status() == false)) return nullptr;
+            return dsc;
+        }
+        case 2:
+        {
+            hi = score / 10;
+            low = score % 10;
+            DieScoresComplex* dsc = 
+            new (std::nothrow) DieScoresComplex{ship_center, &digits[hi],
+                                                &digits[low]};
+            if (!dsc || (dsc->Status() == false)) return nullptr;
+            return dsc;
+        }
+        default: { return nullptr;}
+    }
+
+}
+
+void ObjectsStore::ShowDieScores(const Sdl* sdl) const
+{
+    dieScores->Show(sdl);
+}
+
+void ObjectsStore::MoveDieScores()
+{
+    dieScores->Move();
+}
+
+void ObjectsStore::ClearDieScores()
+{
+    dieScores->Check();
 }
 

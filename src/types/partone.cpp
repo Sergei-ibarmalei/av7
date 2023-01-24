@@ -19,21 +19,20 @@ bool GameClass::partOne(log_::Log& log)
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();
         nHero->Show(sdl_);
-        //gameFleets->Alien_t1_Show(sdl_);
-        //gameFleets->FleetMove();
         objectsStore->ShowAlienFleetOne(sdl_);
         objectsStore->MoveAlienFleetOne(); 
         objectsStore->ShowHeroLazers(sdl_);
         objectsStore->MoveHeroLazers();
-        borderSky_show_moving();
-        gameInfo->ShowGameInfo(sdl_, status);
-        //objectsStore->Checks_herolazer_plainAlien();
         if (objectsStore->Checks_herolazer_plainAlien(status))
             gameInfo->ChangeScore(status);
+        objectsStore->ShowDieScores(sdl_);
+        objectsStore->MoveDieScores();
+        objectsStore->ClearDieScores();
 
-        //Checks_lazer_plainAlien(this);
 
 
+        borderSky_show_moving();
+        gameInfo->ShowGameInfo(sdl_, status);
         if (status.pause) pauseIsPressed();
         SDL_RenderPresent(sdl_->Renderer());       
 

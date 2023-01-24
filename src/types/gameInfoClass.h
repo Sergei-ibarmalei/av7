@@ -39,6 +39,7 @@ class GameInfoClass
     bool Status() const {return init;}
     void ShowGameInfo(Sdl* sdl, status_t& gameStatus);
     void ChangeScore(status_t& status);
+    texture_* HeapDigits() const {return heap_scoreBanner;}
 };
 
 

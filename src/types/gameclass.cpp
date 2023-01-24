@@ -52,7 +52,8 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
 
     
-    objectsStore = new (std::nothrow) ObjectsStore(&collection);
+    objectsStore = new (std::nothrow) ObjectsStore(&collection, 
+                                        gameInfo->HeapDigits());
     if (objectsStore->Status() == false)
     {
         gameClassStatus = false; return;
@@ -232,6 +233,7 @@ void GameClass::pauseIsPressed()
         objectsStore->ShowHeroLazers(sdl_);
         borderSky_show_moving();
         objectsStore->ShowAlienFleetOne(sdl_);
+        objectsStore->ShowDieScores(sdl_);
 
         gameInfo->ShowGameInfo(sdl_, status);
         showPause();

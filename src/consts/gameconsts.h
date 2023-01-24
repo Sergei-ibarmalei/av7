@@ -43,6 +43,8 @@
 
 #define ALIENS_LAZER_STORAGE_CAP 2
 
+#define DIESCORE_VELOCITY -3
+
 
 /*Направление движения*/
 namespace dir
