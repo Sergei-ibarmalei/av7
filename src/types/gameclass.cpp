@@ -212,7 +212,8 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    objectsStore->MakeHeroLazer(nHero->LazerStart());
+                    status.gameQuit = 
+                        !objectsStore->MakeHeroLazer(nHero->LazerStart());
                 }
                  
                 default: {}
@@ -230,15 +231,10 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         nHero->Show(sdl_);
-        objectsStore->ShowHeroLazers(sdl_);
-        borderSky_show_moving();
-        objectsStore->ShowAlienFleetOne(sdl_);
-        objectsStore->ShowDieScores(sdl_);
-        objectsStore->ShowAlienFleetOneLazers(sdl_);
-
-        gameInfo->ShowGameInfo(sdl_, status);
+        objectsStore->InPause(sdl_, status, gameInfo);
         showPause();
-
+        borderSky_show_moving();
+        
         while (SDL_PollEvent(&sdl_->event()) != 0)
         {
             if (sdl_->event().type == SDL_QUIT)

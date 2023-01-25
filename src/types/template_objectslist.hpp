@@ -28,7 +28,7 @@ class ObjectsList
     ObjectsList& operator=(const ObjectsList&) = delete;
     void Push(T* data);
     void Show(const Sdl* sdl) const;
-    void Check();
+    void Check_and_clear();
     void Move();
 
 
@@ -87,7 +87,7 @@ void ObjectsList<T>::Show(const Sdl* sdl) const
 }
 
 template<class T>
-void ObjectsList<T>::Check()
+void ObjectsList<T>::Check_and_clear()
 {
     current = &first;
     while (*current)

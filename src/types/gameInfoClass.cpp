@@ -134,7 +134,7 @@ void GameInfoClass::setHeroLivesCoords()
     #undef LEFT_SIDE
 }
 
-void GameInfoClass::ShowGameInfo(Sdl* sdl, status_t& gameStatus)
+void GameInfoClass::ShowGameInfo(const Sdl* sdl, status_t& gameStatus)
 {
     /*Рисуем счет справа*/
     for (int segment = 0; segment < scoreBannerLen; ++segment)

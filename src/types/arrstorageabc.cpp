@@ -55,7 +55,6 @@ void ArrStorageABC::Sort(const int arrLen)
 {
     #define IS_PRESENSE storage[i]
     #define IS_ON_SCREEN storage[i]->OnScreen()
-    //#define IS_ALIVE !storage[i]->IsItGone()
 
     int len = arrLen;
     while (len--)
@@ -83,7 +82,6 @@ void ArrStorageABC::Sort(const int arrLen)
 
     #undef IS_PRESENSE
     #undef IS_ON_SCREEN
-    //#undef IS_ALIVE
 }
 
 ArrStorageABC::~ArrStorageABC()

@@ -5,13 +5,9 @@
 #include "mainmenu.h"
 #include "borderclass.h"
 #include "skyclass.h"
-#include "gameInfoClass.h"
 
 
-//#include "ob.h"
 #include "n_ob.h"
-//#include "aliens.h"
-//#include "fleets.h"
 
 
 class GameClass

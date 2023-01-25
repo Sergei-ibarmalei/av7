@@ -46,7 +46,10 @@ void BaseLazer::Move()
         {
             resetUpLeftCorner_x(-obj_velocities->x);
             if (hasCrossedLeft_fromScreen(MAINRECT_WIDTH))
+            {
                 isOnScreen = false;
+                ItIsGoneNow();
+            }
             break;
         }
         default: {}

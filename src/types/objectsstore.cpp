@@ -74,8 +74,9 @@ void ObjectsStore::ShowHeroLazers(const Sdl* sdl) const
 
 
 
-bool ObjectsStore::MakeHeroLazer(const plot* start)
+bool ObjectsStore::makeHeroLazer(const plot* start)
 {
+    if (!start) return false;
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
@@ -92,7 +93,7 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     #define PREVLAZER_X PREVLAZER->Lazer_x()
     #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
-    if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return false;
+    if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return true;
     HeroLazer* lazer = new (std::nothrow) HeroLazer{start,
                                     &tcollection->Pictures()[tn::blue_laser]};
     if (!lazer || (lazer->Status() == false)) return false;
@@ -108,14 +109,14 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
 
 bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
 {
-    #define HEROLAZER *heroLazerStorage->operator[](l)
-    #define ALIEN *alienFleetOneStorage->operator[](a)
-    #define HEROLAZER_ABSENT heroLazerStorage->operator[](0) == nullptr
-    #define CURRENT_HEROLAZER_ABSENT heroLazerStorage->operator[](l) == nullptr
-    #define ALIEN_ABSENT alienFleetOneStorage->operator[](a) == nullptr
-    #define ALIEN_outSCREEN !alienFleetOneStorage->operator[](a)->OnScreen()
-    #define ALIEN_SCORE alienFleetOneStorage->operator[](a)->GetScoreWeight()
-    #define ALIEN_CENTER alienFleetOneStorage->operator[](a)->GetCenter()
+    #define HEROLAZER *(*(heroLazerStorage))[l]
+    #define ALIEN *(*(alienFleetOneStorage))[a]
+    #define HEROLAZER_ABSENT (*(heroLazerStorage))[0] == nullptr
+    #define CURRENT_HEROLAZER_ABSENT (*(heroLazerStorage))[l] == nullptr
+    #define ALIEN_ABSENT (*(alienFleetOneStorage))[a] == nullptr
+    #define ALIEN_outSCREEN !(*(alienFleetOneStorage))[a]->OnScreen()
+    #define ALIEN_SCORE (*(alienFleetOneStorage))[a]->GetScoreWeight()
+    #define ALIEN_CENTER (*(alienFleetOneStorage))[a]->GetCenter()
 
 
     bool score_changed {false};
@@ -130,8 +131,8 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
 
             if (ALIEN == HEROLAZER)
             {
-                alienFleetOneStorage->operator[](a)->ItIsGoneNow();
-                heroLazerStorage->operator[](l)->ResetOnScreen(false);
+                (*(alienFleetOneStorage))[a]->ItIsGoneNow();
+                (*(heroLazerStorage))[l]->ResetOnScreen(false);
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
                 status.gameScore += ALIEN_SCORE;
                 score_changed = true;
@@ -200,9 +201,10 @@ void ObjectsStore::MoveDieScores()
     dieScoresStorage->Move();
 }
 
+/*Очистка списка DieScores*/
 void ObjectsStore::ClearDieScores()
 {
-    dieScoresStorage->Check();
+    dieScoresStorage->Check_and_clear();
 }
 
 void ObjectsStore::ShowAlienFleetOneLazers(const Sdl* sdl) const
@@ -213,5 +215,51 @@ void ObjectsStore::ShowAlienFleetOneLazers(const Sdl* sdl) const
 void ObjectsStore::MoveAlienFleetOneLazers()
 {
     alienLazerStorage->Move();
+}
+
+/*Очистка списка выстрелянных лазеров алиенов*/
+void ObjectsStore::ClearAlienLazers()
+{
+    alienLazerStorage->Check_and_clear();
+}
+
+bool ObjectsStore::MakeHeroLazer(const plot* start)
+{
+    return makeHeroLazer(start);
+}
+
+
+void ObjectsStore::DoGameAlgorithm(NHero* hero, const Sdl* sdl, 
+                        status_t& status, GameInfoClass* gameInfo)
+{
+    #define HERO_ECHELON hero->GetHeroEchelon()
+    #define HERO_HITS_ALIEN Checks_herolazer_plainAlien(status)
+
+
+    ShowAlienFleetOne(sdl);
+    MoveAlienFleetOne(HERO_ECHELON);
+    ShowHeroLazers(sdl);
+    MoveHeroLazers();
+    if (HERO_HITS_ALIEN) gameInfo->ChangeScore(status);
+    ShowDieScores(sdl);
+    ShowAlienFleetOneLazers(sdl);
+    MoveAlienFleetOneLazers();
+    ClearAlienLazers();
+    MoveDieScores();
+    ClearDieScores(); 
+
+    #undef HERO_ECHELON
+    #undef HERO_HITS_ALIEN
+
+}
+
+void ObjectsStore::InPause(const Sdl* sdl, status_t& status, 
+                                GameInfoClass* gameInfo)
+{
+    ShowHeroLazers(sdl);
+    ShowAlienFleetOne(sdl);
+    ShowDieScores(sdl);
+    ShowAlienFleetOneLazers(sdl);
+    gameInfo->ShowGameInfo(sdl, status);
 }
 

@@ -8,6 +8,7 @@
 #include "../consts/gameconsts.h"
 #include "test.h"
 #include "texturescollection.h"
+#include "gameInfoClass.h"
 
 /*Абстрактный класс - основа всех объектов*/
 class ElementaryObject
@@ -319,7 +320,18 @@ class ObjectsStore
                                         const int score);
 
     bool makeAlienFleetOne(const tc* collection);
-    
+    bool makeHeroLazer(const plot* start);
+    void MoveHeroLazers();
+    void ShowHeroLazers(const Sdl* sdl) const;
+    void MoveAlienFleetOne(const echelon* heroEchelon);
+    void ShowAlienFleetOne(const Sdl* sdl) const;
+    void ShowAlienFleetOneLazers(const Sdl* sdl) const;
+    bool Checks_herolazer_plainAlien(status_t& status);
+    void ShowDieScores(const Sdl* sdl) const;
+    void MoveDieScores();
+    void MoveAlienFleetOneLazers();
+    void ClearDieScores();
+    void ClearAlienLazers();   
     
 
     public:
@@ -327,22 +339,12 @@ class ObjectsStore
     ~ObjectsStore();
     ObjectsStore(const ObjectsStore&) = delete;
     ObjectsStore& operator=(const ObjectsStore&) = delete;
-    bool MakeHeroLazer(const plot* start);
-    void MoveHeroLazers();
-    void ShowHeroLazers(const Sdl* sdl) const;
-    void MoveAlienFleetOne(const echelon* heroEchelon);
-    void ShowAlienFleetOne(const Sdl* sdl) const;
-    void ShowAlienFleetOneLazers(const Sdl* sdl) const;
-
 
     bool Status() const {return init;}
-    bool  Checks_herolazer_plainAlien(status_t& status);
-    void ShowDieScores(const Sdl* sdl) const;
-    void MoveDieScores();
-    void MoveAlienFleetOneLazers();
-    void ClearDieScores();
-
-
+    void DoGameAlgorithm(NHero* hero, const Sdl* sdl, status_t& status,
+                            GameInfoClass* gameInfo);
+    bool MakeHeroLazer(const plot* start);
+    void InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo);
 
 };
 
