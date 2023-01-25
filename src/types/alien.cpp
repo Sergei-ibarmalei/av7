@@ -10,6 +10,7 @@ Alien::Alien(const texture_* t,
     ElementaryObject::Velocities()->x = -ALIENFLEET_ONE_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
     scoreWeight = scores::plainAlien;
+    stepsWithoutFire = 0;
 }
 
 Alien::~Alien()
@@ -59,6 +60,7 @@ void Alien::Move()
 {
     ElementaryObject::resetUpLeftCorner();
     setCr();
+    recomputeLazerStart();
 
 
     //Если вышла на экран
@@ -66,6 +68,7 @@ void Alien::Move()
     {
         if (!OnScreen())
             ResetOnScreen(true);
+        stepsWithoutFire++;
     }
     //Если вышли за левую границу экрана, то удаляемся
     if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
@@ -83,6 +86,11 @@ bool Alien::operator==(const HeroLazer& hl)
         return *Alien::cr == hl.GetMainRect();
     }
     return false;
+}
+
+bool Alien::operator==(const echelon* heroEchelon)
+{
+    return *GetMainRect() == *heroEchelon;
 }
 
 

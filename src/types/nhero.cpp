@@ -16,9 +16,18 @@ NHero::NHero(const texture_* t): ComplexObject(t, re::heros::allR)
     setToStartPos(HEROSTART_X, HEROSTART_Y);
     setCr();
     initLazerStart();
-    
+    heroEchelon = new (std::nothrow) echelon;
+    if (!heroEchelon) init = false;
     #undef HEROSTART_X
     #undef HEROSTART_Y
+}
+
+
+void NHero::recomputeHeroEchelon()
+{
+    heroEchelon->hi = obj_texture->main_rect.y - HERO_ECHELON_HI;
+    heroEchelon->low = (obj_texture->main_rect.y + obj_texture->main_rect.h) +
+        HERO_ECHELON_LOW;
 }
 
 void NHero::initHeroStopIntro()
@@ -95,6 +104,8 @@ NHero::~NHero()
     heroStopIntro = nullptr;
     delete lazerStart;
     lazerStart = nullptr;
+    delete heroEchelon;
+    heroEchelon = nullptr;
 }
 
 void NHero::initLazerStart()
@@ -171,11 +182,12 @@ void NHero::Move()
     if (isGonnaCrossDown())  return;
     if (isGonnaCrossRight()) return;
     if (isGonnaCrossLeft())  return;
-    ElementaryObject::resetUpLeftCorner();
+    resetUpLeftCorner();
 
-    NHero::setCr();
+    setCr();
 
-    NHero::recomputeLazerStart();
+    recomputeLazerStart();
+    recomputeHeroEchelon();
 }
 
 

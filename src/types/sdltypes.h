@@ -8,6 +8,17 @@
 #include <iostream>
 #include "../consts/graphconsts.h"
 
+struct Echelon
+{
+    int hi, low;
+    bool operator==(const SDL_Rect& r) const
+    {
+        if (r.y < hi)        return false;
+        if ((r.y+r.h) > low) return false;
+        return true;
+    }
+};
+using echelon = Echelon;
 
 struct Rect: public SDL_Rect
 {
@@ -21,12 +32,22 @@ struct Rect: public SDL_Rect
         if (x>= (r.x+r.w))     return false;
         return true;
     }
+    bool operator==(const echelon& e) const
+    {
+        if (y < e.hi)      return false;
+        if ((y+h) > e.low) return false;
+        return true;
+    }
+
+
 
     friend std::ostream& operator<<(std::ostream& os, const  Rect& r);
 
 };
 
 using rect_ = Rect;
+
+
 
 struct Texture 
 {

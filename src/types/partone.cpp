@@ -1,7 +1,7 @@
 #include "gameclass.h"
 #include "../core/core.h"
 
-
+#define HERO_ECHELON nHero->GetHeroEchelon()
 
 bool GameClass::partOne(log_::Log& log)
 {
@@ -20,12 +20,14 @@ bool GameClass::partOne(log_::Log& log)
         nHero->Move();
         nHero->Show(sdl_);
         objectsStore->ShowAlienFleetOne(sdl_);
-        objectsStore->MoveAlienFleetOne(); 
+        objectsStore->MoveAlienFleetOne(HERO_ECHELON); 
         objectsStore->ShowHeroLazers(sdl_);
         objectsStore->MoveHeroLazers();
         if (objectsStore->Checks_herolazer_plainAlien(status))
             gameInfo->ChangeScore(status);
         objectsStore->ShowDieScores(sdl_);
+        objectsStore->ShowAlienFleetOneLazers(sdl_);
+        objectsStore->MoveAlienFleetOneLazers(); 
         objectsStore->MoveDieScores();
         objectsStore->ClearDieScores();
 

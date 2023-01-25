@@ -234,6 +234,7 @@ void GameClass::pauseIsPressed()
         borderSky_show_moving();
         objectsStore->ShowAlienFleetOne(sdl_);
         objectsStore->ShowDieScores(sdl_);
+        objectsStore->ShowAlienFleetOneLazers(sdl_);
 
         gameInfo->ShowGameInfo(sdl_, status);
         showPause();

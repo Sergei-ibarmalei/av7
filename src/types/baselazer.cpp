@@ -70,7 +70,7 @@ int BaseLazer::Lazer_w() const
     return GetMainRect_w();
 }
 
-void BaseLazer::ShowLazer(const Sdl* sdl) const 
+void BaseLazer::Show(const Sdl* sdl) const 
 {
     ShowObj(sdl);
 }

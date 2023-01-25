@@ -28,15 +28,16 @@ ObjectsStore::ObjectsStore(const tc* collection, const texture_* heap_digits)
     {
         init = false; return;
     }
-    aliensLazerStorage = new (std::nothrow) 
-                                AliensLazersStorage{ALIENS_LAZER_STORAGE_CAP};
-    if (!aliensLazerStorage)
+
+
+    dieScoresStorage = new (std::nothrow) ObjectsList<DieScoresComplex>();
+    if (!dieScoresStorage)
     {
         init = false; return;
     }
 
-    dieScores = new (std::nothrow) ObjectsList<DieScoresComplex>();
-    if (!dieScores)
+    alienLazerStorage = new (std::nothrow) ObjectsList<AlienLazer>();
+    if (!alienLazerStorage)
     {
         init = false; return;
     }
@@ -50,10 +51,10 @@ ObjectsStore::~ObjectsStore()
     heroLazerStorage = nullptr;
     delete alienFleetOneStorage;
     alienFleetOneStorage = nullptr;
-    delete aliensLazerStorage;
-    aliensLazerStorage = nullptr;
-    delete dieScores;
-    dieScores = nullptr;
+    delete dieScoresStorage;
+    dieScoresStorage = nullptr;
+    delete alienLazerStorage;
+    alienLazerStorage = nullptr;
 }
 
 void ObjectsStore::MoveHeroLazers()
@@ -78,8 +79,12 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
-        return heroLazerStorage->Push(new HeroLazer{start, 
-                                      &tcollection->Pictures()[tn::blue_laser]});
+        HeroLazer* lazer = new (std::nothrow) HeroLazer{start,
+                                    &tcollection->Pictures()[tn::blue_laser]};
+        if (!lazer || (lazer->Status() == false)) return false;
+            return heroLazerStorage->Push(lazer);
+
+        return heroLazerStorage->Push(lazer);
     }
   
     #define COUNTER heroLazerStorage->GetCounter()
@@ -88,8 +93,10 @@ bool ObjectsStore::MakeHeroLazer(const plot* start)
     #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
     if ( (PREVLAZER_X - start->x) < PREVLAZER_W * 3) return false;
-    return heroLazerStorage->Push(new HeroLazer{start,
-                                    &tcollection->Pictures()[tn::blue_laser]});
+    HeroLazer* lazer = new (std::nothrow) HeroLazer{start,
+                                    &tcollection->Pictures()[tn::blue_laser]};
+    if (!lazer || (lazer->Status() == false)) return false;
+    return heroLazerStorage->Push(lazer);
 
 
     #undef PREVLAZER_X
@@ -128,7 +135,7 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
                 status.gameScore += ALIEN_SCORE;
                 score_changed = true;
-                dieScores->Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
+                dieScoresStorage->Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
                 break;
             }
         }
@@ -185,16 +192,26 @@ DieScoresComplex* ObjectsStore::make_scoreComplex(const plot* ship_center,
 
 void ObjectsStore::ShowDieScores(const Sdl* sdl) const
 {
-    dieScores->Show(sdl);
+    dieScoresStorage->Show(sdl);
 }
 
 void ObjectsStore::MoveDieScores()
 {
-    dieScores->Move();
+    dieScoresStorage->Move();
 }
 
 void ObjectsStore::ClearDieScores()
 {
-    dieScores->Check();
+    dieScoresStorage->Check();
+}
+
+void ObjectsStore::ShowAlienFleetOneLazers(const Sdl* sdl) const
+{
+    alienLazerStorage->Show(sdl);
+}
+
+void ObjectsStore::MoveAlienFleetOneLazers()
+{
+    alienLazerStorage->Move();
 }
 

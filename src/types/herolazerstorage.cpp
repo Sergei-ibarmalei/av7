@@ -32,7 +32,7 @@ void HeroLazerStorage::Show(const Sdl* sdl) const
     for (int i = 0; i < counter; ++i)
     {
         if (storage[i])
-            static_cast<HeroLazer*>(storage[i])->ShowLazer(sdl);
+            static_cast<HeroLazer*>(storage[i])->Show(sdl);
     }
 }
 

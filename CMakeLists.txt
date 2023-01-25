@@ -15,7 +15,7 @@ set(SOURCES
     src/types/alien.cpp
     src/types/alienabc.cpp
     src/types/alienfleetonestorage.cpp
-    src/types/alienlazersstorage.cpp
+    src/types/alienlazer.cpp
     src/types/arrstorageabc.cpp
     src/types/baselazer.cpp
     src/types/borderclass.cpp

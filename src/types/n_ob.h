@@ -100,6 +100,8 @@ class NHero: public ComplexObject
 {
     private:
     plot*   heroStopIntro {nullptr};
+    echelon* heroEchelon  {nullptr};
+    void    recomputeHeroEchelon();
     void    initHeroStopIntro();
     void    initLazerStart();
     void    recomputeLazerStart();
@@ -124,6 +126,7 @@ class NHero: public ComplexObject
     void HeroLeft();
     void HeroStop();
     void Move() override;
+    echelon* GetHeroEchelon() const {return heroEchelon;}
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
 };
@@ -144,7 +147,7 @@ class BaseLazer: public ElementaryObject
     int Lazer_x() const;
     int Lazer_y() const;
     int Lazer_w() const;
-    void ShowLazer(const Sdl* sdl) const;
+    void Show(const Sdl* sdl) const;
 };
 
 class HeroLazer: public BaseLazer
@@ -153,11 +156,18 @@ class HeroLazer: public BaseLazer
     HeroLazer(const plot* start, const texture_* t);
 };
 
+class AlienLazer: public BaseLazer
+{
+    public:
+    AlienLazer(const plot* start, const texture_* t);
+};
+
 
 class AlienABC: public ComplexObject
 {
     protected:
     int scoreWeight;
+    int stepsWithoutFire;
     rect_* lazerMainRect;
 
     void setToStartPos(const int x, const int y) override;
@@ -173,6 +183,8 @@ class AlienABC: public ComplexObject
     ~AlienABC();
     AlienABC& operator=(const AlienABC&) = delete;
     int GetScoreWeight() const {return scoreWeight;}
+    int GetStepsWithoutFire() const {return stepsWithoutFire;}
+    void ResetStepsWithoutFire() {stepsWithoutFire = 0;}
 
 };
 
@@ -189,6 +201,7 @@ class Alien: public AlienABC
     Alien(const Alien&) = delete;
     Alien& operator=(const Alien&) = delete;
     bool operator==(const HeroLazer& hl);
+    bool operator==(const echelon* heroEchelon);
     void Move();
     void Show(const Sdl* sdl);
 
@@ -246,17 +259,6 @@ class AlienFleet_oneStorage: public ArrStorageABC
     Alien* operator[](const int index);
 };
 
-//All aliens lazers storage
-class AliensLazersStorage: public ArrStorageABC
-{
-    public:
-    explicit AliensLazersStorage(const int capacity);
-    ~AliensLazersStorage() {}
-    AliensLazersStorage(const AliensLazersStorage&) = delete;
-    AliensLazersStorage& operator=(const AliensLazersStorage&) = delete;
-    ElementaryObject* operator[](const int index);
-
-};
 
 class DieScoresObject: public ElementaryObject
 {
@@ -309,10 +311,10 @@ class ObjectsStore
     const tc* tcollection;
     const texture_* digits;
     HeroLazerStorage* heroLazerStorage;
-    AliensLazersStorage* aliensLazerStorage;
     AlienFleet_oneStorage* alienFleetOneStorage;
 
-    ObjectsList<DieScoresComplex>* dieScores;
+    ObjectsList<DieScoresComplex>* dieScoresStorage;
+    ObjectsList<AlienLazer>*       alienLazerStorage;
     DieScoresComplex* make_scoreComplex(const plot* ship_center, 
                                         const int score);
 
@@ -328,14 +330,16 @@ class ObjectsStore
     bool MakeHeroLazer(const plot* start);
     void MoveHeroLazers();
     void ShowHeroLazers(const Sdl* sdl) const;
-    void MoveAlienFleetOne();
+    void MoveAlienFleetOne(const echelon* heroEchelon);
     void ShowAlienFleetOne(const Sdl* sdl) const;
+    void ShowAlienFleetOneLazers(const Sdl* sdl) const;
 
 
     bool Status() const {return init;}
     bool  Checks_herolazer_plainAlien(status_t& status);
     void ShowDieScores(const Sdl* sdl) const;
     void MoveDieScores();
+    void MoveAlienFleetOneLazers();
     void ClearDieScores();
 
 

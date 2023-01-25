@@ -37,12 +37,12 @@ void AlienABC::initLazerStart()
 
 void AlienABC::recomputeLazerStart()
 {
-    #define PLAINALIEN_X ElementaryObject::GetMainRect_x()
-    #define PLAINALIEN_H_HALF ElementaryObject::GetMainRectH_Half()
+    #define PLAINALIEN_X GetMainRect_x()
+    #define PLAINALIEN_H_HALF GetMainRectH_Half()
 
-    ComplexObject::lazerStart->x = 
-            PLAINALIEN_X - lazerMainRect->w - PLAINALIENLASER_OFFSET;
-    ComplexObject::lazerStart->y = PLAINALIEN_H_HALF;
+    lazerStart->x = 
+            PLAINALIEN_X - PLAINALIENLASER_OFFSET;
+    lazerStart->y = PLAINALIEN_H_HALF - lazerMainRect->h / 2;
 
     #undef  PLAINALIEN_X
     #undef  PLAINALIEN_H_HALF

@@ -16,9 +16,13 @@ bool ObjectsStore::makeAlienFleetOne(const tc* collection)
         alien_start.x = RIGHT_SIDE +
             (count * ALIENFLEET_ONE_SPACE_BETWEEN);
         alien_start.y = getRand(UP, DOWN);
-        if (!alienFleetOneStorage->
-            Push(new Alien{ALIEN_TEXTURE, &alien_start, 
-                                   ALIEN_LASER_TEXTURE})) return false;
+
+        Alien* alien = new (std::nothrow) Alien{ALIEN_TEXTURE, &alien_start,
+                                    ALIEN_LASER_TEXTURE};
+        if (!alien || (alien->Status() == false)) return false;
+
+
+        if (!alienFleetOneStorage->Push(alien)) return false;
     }
     return true;
     
@@ -30,14 +34,36 @@ bool ObjectsStore::makeAlienFleetOne(const tc* collection)
     #undef DOWN
 }
 
-void ObjectsStore::MoveAlienFleetOne()
+void ObjectsStore::MoveAlienFleetOne(const echelon* heroEchelon)
 {
     #define COUNTER alienFleetOneStorage->GetCounter()
     #define ALIEN_IS_ABSENT !alienFleetOneStorage->operator[](alien)
+    #define ALIEN_IN_HEROECHELON\
+    alienFleetOneStorage->operator[](alien)->OnScreen()&&\
+    (*alienFleetOneStorage->operator[](alien)==heroEchelon)
+    #define ALIEN_WALKED_ENOUGH_WITHOUT_FIRE\
+    alienFleetOneStorage->operator[](alien)->GetStepsWithoutFire() == \
+            ALIENFLEET_ONE_MAXSTEPSWITHOUTFIRE
 
     for (int alien = 0; alien < COUNTER; ++alien)
     {
+
         if (ALIEN_IS_ABSENT) continue;
+
+        if (ALIEN_IN_HEROECHELON && ALIEN_WALKED_ENOUGH_WITHOUT_FIRE)
+        {
+            alienLazerStorage->
+            Push(new AlienLazer{alienFleetOneStorage->operator[](alien)->
+                            GetLazerStart(), 
+                            &tcollection->Pictures()[tn::alien_laser01]});
+
+            alienFleetOneStorage->operator[](alien)->ResetStepsWithoutFire();
+        }
+        if (ALIEN_WALKED_ENOUGH_WITHOUT_FIRE)
+        {
+            alienFleetOneStorage->operator[](alien)->ResetStepsWithoutFire();
+        }
+
         alienFleetOneStorage->operator[](alien)->Move();
         if (alienFleetOneStorage->operator[](alien)->IsItGone())
             alienFleetOneStorage->Remove(alien);
@@ -45,6 +71,9 @@ void ObjectsStore::MoveAlienFleetOne()
 
     #undef COUNTER
     #undef ALIEN_IS_ABSENT
+    #undef ALIEN_IN_HEROECHELON
+    #undef ALIEN_WALKED_ENOUGH_WITHOUT_FIRE
+    #undef ALIENFLEET_ONE_MAXSTEPSWITHOUTFIRE
  
 }
 
@@ -60,11 +89,8 @@ void ObjectsStore::ShowAlienFleetOne(const Sdl* sdl) const
     for (int alien = 0; alien < COUNTER; ++alien)
     {
 
-        if (ALIEN_IS_ABSENT) continue;
-        if (ALIEN_IS_not_ONSCREEN)
-        {
-            continue;
-        }
+        if (ALIEN_IS_ABSENT)       continue;
+        if (ALIEN_IS_not_ONSCREEN) continue;
         alienFleetOneStorage->operator[](alien)->Show(sdl);
     }
 
