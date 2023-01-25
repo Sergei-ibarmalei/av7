@@ -77,10 +77,3 @@ void BaseLazer::ShowLazer(const Sdl* sdl) const
 
 
 
-HeroLazer::HeroLazer(const plot* start, const texture_* t):
-    BaseLazer(start, dir::right, t)
-{
-    Velocities()->x = HEROLAZER_VELOCITY;
-    Velocities()->y = 0;
-}
-

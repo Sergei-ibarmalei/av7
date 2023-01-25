@@ -1,23 +1,44 @@
 cmake_minimum_required(VERSION 3.16.3)
 project(prog)
 set(SOURCES
-    src/types/sdlclass.cpp
-    src/types/sdltypes.cpp
-    src/loging/loging.cpp
-    src/types/texturescollection.cpp
-    src/types/texturescollection_load.cpp
-    src/types/mainmenu.cpp 
-    src/types/gameclass.cpp   
-    src/types/borderclass.cpp
-    src/types/skyclass.cpp
-    src/types/partone.cpp
-    src/types/gameInfoClass.cpp
-    src/types/nlazer.cpp
-    src/types/n_ob.cpp
-    src/types/fleets.cpp
+
+    #core
+    src/core/checkcrossing.cpp
     src/core/core.cpp
     src/core/rand.cpp
-    src/core/checkcrossing.cpp
+
+
+    #loging
+    src/loging/loging.cpp
+
+    #types
+    src/types/alien.cpp
+    src/types/alienabc.cpp
+    src/types/alienfleetonestorage.cpp
+    src/types/alienlazersstorage.cpp
+    src/types/arrstorageabc.cpp
+    src/types/baselazer.cpp
+    src/types/borderclass.cpp
+    src/types/complexobject.cpp
+    src/types/diescoreobject.cpp
+    src/types/diescorescomplex.cpp
+    src/types/elementaryobject.cpp
+    src/types/fleets.cpp
+    src/types/gameclass.cpp  
+    src/types/herolazer.cpp
+    src/types/herolazerstorage.cpp 
+    src/types/gameInfoClass.cpp
+    src/types/mainmenu.cpp 
+    src/types/nhero.cpp
+    src/types/objectsstore.cpp
+    src/types/partone.cpp
+    src/types/sdlclass.cpp
+    src/types/sdltypes.cpp
+    src/types/skyclass.cpp
+    src/types/texturescollection_load.cpp
+    src/types/texturescollection.cpp
+
+    #av7
     src/main.cpp)
 
 
