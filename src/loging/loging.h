@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-namespace log_
+/*namespace log_
 {
     using string_ = std::string;
 
@@ -24,7 +24,7 @@ namespace log_
         void deleting(Node* first);
         public:
 
-        string_ log_info; /*Сюда пишем лог*/
+        string_ log_info; 
         explicit Log();
         ~Log();
         Log(const Log& ) = delete;
@@ -33,7 +33,7 @@ namespace log_
         void Show();
 
     };
-}
+}*/
 
 
 

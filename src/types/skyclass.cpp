@@ -8,12 +8,10 @@
 
 
 
-Sky::Sky(texture_* t, log_::Log& log)
+Sky::Sky(texture_* t)
 {
     if (!t)
     {
-        log.log_info = "Cannot create sky, texture of star is absent.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }
@@ -22,8 +20,6 @@ Sky::Sky(texture_* t, log_::Log& log)
     slow = new (std::nothrow) rect_[slowStarMax];
     if (!fast || !slow)
     {
-        log.log_info = "Cannot allocate memory for stars.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }

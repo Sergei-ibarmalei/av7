@@ -25,31 +25,31 @@ class GameClass
     bool     gameClassStatus = true;
 
     NHero* nHero;
-    ObjectsStore* objectsStore;
+    Engine* engine;
     
 
 
 
     void initStatus();
-    bool initBorder(log_::Log& log);
-    bool initSky(texture_* starTexture, log_::Log& log);
-    bool partOne(log_::Log& log);
+    bool initBorder();
+    bool initSky(texture_* starTexture);
+    bool partOne();
     void check_key_events();
     void borderSky_show_moving();
-    bool initGameInfo(tc& collection, log_::Log& log);
+    bool initGameInfo(tc& collection);
     void initPause(tc& collection);
     void pauseIsPressed();
     void showPause();
     void showHeroIntro();
 
     public:
-    GameClass(Sdl& sdl, tc& collection, log_::Log& log);
+    GameClass(Sdl& sdl, tc& collection);
     ~GameClass();
     GameClass(const GameClass& ) = delete;
     GameClass& operator=(const GameClass& ) = delete;
     bool Status() const {return gameClassStatus;}
 
-    bool flow(log_::Log& log);
+    bool flow();
 
 
     

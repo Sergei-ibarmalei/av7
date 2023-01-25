@@ -1,12 +1,10 @@
 #include "borderclass.h"
 
-Border::Border(log_::Log& log)
+Border::Border()
 {
     border = new (std::nothrow) rect_[allBorderSides];
     if (!border)
     {
-        log.log_info = "Cannot allocate memory for border.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }

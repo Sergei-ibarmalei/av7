@@ -9,7 +9,7 @@ set(SOURCES
 
 
     #loging
-    src/loging/loging.cpp
+    #src/loging/loging.cpp
 
     #types
     src/types/alien.cpp

@@ -18,7 +18,7 @@ class Sky
     void setStarsCoords();
 
     public:
-    explicit Sky(texture_* t, log_::Log& log);
+    explicit Sky(texture_* t);
     ~Sky();
     Sky(const Sky& ) = delete;
     Sky& operator=(const Sky& ) = delete;

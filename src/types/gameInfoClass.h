@@ -23,16 +23,16 @@ class GameInfoClass
     texture_*  scoreBanner {nullptr};
     texture_*  heroLivesMult   {nullptr};
     bool       init {true};
-    bool       initScoreBanner_heap(tc& collection, log_::Log& log);
-    bool       initHeroLives_heap(tc& collection, log_::Log& log);
-    bool       initScoreBanner(log_::Log& log);
+    bool       initScoreBanner_heap(tc& collection);
+    bool       initHeroLives_heap(tc& collection);
+    bool       initScoreBanner();
     void       initHeroLives(tc& collection);
     void       setScoreBannerCoords();
     void       setHeroLivesCoords();
     void       clearScoreBanner();
 
     public:
-    explicit GameInfoClass(tc& collection, log_::Log& log);
+    explicit GameInfoClass(tc& collection);
     GameInfoClass(const GameInfoClass& gi) = delete;
     GameInfoClass& operator=(const GameInfoClass& ) = delete;
     ~GameInfoClass();

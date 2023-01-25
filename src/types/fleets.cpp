@@ -1,7 +1,7 @@
 #include "n_ob.h"
 #include "../core/rand.h"
 
-bool ObjectsStore::makeAlienFleetOne(const tc* collection)
+bool Engine::makeAlienFleetOne(const tc* collection)
 {
     #define RIGHT_SIDE RIGHT_BORDER_X+RIGHT_BORDER_W
     #define SHIP_MAINRECT_H collection->Pictures()[tn::alien_one].main_rect.h
@@ -34,7 +34,7 @@ bool ObjectsStore::makeAlienFleetOne(const tc* collection)
     #undef DOWN
 }
 
-void ObjectsStore::MoveAlienFleetOne(const echelon* heroEchelon)
+void Engine::MoveAlienFleetOne(const echelon* heroEchelon)
 {
     #define COUNTER alienFleetOneStorage->GetCounter()
     #define ALIEN_IS_ABSENT !(*(alienFleetOneStorage))[alien]
@@ -77,7 +77,7 @@ void ObjectsStore::MoveAlienFleetOne(const echelon* heroEchelon)
  
 }
 
-void ObjectsStore::ShowAlienFleetOne(const Sdl* sdl) const
+void Engine::ShowAlienFleetOne(const Sdl* sdl) const
 {
     #define ALIEN_IS_ALIVE !(*(alienFleetOneStorage))[alien]->IsItGone()
     #define ALIEN_IS_not_ONSCREEN !(*(alienFleetOneStorage))[alien]->OnScreen()

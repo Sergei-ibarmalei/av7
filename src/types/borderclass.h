@@ -14,7 +14,7 @@ class Border
     void setBorder();
 
     public:
-    Border(log_::Log& log);
+    Border();
     ~Border();
     Border& operator=(const Border& ) = delete;
     Border(const Border& ) = delete;

@@ -1,15 +1,13 @@
 #include "mainmenu.h"
 
-MainMenu::MainMenu(texture_* t,log_::Log& log)
+MainMenu::MainMenu(texture_* t)
 {
     if (!t)
     {
-        log.log_info = "Textures for main menu are absent.\n";
-        log.push(log.log_info);
         mmStatus = false;
         return;
     }
-    init_mmTextures(t, log);
+    init_mmTextures(t);
 
 
 }
@@ -24,13 +22,11 @@ MainMenu::~MainMenu()
     mmTextures = nullptr;
 }
 
-void MainMenu::init_mmTextures(texture_* t, log_::Log& log)
+void MainMenu::init_mmTextures(texture_* t)
 {
     mmTextures = new (std::nothrow) texture_[tn::pause];
     if (!mmTextures)
     {
-        log.log_info = "Cannot allocate memory for main menu texts.\n";
-        log.push(log.log_info);
         mmStatus = false;
         return;
     }
@@ -65,12 +61,10 @@ void MainMenu::set_mmTextures()
     
 }
 
-void MainMenu::ShowMainMenu(Sdl* sdl, status_t& gameStatus, log_::Log& log)
+void MainMenu::ShowMainMenu(Sdl* sdl, status_t& gameStatus)
 {
     if (!sdl)
     {
-        log.log_info = "In main menu sdl is null.\n";
-        log.push(log.log_info);
         mmStatus = false;
         return;
     }

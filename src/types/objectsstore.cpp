@@ -1,6 +1,6 @@
 #include "n_ob.h"
 
-ObjectsStore::ObjectsStore(const tc* collection, const texture_* heap_digits)
+Engine::Engine(const tc* collection, const texture_* heap_digits)
 {
     if (!collection)
     {
@@ -44,7 +44,7 @@ ObjectsStore::ObjectsStore(const tc* collection, const texture_* heap_digits)
 
 }
 
-ObjectsStore::~ObjectsStore()
+Engine::~Engine()
 {
     tcollection = nullptr;
     delete heroLazerStorage;
@@ -57,7 +57,7 @@ ObjectsStore::~ObjectsStore()
     alienLazerStorage = nullptr;
 }
 
-void ObjectsStore::MoveHeroLazers()
+void Engine::MoveHeroLazers()
 {
     bool flag_StartSort = false;
     heroLazerStorage->Move(flag_StartSort);
@@ -67,14 +67,14 @@ void ObjectsStore::MoveHeroLazers()
     }
 }
 
-void ObjectsStore::ShowHeroLazers(const Sdl* sdl) const
+void Engine::ShowHeroLazers(const Sdl* sdl) const
 {
     heroLazerStorage->Show(sdl);
 }
 
 
 
-bool ObjectsStore::makeHeroLazer(const plot* start)
+bool Engine::makeHeroLazer(const plot* start)
 {
     if (!start) return false;
     /*Если это первый выстрел*/
@@ -107,7 +107,7 @@ bool ObjectsStore::makeHeroLazer(const plot* start)
 }
 
 
-bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
+bool  Engine::Checks_herolazer_plainAlien(status_t& status)
 {
     #define HEROLAZER *(*(heroLazerStorage))[l]
     #define ALIEN *(*(alienFleetOneStorage))[a]
@@ -156,7 +156,7 @@ bool  ObjectsStore::Checks_herolazer_plainAlien(status_t& status)
     return score_changed;
 }
 
-DieScoresComplex* ObjectsStore::make_scoreComplex(const plot* ship_center,
+DieScoresComplex* Engine::make_scoreComplex(const plot* ship_center,
                                                     const int score)
 {
     if (score <= 0) return nullptr;
@@ -191,45 +191,45 @@ DieScoresComplex* ObjectsStore::make_scoreComplex(const plot* ship_center,
 
 }
 
-void ObjectsStore::ShowDieScores(const Sdl* sdl) const
+void Engine::ShowDieScores(const Sdl* sdl) const
 {
     dieScoresStorage->Show(sdl);
 }
 
-void ObjectsStore::MoveDieScores()
+void Engine::MoveDieScores()
 {
     dieScoresStorage->Move();
 }
 
 /*Очистка списка DieScores*/
-void ObjectsStore::ClearDieScores()
+void Engine::ClearDieScores()
 {
     dieScoresStorage->Check_and_clear();
 }
 
-void ObjectsStore::ShowAlienFleetOneLazers(const Sdl* sdl) const
+void Engine::ShowAlienFleetOneLazers(const Sdl* sdl) const
 {
     alienLazerStorage->Show(sdl);
 }
 
-void ObjectsStore::MoveAlienFleetOneLazers()
+void Engine::MoveAlienFleetOneLazers()
 {
     alienLazerStorage->Move();
 }
 
 /*Очистка списка выстрелянных лазеров алиенов*/
-void ObjectsStore::ClearAlienLazers()
+void Engine::ClearAlienLazers()
 {
     alienLazerStorage->Check_and_clear();
 }
 
-bool ObjectsStore::MakeHeroLazer(const plot* start)
+bool Engine::MakeHeroLazer(const plot* start)
 {
     return makeHeroLazer(start);
 }
 
 
-void ObjectsStore::DoGameAlgorithm(NHero* hero, const Sdl* sdl, 
+void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl, 
                         status_t& status, GameInfoClass* gameInfo)
 {
     #define HERO_ECHELON hero->GetHeroEchelon()
@@ -253,7 +253,7 @@ void ObjectsStore::DoGameAlgorithm(NHero* hero, const Sdl* sdl,
 
 }
 
-void ObjectsStore::InPause(const Sdl* sdl, status_t& status, 
+void Engine::InPause(const Sdl* sdl, status_t& status, 
                                 GameInfoClass* gameInfo)
 {
     ShowHeroLazers(sdl);

@@ -2,33 +2,18 @@
 
 using string_ = std::string;
 
-Sdl::Sdl(const char* appName, log_::Log& log)
+Sdl::Sdl(const char* appName)
 {
-    init = Init(appName, log);
+    init = Init(appName);
 }
 
-bool Sdl::Init(const char* appName, log_::Log& log)
+bool Sdl::Init(const char* appName)
 {
-    if (appName == nullptr)
-    {
-        log.log_info = "Application name is absent, abort.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (appName == nullptr) return false;
         
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-    {
-        log.log_info = "Could not initialize video mode.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
 
-    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-    {
-        log.log_info = "SDL linear texture error.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) return false;
 
     /*Create window*/
     gWindow = SDL_CreateWindow(appName,
@@ -37,37 +22,17 @@ bool Sdl::Init(const char* appName, log_::Log& log)
                                    S_W,
                                    S_H,
                                    SDL_WINDOW_SHOWN);
-    if (!gWindow)
-    {
-        log.log_info = "Cannot create window.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!gWindow) return false;
 
     gRenderer = SDL_CreateRenderer(gWindow,
                                     -1,
                                     SDL_RENDERER_SOFTWARE/*SDL_RENDERER_ACCELERATED*/);
-    if (!gRenderer)
-    {
-        log.log_info = "Renderer could not be created.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!gRenderer) return false;
 
     int imgFlags = IMG_INIT_PNG;
-    if (!(IMG_Init(imgFlags) & imgFlags))
-    {
-        log.log_info = "Could not initialize png image.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!(IMG_Init(imgFlags) & imgFlags)) return false;
 
-    if (TTF_Init() == 1)
-    {
-        log.log_info = "SDL_ttf could not initialize.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (TTF_Init() == 1) return false;
 
     return true;
 }

@@ -1,6 +1,6 @@
 #include "loging.h"
 
-namespace log_
+/*namespace log_
 {
     Log::Log()
     {
@@ -55,6 +55,6 @@ namespace log_
         std::cout  << *first->info << std::endl;
         showInfo(first->next);
     }
-}
+}*/
 
 

@@ -305,7 +305,7 @@ class DieScoresComplex
 
 
 /*Место для хранения объектов*/
-class ObjectsStore
+class Engine
 {
     private:
     bool init {true};
@@ -335,11 +335,10 @@ class ObjectsStore
     
 
     public:
-    ObjectsStore(const tc* collection, const texture_* heap_digits);
-    ~ObjectsStore();
-    ObjectsStore(const ObjectsStore&) = delete;
-    ObjectsStore& operator=(const ObjectsStore&) = delete;
-
+    Engine(const tc* collection, const texture_* heap_digits);
+    ~Engine();
+    Engine(const Engine&) = delete;
+    Engine& operator=(const Engine&) = delete;
     bool Status() const {return init;}
     void DoGameAlgorithm(NHero* hero, const Sdl* sdl, status_t& status,
                             GameInfoClass* gameInfo);

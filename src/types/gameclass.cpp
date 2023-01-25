@@ -1,35 +1,31 @@
 #include "gameclass.h"
 
-GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
+GameClass::GameClass(Sdl& sdl, tc& collection)
 {
     sdl_ = &sdl;
     initStatus();
-    mm = new (std::nothrow) MainMenu(collection.Strings(), log);
+    mm = new (std::nothrow) MainMenu(collection.Strings());
     if (!mm)
     {
-        log.log_info = "Cannot allocate memory for main menu.\n";
-        log.push(log.log_info);
         gameClassStatus = false;
         return;
     }
     if (mm->Status() == false)
     {
-        log.log_info = "Main menu creation is failure.\n";
-        log.push(log.log_info);
         gameClassStatus = false;
         return;
     }
-    if (!(initBorder(log)))
+    if (!(initBorder()))
     {
         gameClassStatus = false; return;
     }
 
-    if (!(initSky(&collection.Pictures()[tn::star], log)))
+    if (!(initSky(&collection.Pictures()[tn::star])))
     {
         gameClassStatus = false; return;
     }
 
-    if (!(initGameInfo(collection, log)))
+    if (!(initGameInfo(collection)))
     {
         gameClassStatus = false; return;
     }
@@ -37,8 +33,6 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     pause = new (std::nothrow) texture_[2];
     if (!pause)
     {
-        log.log_info = "Main menu creation is failure.\n";
-        log.push(log.log_info);
         gameClassStatus = false;
         return;       
     }
@@ -52,9 +46,9 @@ GameClass::GameClass(Sdl& sdl, tc& collection, log_::Log& log)
     }
 
     
-    objectsStore = new (std::nothrow) ObjectsStore(&collection, 
+    engine = new (std::nothrow) Engine(&collection, 
                                         gameInfo->HeapDigits());
-    if (objectsStore->Status() == false)
+    if (engine->Status() == false)
     {
         gameClassStatus = false; return;
     }
@@ -83,51 +77,29 @@ void GameClass::initPause(tc& collection)
 
 }
 
-bool GameClass::initGameInfo(tc& collection, log_::Log& log)
+bool GameClass::initGameInfo(tc& collection)
 {
-    gameInfo = new (std::nothrow) GameInfoClass(collection, log);
+    gameInfo = new (std::nothrow) GameInfoClass(collection);
     if (!gameInfo)
     {
-        log.log_info = "Cannot allocate memory for gameInfo in game class.\n";
-        log.push(log.log_info);
         return false;
     }
     return gameInfo->Status();
 }
 
-bool GameClass::initBorder(log_::Log& log)
+bool GameClass::initBorder()
 {
-    border = new (std::nothrow) Border(log);
-    if (!border)
-    {
-        log.log_info = "Cannot allocate memory for border in gameclass.\n";
-        log.push(log.log_info);
-        return false;
-    }
-    if (border->Status() == false)
-    {
-        log.log_info = "Border class initiate is failure.";
-        log.push(log.log_info);
-        return false;
-    }
+    border = new (std::nothrow) Border();
+    if (!border) return false;
+    if (border->Status() == false) return false;
     return true;
 }
 
-bool GameClass::initSky(texture_* starTexture, log_::Log& log)
+bool GameClass::initSky(texture_* starTexture)
 {
-    sky = new (std::nothrow) Sky(starTexture, log);
-    if (!sky)
-    {
-        log.log_info = "Cannot allocate memory for sky class.\n";
-        log.push(log.log_info);
-        return false;
-    }
-    if (sky->Status() == false)
-    {
-        log.log_info = "Sky class initiate is failure.\n";
-        log.push(log.log_info);
-        return false;
-    }
+    sky = new (std::nothrow) Sky(starTexture);
+    if (!sky) return false;
+    if (sky->Status() == false) return false;
     return true;
 }
 
@@ -146,8 +118,8 @@ GameClass::~GameClass()
     delete[] pause;
 
     delete nHero; nHero = nullptr;
-    delete objectsStore;
-    objectsStore = nullptr;
+    delete engine;
+    engine = nullptr;
 
 }
 
@@ -163,18 +135,18 @@ void GameClass::initStatus()
     status.gameScore = 0;
 }
 
-bool GameClass::flow(log_::Log& log)
+bool GameClass::flow()
 {
     while (!status.gameQuit)
     {
         SDL_RenderClear(sdl_->Renderer());
         if (status.mainMenu)
         {
-            mm->ShowMainMenu(sdl_, status, log);
+            mm->ShowMainMenu(sdl_, status);
         }
         if (status.partOne)
         {
-            if (!partOne(log)) return false;
+            if (!partOne()) return false;
         }
     }
     return true;
@@ -213,7 +185,7 @@ void GameClass::check_key_events()
                 case SDLK_SPACE:
                 {
                     status.gameQuit = 
-                        !objectsStore->MakeHeroLazer(nHero->LazerStart());
+                        !engine->MakeHeroLazer(nHero->LazerStart());
                 }
                  
                 default: {}
@@ -231,7 +203,7 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         nHero->Show(sdl_);
-        objectsStore->InPause(sdl_, status, gameInfo);
+        engine->InPause(sdl_, status, gameInfo);
         showPause();
         borderSky_show_moving();
         

@@ -1,20 +1,16 @@
 #include "gameInfoClass.h"
 #include "../consts/gameconsts.h"
 
-GameInfoClass::GameInfoClass(tc& collection, log_::Log& log)
+GameInfoClass::GameInfoClass(tc& collection)
 {
 
-    if (!(initScoreBanner_heap(collection, log)))
+    if (!(initScoreBanner_heap(collection)))
     {
-        log.log_info = "Cannot create gameInfo class.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }
-    if (!(initHeroLives_heap(collection, log)))
+    if (!(initHeroLives_heap(collection)))
     {
-        log.log_info = "Cannot create gameInfo class.\n";
-        log.push(log.log_info);
         init = false;
         return;
     }
@@ -22,7 +18,7 @@ GameInfoClass::GameInfoClass(tc& collection, log_::Log& log)
 
     initHeroLives(collection);
 
-    initScoreBanner(log);
+    initScoreBanner();
 }
 
 GameInfoClass::~GameInfoClass()
@@ -51,13 +47,11 @@ GameInfoClass::~GameInfoClass()
     hero_texture = nullptr;
 }
 
-bool GameInfoClass::initScoreBanner(log_::Log& log)
+bool GameInfoClass::initScoreBanner()
 {
     scoreBanner = new (std::nothrow) texture_[scoreBannerLen];
     if (!scoreBanner)
     {
-        log.log_info = "Cannot allocate memory for score banner.";
-        log.push(log.log_info);
         return false;
     }
     /*Устанавливаем все шесть сегментов scoreBanner в текстуру "0"*/
@@ -155,14 +149,12 @@ void GameInfoClass::ShowGameInfo(const Sdl* sdl, status_t& gameStatus)
 }
 
 /*Куча текстур цифр для отображения счета*/
-bool GameInfoClass::initScoreBanner_heap(tc& collection, log_::Log& log)
+bool GameInfoClass::initScoreBanner_heap(tc& collection)
 {
     int offSet = tn::zeroScoreB;
     heap_scoreBanner = new (std::nothrow) texture_[allDigits];
     if (!heap_scoreBanner)
     {
-        log.log_info = "Cannot allocate memory for score banner_heap.\n";
-        log.push(log.log_info); 
         return false;
     }
     /*Кидаем в кучу текстуры цифр от 0 до 9*/
@@ -173,16 +165,11 @@ bool GameInfoClass::initScoreBanner_heap(tc& collection, log_::Log& log)
     return true;
 }
 
-bool GameInfoClass::initHeroLives_heap(tc& collection, log_::Log& log)
+bool GameInfoClass::initHeroLives_heap(tc& collection)
 {
     int offSet = tn::x1;
     heap_heroLivesMult = new (std::nothrow) texture_[heroLivesLen];
-    if (!heap_heroLivesMult)
-    {
-        log.log_info = "Cannot allocate memory for hero lives_heap.\n";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!heap_heroLivesMult) return false;
 
 
     for (int t = 0; t < heroLivesLen; ++t)

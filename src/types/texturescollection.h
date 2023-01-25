@@ -31,23 +31,23 @@ class TexturesCollection
         gamefont_* gameFonts = nullptr;
         texture_*  pictures = nullptr;
         texture_*  strings  = nullptr;
-        bool initGameFonts(log_::Log& log);
+        bool initGameFonts();
         void setFontsProperties();
-        bool makePicturesTextures(log_::Log& log);
-        bool makeStringsTextures(log_::Log& log);
+        bool makePicturesTextures();
+        bool makeStringsTextures();
         void textureFree(SDL_Texture* t);
         bool loadFromFile(SDL_Renderer* r,
                           SDL_Texture** t,
                           rect_& mainRect,
-                          const char* name, log_::Log& log);
+                          const char* name);
         bool loadFromText(SDL_Renderer* r,
                           SDL_Texture** t,
                           rect_& mainRect,
                           const char* textToTexture,
-                          gamefont_* font, log_::Log& log);
+                          gamefont_* font);
 
     public:
-        explicit TexturesCollection(SDL_Renderer* const r, log_::Log& log);
+        explicit TexturesCollection(SDL_Renderer* const r);
         ~TexturesCollection();
         TexturesCollection(const TexturesCollection& ) = delete;
         TexturesCollection& operator=(const TexturesCollection&) = delete;

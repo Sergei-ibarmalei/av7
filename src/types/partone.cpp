@@ -1,7 +1,7 @@
 #include "gameclass.h"
 #include "../core/core.h"
 
-bool GameClass::partOne(log_::Log& log)
+bool GameClass::partOne()
 {
     while (!status.gameQuit)
     {
@@ -17,7 +17,7 @@ bool GameClass::partOne(log_::Log& log)
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();
         nHero->Show(sdl_);
-        objectsStore->DoGameAlgorithm(nHero, sdl_, status, gameInfo);
+        engine->DoGameAlgorithm(nHero, sdl_, status, gameInfo);
 
 
         borderSky_show_moving();

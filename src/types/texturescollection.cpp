@@ -3,27 +3,24 @@
 #include "texturesnames.h"
 using string_ = std::string;
 
-TexturesCollection::TexturesCollection(SDL_Renderer* const renderer,
-                                        log_::Log& log)
+TexturesCollection::TexturesCollection(SDL_Renderer* const renderer)
 {
     if (!renderer)
     {
         status = false;
-        log.log_info = "Cannot create texture collection, render is null.\n";
-        log.push(log.log_info);
         return;
     }
     r = renderer;
-    if (!initGameFonts(log))
+    if (!initGameFonts())
     {
         status = false; return;
     }
-    if (!makeStringsTextures(log))
+    if (!makeStringsTextures())
     {
         status = false; return;
     }
 
-    if (!makePicturesTextures(log))
+    if (!makePicturesTextures())
     {
         status = false; return;
     }
@@ -40,36 +37,29 @@ void TexturesCollection::textureFree(SDL_Texture* t)
     }
 }
 
-bool TexturesCollection::makePicturesTextures(log_::Log& log)
+bool TexturesCollection::makePicturesTextures()
 {
     int texture;
     pictures = new (std::nothrow)texture_[tn::all_pics];
-    if (!pictures)
-    {
-        log.log_info = "Cannot allocate memory for pictures textures.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!pictures) return false;
     for (texture = tn::hero; texture < tn::all_pics; ++texture)
     {
         pictures[texture].texture = nullptr;
         if (loadFromFile(r,
                          &pictures[texture].texture,
                          pictures[texture].main_rect,
-                         names_pics[texture], log) == false) return false;
+                         names_pics[texture]) == false) return false;
 
     }
     return true;
 }
 
-bool TexturesCollection::makeStringsTextures(log_::Log& log)
+bool TexturesCollection::makeStringsTextures()
 {
     int texture;
     strings = new (std::nothrow) texture_[tn::allStringTextures];
     if (!strings)
     {
-        log.log_info = "Cannot allocate memory for strings textures.";
-        log.push(log.log_info);
         status = false;
         return status;
     }
@@ -80,7 +70,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::MainMenu], log) == false) return false;
+                         &gameFonts[tn::MainMenu]) == false) return false;
     }
     /*MAKING TEXTURES FOR MAIN MENU BRIGHT*/
     for (texture = tn::new_game_bright; texture < tn::pause; ++texture)
@@ -89,7 +79,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::MainMenuBright], log) == false)
+                         &gameFonts[tn::MainMenuBright]) == false)
             return false;
     }
 
@@ -99,7 +89,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                      &strings[texture].texture,
                      strings[texture].main_rect,
                      names[texture],
-                     &gameFonts[tn::Pause], log) == false) return false;
+                     &gameFonts[tn::Pause]) == false) return false;
     /*MAKING TEXTURE FOR PRESS ESC..*/
 
     texture = tn::pressEscape;
@@ -107,7 +97,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                      &strings[texture].texture,
                      strings[texture].main_rect,
                      names[texture],
-                     &gameFonts[tn::PressEsc], log) == false) return false;
+                     &gameFonts[tn::PressEsc]) == false) return false;
     /*MAKING TEXTURE FOR SCORES*/
     for (texture = tn::zeroScore; texture < tn::zeroScoreB; ++texture)
     {
@@ -115,7 +105,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::Scores], log) == false) return false;
+                         &gameFonts[tn::Scores]) == false) return false;
     }
     /*MAKING TEXTURE FOR SCORE BANNER*/
     for (texture = tn::zeroScoreB; texture < tn::x1; ++texture)
@@ -124,7 +114,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::ScoresBanner], log) == false)
+                         &gameFonts[tn::ScoresBanner]) == false)
             return false;
     }
     /*MAKING TEXTURE FOR LIVE MULTIPLIVCATION*/
@@ -135,7 +125,7 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::LiveMult], log) == false) return false;
+                         &gameFonts[tn::LiveMult]) == false) return false;
     }
     
 
@@ -144,26 +134,16 @@ bool TexturesCollection::makeStringsTextures(log_::Log& log)
 
 
 
-bool TexturesCollection::initGameFonts(log_::Log& log)
+bool TexturesCollection::initGameFonts()
 {
     gameFonts = new (std::nothrow) gamefont_[tn::allGameFonts];
-    if (!gameFonts)
-    {
-        log.log_info = "Cannot allocate memory for game fonts.";
-        log.push(log.log_info);
-        return false;
-    }
+    if (!gameFonts) return false;
     setFontsProperties();
     for (int font = 0; font < tn::allGameFonts; ++font)
     {
         gameFonts[font].font = TTF_OpenFont(GLOBALFONTNAME,
                                             gameFonts[font].size);
-        if (!gameFonts[font].font)
-        {
-            log.log_info = "Cannot open font.";
-            log.push(log.log_info);
-            return false;
-        }
+        if (!gameFonts[font].font) return false;
     }
     return true;
 }
