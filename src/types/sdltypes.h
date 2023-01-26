@@ -81,7 +81,9 @@ class CRC
     CRC& operator=(const CRC&) = delete;
     bool operator==(const CRC& crc);
     bool operator==(const CRC* crc);
-    bool operator==(rect_* r);
+    bool operator==(const rect_* r);
+
+    bool operator==(const rect_& r);
 
 
 

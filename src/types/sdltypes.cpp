@@ -44,9 +44,14 @@ bool CRC::operator==(const CRC* crc)
                                     comparison(crc->array, crc->arrLen, array);
 }
 
-bool CRC::operator==(rect_* r)
+bool CRC::operator==(const rect_* r)
 {
     return cmp_oneTomany(r);
+}
+
+bool CRC::operator==(const rect_& r)
+{
+    return cmp_oneTomany(&r);
 }
 
 

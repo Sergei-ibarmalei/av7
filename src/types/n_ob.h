@@ -2,13 +2,12 @@
 #define N_OB_H
 
 //#include "sdlclass.h"
-#include "template_objectslist.hpp"
 #include "gametypes.h"
-#include "../loging/loging.h"
 #include "../consts/gameconsts.h"
 #include "test.h"
 #include "texturescollection.h"
 #include "gameInfoClass.h"
+#include "sdlclass.h"
 
 /*Абстрактный класс - основа всех объектов*/
 class ElementaryObject
@@ -32,7 +31,6 @@ class ElementaryObject
     ElementaryObject(const texture_* t);
     ElementaryObject(const ElementaryObject& eo);
     ElementaryObject& operator=(const ElementaryObject& eo);
-    //bool operator==(const ElementaryObject& eo);
     virtual ~ElementaryObject();
     bool Status() const {return init;}
     virtual void Move() = 0;
@@ -73,6 +71,7 @@ class ComplexObject: public ElementaryObject
     ComplexObject(const texture_* t, const int arrLen);
     ComplexObject& operator=(const ComplexObject& ) = delete;
     ~ComplexObject();
+    bool operator==(const rect_& r);
     ComplexObject(const ComplexObject& co) = delete;
     plot* GetLazerStart() const {return lazerStart;}
     plot* GetCenter() const {return obj_center;}
@@ -127,10 +126,148 @@ class NHero: public ComplexObject
     void HeroLeft();
     void HeroStop();
     void Move() override;
+    
     echelon* GetHeroEchelon() const {return heroEchelon;}
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
 };
+
+
+
+
+template<class T>
+class ObjectsList
+{
+    private:
+    template<class N>
+    struct Node
+    {
+        N* data;
+        struct Node* next;
+        ~Node()
+        {
+            delete data;
+            data = nullptr;
+        }
+    };
+    struct Node<T>* first;
+    struct Node<T>** current;
+
+    public:
+    ObjectsList();
+    ~ObjectsList();
+    ObjectsList(const ObjectsList&) = delete;
+    ObjectsList& operator=(const ObjectsList&) = delete;
+    void Push(T* data);
+    void Show(const Sdl* sdl) const;
+    void Check_and_clear();
+    void Check_withObject(NHero* hero);
+    void Move();
+
+
+};
+
+template<class T>
+ObjectsList<T>::ObjectsList()
+{
+    first = nullptr;
+}
+
+template<class T>
+ObjectsList<T>::~ObjectsList()
+{
+    while (first)
+    {
+        struct Node<T>* tmp = first;
+        first = first->next;
+        delete tmp;
+        tmp = nullptr;
+    }
+}
+
+template<class T>
+void ObjectsList<T>::Push(T* data)
+{
+    if (!data) return;
+    struct Node<T>* tmp = new (std::nothrow) Node<T>;
+    if (!tmp) return;
+    tmp->data = data;
+    if (!first)
+    {
+        tmp->next = nullptr;
+        first = tmp;
+        return; 
+    }
+    tmp->next = first;
+    first = tmp;
+    return;
+}
+
+template<class T>
+void ObjectsList<T>::Show(const Sdl* sdl) const
+{
+    if (!first) 
+    {
+        return;
+    }
+    struct Node<T>* tmp = first;
+    while (tmp)
+    {
+        tmp->data->Show(sdl);
+        tmp = tmp->next;
+    }
+
+}
+
+template<class T>
+void ObjectsList<T>::Check_and_clear()
+{
+    current = &first;
+    while (*current)
+    {
+        if ( (*current)->data->IsItGone())
+        { 
+            struct Node<T>* tmp = *current;
+            *current = (*current)->next;
+            delete tmp;
+        }
+        else current = &(*current)->next;
+    }
+}
+
+template<class T>
+void ObjectsList<T>::Check_withObject(NHero* hero)
+{
+    if (!first) return;
+    current = &first;
+    while(*current)
+    {
+        if ( *((*current)->data) == *hero)
+        {
+            struct Node<T>* tmp = *current;
+            *current = (*current)->next;
+            delete tmp;
+            //отмечаем,что героя подбили
+            hero->IsItGone();
+        }
+        else current = &(*current)->next;
+    }
+}
+
+template<class T>
+void ObjectsList<T>::Move()
+{
+    if (!first) return;
+    struct Node<T>* tmp = first;
+    while(tmp)
+    {
+        tmp->data->Move();
+        tmp = tmp->next;
+    }
+}
+
+
+
 
 
 
@@ -161,6 +298,7 @@ class AlienLazer: public BaseLazer
 {
     public:
     AlienLazer(const plot* start, const texture_* t);
+    bool operator==(NHero& hero);
 };
 
 
@@ -326,12 +464,14 @@ class Engine
     void MoveAlienFleetOne(const echelon* heroEchelon);
     void ShowAlienFleetOne(const Sdl* sdl) const;
     void ShowAlienFleetOneLazers(const Sdl* sdl) const;
-    bool Checks_herolazer_plainAlien(status_t& status);
+    bool Checks_herolazer_hitsAlien(status_t& status);
+    void Checks_alienlazer_hitsHero(NHero* hero, status_t& status);
     void ShowDieScores(const Sdl* sdl) const;
     void MoveDieScores();
     void MoveAlienFleetOneLazers();
     void ClearDieScores();
     void ClearAlienLazers();   
+    
     
 
     public:

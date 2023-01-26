@@ -14,6 +14,7 @@ typedef struct
     bool gameQuit;
 
     int  gameScore;
+    bool hero_dead;
 } status_t;
 
 enum borderSides {borderUp,

@@ -47,6 +47,11 @@ void ComplexObject::Show(const Sdl* sdl) const
     #endif
 }
 
+bool ComplexObject::operator==(const rect_& r)
+{
+    return *cr == r;
+}
+
 
 
 

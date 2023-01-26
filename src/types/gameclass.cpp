@@ -133,6 +133,7 @@ void GameClass::initStatus()
     status.partTwo = false;
     status.HeroLives = HERO_LIVES;
     status.gameScore = 0;
+    status.hero_dead = false;
 }
 
 bool GameClass::flow()

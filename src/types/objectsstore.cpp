@@ -106,8 +106,15 @@ bool Engine::makeHeroLazer(const plot* start)
     #undef COUNTER
 }
 
+void  Engine::Checks_alienlazer_hitsHero(NHero* hero, status_t& status)
+{
+    alienLazerStorage->Check_withObject(hero);
+    //если героя подбили, устанавливаем статус hero_dead = true
+    if (hero->IsItGone()) status.hero_dead = true;
+}
 
-bool  Engine::Checks_herolazer_plainAlien(status_t& status)
+
+bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
 {
     #define HEROLAZER *(*(heroLazerStorage))[l]
     #define ALIEN *(*(alienFleetOneStorage))[a]
@@ -136,7 +143,8 @@ bool  Engine::Checks_herolazer_plainAlien(status_t& status)
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
                 status.gameScore += ALIEN_SCORE;
                 score_changed = true;
-                dieScoresStorage->Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
+                dieScoresStorage->
+                        Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
                 break;
             }
         }
@@ -215,6 +223,7 @@ void Engine::ShowAlienFleetOneLazers(const Sdl* sdl) const
 void Engine::MoveAlienFleetOneLazers()
 {
     alienLazerStorage->Move();
+
 }
 
 /*Очистка списка выстрелянных лазеров алиенов*/
@@ -233,23 +242,25 @@ void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl,
                         status_t& status, GameInfoClass* gameInfo)
 {
     #define HERO_ECHELON hero->GetHeroEchelon()
-    #define HERO_HITS_ALIEN Checks_herolazer_plainAlien(status)
 
 
     ShowAlienFleetOne(sdl);
     MoveAlienFleetOne(HERO_ECHELON);
     ShowHeroLazers(sdl);
     MoveHeroLazers();
-    if (HERO_HITS_ALIEN) gameInfo->ChangeScore(status);
+    if (Checks_herolazer_hitsAlien(status))
+        gameInfo->ChangeScore(status);
     ShowDieScores(sdl);
     ShowAlienFleetOneLazers(sdl);
     MoveAlienFleetOneLazers();
+    //
+    Checks_alienlazer_hitsHero(hero, status);
+    //
     ClearAlienLazers();
     MoveDieScores();
     ClearDieScores(); 
 
     #undef HERO_ECHELON
-    #undef HERO_HITS_ALIEN
 
 }
 
