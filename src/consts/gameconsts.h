@@ -47,7 +47,7 @@
 
 #define ALIENLAZER_VELOCITY 3
 
-#define DIESCORE_VELOCITY -3
+#define DIESCORE_VELOCITY -1
 
 
 /*Направление движения*/

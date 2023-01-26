@@ -401,38 +401,40 @@ class AlienFleet_oneStorage: public ArrStorageABC
 };
 
 
-class DieScoresObject: public ElementaryObject
+class DieObject: public ElementaryObject
 {
     
    private:
-   enum {pathLength = 40,};
+   enum {pathLength = 60,};
    int stepsCount;
    void move_object();
 
    public:
-   DieScoresObject(const texture_* t);
-   ~DieScoresObject() {}
-   DieScoresObject(const DieScoresObject&) = delete;
-   DieScoresObject& operator=(const DieScoresObject&) = delete;
+   DieObject(const texture_* t);
+   ~DieObject() {}
+   DieObject(const DieObject&) = delete;
+   DieObject& operator=(const DieObject&) = delete;
    void Move();
    void Show(const Sdl* sdl) const;
 
 };
 
-class DieScoresComplex
+
+
+class DieComplex
 {
     private:
     enum {firstTexture, secondTexture, maxTexture,};
     bool init {true};
     int arrLen;
-    DieScoresObject** complex;
+    DieObject** complex;
 
     public:
-    DieScoresComplex(const plot* ship_center, const texture_* first, 
+    DieComplex(const plot* ship_center, const texture_* first, 
                      const texture_* second = nullptr);
-    DieScoresComplex(const DieScoresComplex&) = delete;
-    DieScoresComplex& operator=(const DieScoresComplex&) = delete;
-    ~DieScoresComplex();
+    DieComplex(const DieComplex&) = delete;
+    DieComplex& operator=(const DieComplex&) = delete;
+    ~DieComplex();
     bool Status() const {return init;}
     void Move();
     void Show(const Sdl* sdl) const;
@@ -454,10 +456,11 @@ class Engine
     HeroLazerStorage* heroLazerStorage;
     AlienFleet_oneStorage* alienFleetOneStorage;
 
-    ObjectsList<DieScoresComplex>* dieScoresStorage;
-    ObjectsList<AlienLazer>*       alienLazerStorage;
-    DieScoresComplex* make_scoreComplex(const plot* ship_center, 
-                                        const int score);
+    ObjectsList<DieComplex>* dieStorage;
+    ObjectsList<AlienLazer>* alienLazerStorage;
+
+    DieComplex* make_DieComplex(const plot* ship_center, 
+                                    const int score = 5, bool scull = false);
 
     bool makeAlienFleetOne(const tc* collection);
     bool makeHeroLazer(const plot* start);

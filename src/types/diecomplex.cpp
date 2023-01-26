@@ -1,6 +1,6 @@
 #include "n_ob.h"
 
-DieScoresComplex::DieScoresComplex(const plot* ship_center, const texture_* f,       
+DieComplex::DieComplex(const plot* ship_center, const texture_* f,       
                                     const texture_* s)
 {
     #define TEXTURES_ARE_ABSENT !f && !s
@@ -19,18 +19,19 @@ DieScoresComplex::DieScoresComplex(const plot* ship_center, const texture_* f,
     {
         init = false; return;
     }
+    
     if (TEXTURES_HERE)
     {
         arrLen = maxTexture;
-        complex = new (std::nothrow) DieScoresObject* [maxTexture] {nullptr};
-        complex[firstTexture] = new (std::nothrow) DieScoresObject(f);
+        complex = new (std::nothrow) DieObject* [maxTexture] {nullptr};
+        complex[firstTexture] = new (std::nothrow) DieObject(f);
         if (!complex[firstTexture])
         {
             init = false; return;
         }
         FIRSTTEXTURE_X = ship_center->x - FIRSTTEXTURE_W;
         FIRSTTEXTURE_Y = ship_center->y - FIRSTTEXTURE_HALF_HEIGHT;
-        complex[secondTexture] = new (std::nothrow) DieScoresObject(s);
+        complex[secondTexture] = new (std::nothrow) DieObject(s);
         if (!complex[secondTexture])
         {
             init = false; return;
@@ -41,8 +42,8 @@ DieScoresComplex::DieScoresComplex(const plot* ship_center, const texture_* f,
     else
     {
         arrLen = 1;
-        complex = new (std::nothrow) DieScoresObject* [1] {nullptr};
-        complex[firstTexture] = new (std::nothrow) DieScoresObject(f);
+        complex = new (std::nothrow) DieObject* [1] {nullptr};
+        complex[firstTexture] = new (std::nothrow) DieObject(f);
         if (!complex[firstTexture])
         {
             init = false; return;
@@ -63,7 +64,7 @@ DieScoresComplex::DieScoresComplex(const plot* ship_center, const texture_* f,
     #undef FIRSTTEXTURE_ABSENT
 }
 
-DieScoresComplex::~DieScoresComplex()
+DieComplex::~DieComplex()
 {
     for (int t = firstTexture; t < arrLen;++t)
     {
@@ -75,7 +76,7 @@ DieScoresComplex::~DieScoresComplex()
 
 }
 
-void DieScoresComplex::Move()
+void DieComplex::Move()
 {
     if (arrLen == maxTexture)
     {
@@ -88,7 +89,7 @@ void DieScoresComplex::Move()
     complex[firstTexture]->Move();
 }
 
-void DieScoresComplex::Show(const Sdl* sdl) const
+void DieComplex::Show(const Sdl* sdl) const
 {
     if (arrLen == maxTexture)
     {

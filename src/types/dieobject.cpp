@@ -1,6 +1,6 @@
 #include "n_ob.h"
 
-DieScoresObject::DieScoresObject(const texture_* textures):
+DieObject::DieObject(const texture_* textures):
     ElementaryObject(textures)
 {
     Velocities()->x = 0;
@@ -8,7 +8,7 @@ DieScoresObject::DieScoresObject(const texture_* textures):
     stepsCount = 0;
 }
 
-void DieScoresObject::move_object()
+void DieObject::move_object()
 {
     if (IsItGone()) return;
     resetUpLeftCorner();
@@ -16,12 +16,12 @@ void DieScoresObject::move_object()
     if (stepsCount == pathLength) ItIsGoneNow();
 }
 
-void DieScoresObject::Move()
+void DieObject::Move()
 {
     move_object();
 }
 
-void DieScoresObject::Show(const Sdl* sdl) const
+void DieObject::Show(const Sdl* sdl) const
 {
     ShowObj(sdl);
 }

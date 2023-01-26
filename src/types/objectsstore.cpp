@@ -30,8 +30,8 @@ Engine::Engine(const tc* collection, const texture_* heap_digits)
     }
 
 
-    dieScoresStorage = new (std::nothrow) ObjectsList<DieScoresComplex>();
-    if (!dieScoresStorage)
+    dieStorage = new (std::nothrow) ObjectsList<DieComplex>();
+    if (!dieStorage)
     {
         init = false; return;
     }
@@ -51,8 +51,8 @@ Engine::~Engine()
     heroLazerStorage = nullptr;
     delete alienFleetOneStorage;
     alienFleetOneStorage = nullptr;
-    delete dieScoresStorage;
-    dieScoresStorage = nullptr;
+    delete dieStorage;
+    dieStorage = nullptr;
     delete alienLazerStorage;
     alienLazerStorage = nullptr;
 }
@@ -142,8 +142,8 @@ bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
                 heroLazerStorage->Sort(HERO_LAZERSTORAGE_CAP);
                 status.gameScore += ALIEN_SCORE;
                 score_changed = true;
-                dieScoresStorage->
-                        Push(make_scoreComplex(ALIEN_CENTER, ALIEN_SCORE));
+                dieStorage->
+                    Push(make_DieComplex(ALIEN_CENTER, ALIEN_SCORE));
                 break;
             }
         }
@@ -163,9 +163,24 @@ bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
     return score_changed;
 }
 
-DieScoresComplex* Engine::make_scoreComplex(const plot* ship_center,
-                                                    const int score)
+
+/// @brief Создание комплекса летающего счета или черепа
+/// @param ship_center - центр корабля для отсчета координат
+/// @param score - счет, из которого создается комплекс
+/// @param scull - true - если нужно создать череп героя вместо счета
+/// @return 
+DieComplex* Engine::make_DieComplex(const plot* ship_center,
+                                                const int score, bool scull)
 {
+    if (scull)
+    {
+        DieComplex* dsc = 
+        new (std::nothrow) DieComplex(ship_center, 
+                                    &tcollection->Pictures()[tn::scull]);
+        if (!dsc || dsc->Status() == false) return nullptr;
+        return dsc;
+    }
+    
     if (score <= 0) return nullptr;
 
     int complexLength = score / 10;
@@ -178,8 +193,8 @@ DieScoresComplex* Engine::make_scoreComplex(const plot* ship_center,
     {
         case 1:
         {
-            DieScoresComplex* dsc = 
-            new (std::nothrow) DieScoresComplex{ship_center, &digits[score]};
+            DieComplex* dsc = 
+            new (std::nothrow) DieComplex{ship_center, &digits[score]};
             if (!dsc || (dsc->Status() == false)) return nullptr;
             return dsc;
         }
@@ -187,8 +202,8 @@ DieScoresComplex* Engine::make_scoreComplex(const plot* ship_center,
         {
             hi = score / 10;
             low = score % 10;
-            DieScoresComplex* dsc = 
-            new (std::nothrow) DieScoresComplex{ship_center, &digits[hi],
+            DieComplex* dsc = 
+            new (std::nothrow) DieComplex{ship_center, &digits[hi],
                                                 &digits[low]};
             if (!dsc || (dsc->Status() == false)) return nullptr;
             return dsc;
@@ -200,18 +215,18 @@ DieScoresComplex* Engine::make_scoreComplex(const plot* ship_center,
 
 void Engine::ShowDieScores(const Sdl* sdl) const
 {
-    dieScoresStorage->Show(sdl);
+    dieStorage->Show(sdl);
 }
 
 void Engine::MoveDieScores()
 {
-    dieScoresStorage->Move();
+    dieStorage->Move();
 }
 
 /*Очистка списка DieScores*/
 void Engine::ClearDieScores()
 {
-    dieScoresStorage->Check_and_clear();
+    dieStorage->Check_and_clear();
 }
 
 void Engine::ShowAlienFleetOneLazers(const Sdl* sdl) const

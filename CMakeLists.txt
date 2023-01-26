@@ -20,8 +20,8 @@ set(SOURCES
     src/types/baselazer.cpp
     src/types/borderclass.cpp
     src/types/complexobject.cpp
-    src/types/diescoreobject.cpp
-    src/types/diescorescomplex.cpp
+    src/types/dieobject.cpp
+    src/types/diecomplex.cpp
     src/types/elementaryobject.cpp
     src/types/fleets.cpp
     src/types/gameclass.cpp  
