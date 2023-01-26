@@ -1,4 +1,5 @@
 #include "n_ob.h"
+#include "../core/checkcrossing.h"
 
 
 AlienABC::AlienABC(const texture_* t, 
@@ -51,6 +52,37 @@ void AlienABC::recomputeLazerStart()
 void AlienABC::show(const Sdl* sdl) const
 {
     ComplexObject::Show(sdl);
+}
+
+void AlienABC::StrightMove(NHero* hero)
+{
+    resetUpLeftCorner();
+    setCr();
+    recomputeLazerStart();
+    
+    //Если вышла на экран
+    if (hasCrossedRight_fromOut(ElementaryObject::GetMainRect_x()))
+    {
+        if (!OnScreen())
+            ResetOnScreen(true);
+        stepsWithoutFire++;
+    }
+
+    /*Проверка на столкновение алиена и героя*/
+    if (obj_texture->main_rect == *hero->GetMainRect())
+    {
+        if (*hero->CR() == cr)
+        {
+            hero->ItIsGoneNow();
+        }
+    }
+
+    //Если вышли за левую границу экрана, то удаляемся
+    if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
+    {
+        ResetOnScreen(false);
+        ItIsGoneNow();
+    }
 }
 
 

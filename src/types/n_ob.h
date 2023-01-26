@@ -33,7 +33,7 @@ class ElementaryObject
     ElementaryObject& operator=(const ElementaryObject& eo);
     virtual ~ElementaryObject();
     bool Status() const {return init;}
-    virtual void Move() = 0;
+    //virtual void Move() = 0;
 
     rect_& MainRect() const {return obj_texture->main_rect;}
     rect_* GetMainRect() const {return &obj_texture->main_rect;}
@@ -75,9 +75,10 @@ class ComplexObject: public ElementaryObject
     ComplexObject(const ComplexObject& co) = delete;
     plot* GetLazerStart() const {return lazerStart;}
     plot* GetCenter() const {return obj_center;}
-    virtual void Move() = 0;
+    //virtual void Move() = 0;
 
     void Show(const Sdl* sdl) const;
+    CRC* CR() const {return cr;}
 
 };
 
@@ -125,7 +126,8 @@ class NHero: public ComplexObject
     void HeroRight();
     void HeroLeft();
     void HeroStop();
-    void Move() override;
+    void Move();
+    //void Move() override;
     
     echelon* GetHeroEchelon() const {return heroEchelon;}
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
@@ -235,6 +237,8 @@ void ObjectsList<T>::Check_and_clear()
     }
 }
 
+
+/*Проверка на столкновение с героем*/
 template<class T>
 void ObjectsList<T>::Check_withObject(NHero* hero)
 {
@@ -248,7 +252,7 @@ void ObjectsList<T>::Check_withObject(NHero* hero)
             *current = (*current)->next;
             delete tmp;
             //отмечаем,что героя подбили
-            hero->IsItGone();
+            hero->ItIsGoneNow();
         }
         else current = &(*current)->next;
     }
@@ -324,6 +328,7 @@ class AlienABC: public ComplexObject
     int GetScoreWeight() const {return scoreWeight;}
     int GetStepsWithoutFire() const {return stepsWithoutFire;}
     void ResetStepsWithoutFire() {stepsWithoutFire = 0;}
+    void StrightMove(NHero* hero);
 
 };
 
@@ -341,11 +346,8 @@ class Alien: public AlienABC
     Alien& operator=(const Alien&) = delete;
     bool operator==(const HeroLazer& hl);
     bool operator==(const echelon* heroEchelon);
-    void Move();
+    bool operator==(const NHero* hero);
     void Show(const Sdl* sdl);
-
-
-
 };
 
 
@@ -461,11 +463,11 @@ class Engine
     bool makeHeroLazer(const plot* start);
     void MoveHeroLazers();
     void ShowHeroLazers(const Sdl* sdl) const;
-    void MoveAlienFleetOne(const echelon* heroEchelon);
+    void MoveAlienFleetOne(NHero* hero);
     void ShowAlienFleetOne(const Sdl* sdl) const;
     void ShowAlienFleetOneLazers(const Sdl* sdl) const;
     bool Checks_herolazer_hitsAlien(status_t& status);
-    void Checks_alienlazer_hitsHero(NHero* hero, status_t& status);
+    void Checks_alienlazer_hitsHero(NHero* hero);
     void ShowDieScores(const Sdl* sdl) const;
     void MoveDieScores();
     void MoveAlienFleetOneLazers();
@@ -484,6 +486,7 @@ class Engine
                             GameInfoClass* gameInfo);
     bool MakeHeroLazer(const plot* start);
     void InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo);
+
 
 };
 

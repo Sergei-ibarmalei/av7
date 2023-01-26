@@ -106,11 +106,10 @@ bool Engine::makeHeroLazer(const plot* start)
     #undef COUNTER
 }
 
-void  Engine::Checks_alienlazer_hitsHero(NHero* hero, status_t& status)
+void  Engine::Checks_alienlazer_hitsHero(NHero* hero)
 {
     alienLazerStorage->Check_withObject(hero);
     //если героя подбили, устанавливаем статус hero_dead = true
-    if (hero->IsItGone()) status.hero_dead = true;
 }
 
 
@@ -241,11 +240,10 @@ bool Engine::MakeHeroLazer(const plot* start)
 void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl, 
                         status_t& status, GameInfoClass* gameInfo)
 {
-    #define HERO_ECHELON hero->GetHeroEchelon()
 
 
     ShowAlienFleetOne(sdl);
-    MoveAlienFleetOne(HERO_ECHELON);
+    MoveAlienFleetOne(hero);
     ShowHeroLazers(sdl);
     MoveHeroLazers();
     if (Checks_herolazer_hitsAlien(status))
@@ -254,13 +252,12 @@ void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl,
     ShowAlienFleetOneLazers(sdl);
     MoveAlienFleetOneLazers();
     //
-    Checks_alienlazer_hitsHero(hero, status);
+    Checks_alienlazer_hitsHero(hero);
     //
     ClearAlienLazers();
     MoveDieScores();
     ClearDieScores(); 
 
-    #undef HERO_ECHELON
 
 }
 

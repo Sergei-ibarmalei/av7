@@ -34,23 +34,26 @@ bool Engine::makeAlienFleetOne(const tc* collection)
     #undef DOWN
 }
 
-void Engine::MoveAlienFleetOne(const echelon* heroEchelon)
+void Engine::MoveAlienFleetOne(NHero* hero)
 {
     #define COUNTER alienFleetOneStorage->GetCounter()
     #define ALIEN_IS_ABSENT !(*(alienFleetOneStorage))[alien]
     #define ALIEN_IN_HEROECHELON\
                         (*(alienFleetOneStorage))[alien]->OnScreen() &&\
-                        *(*(alienFleetOneStorage))[alien] == heroEchelon
+                        *(*(alienFleetOneStorage))[alien] ==\
+                        hero->GetHeroEchelon()
     #define ALIEN_WALKED_ENOUGH_WITHOUT_FIRE\
                 (*(alienFleetOneStorage))[alien]->GetStepsWithoutFire() ==\
                 ALIENFLEET_ONE_MAXSTEPSWITHOUTFIRE
+    #define HERO_IS_ALIVE hero->IsItGone() == false
 
     for (int alien = 0; alien < COUNTER; ++alien)
     {
 
         if (ALIEN_IS_ABSENT) continue;
 
-        if (ALIEN_IN_HEROECHELON && ALIEN_WALKED_ENOUGH_WITHOUT_FIRE)
+        if (HERO_IS_ALIVE && ALIEN_IN_HEROECHELON && 
+                                            ALIEN_WALKED_ENOUGH_WITHOUT_FIRE)
         {
             AlienLazer* lazer = new (std::nothrow) 
             AlienLazer{(*(alienFleetOneStorage))[alien]->GetLazerStart(),
@@ -64,12 +67,14 @@ void Engine::MoveAlienFleetOne(const echelon* heroEchelon)
             (*(alienFleetOneStorage))[alien]->ResetStepsWithoutFire();
         }
 
-        (*(alienFleetOneStorage))[alien]->Move();
+        (*(alienFleetOneStorage))[alien]->StrightMove(hero);
+
         if ((*(alienFleetOneStorage))[alien]->IsItGone())
             alienFleetOneStorage->Remove(alien);
     }
 
     #undef COUNTER
+    #undef HERO_IS_ALIVE
     #undef ALIEN_IS_ABSENT
     #undef ALIEN_IN_HEROECHELON
     #undef ALIEN_WALKED_ENOUGH_WITHOUT_FIRE

@@ -1,5 +1,4 @@
 #include "n_ob.h"
-#include "../core/checkcrossing.h"
 
 Alien::Alien(const texture_* t,
                              const plot* start,
@@ -56,38 +55,20 @@ void Alien::setCr()
     #undef THREE
 }
 
-void Alien::Move()
-{
-    ElementaryObject::resetUpLeftCorner();
-    setCr();
-    recomputeLazerStart();
 
-
-    //Если вышла на экран
-    if (hasCrossedRight_fromOut(ElementaryObject::GetMainRect_x()))
-    {
-        if (!OnScreen())
-            ResetOnScreen(true);
-        stepsWithoutFire++;
-    }
-    //Если вышли за левую границу экрана, то удаляемся
-    if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
-    {
-        ResetOnScreen(false);
-        ItIsGoneNow();
-    }
-}
-
+/*Проверка на столкновение алиена и лазера героя*/
 bool Alien::operator==(const HeroLazer& hl)
 {
     if (obj_texture->main_rect == *hl.GetMainRect())
     {
-        //return true;
         return *Alien::cr == hl.GetMainRect();
     }
     return false;
 }
 
+
+
+/*Проверка - находится ли алиен в эшелоне героя*/
 bool Alien::operator==(const echelon* heroEchelon)
 {
     return *GetMainRect() == *heroEchelon;
@@ -95,7 +76,14 @@ bool Alien::operator==(const echelon* heroEchelon)
 
 
 
-
+bool Alien::operator==(const NHero* hero)
+{
+    if (obj_texture->main_rect == *hero->GetMainRect())
+    {   
+        return cr == hero->CR();
+    }
+    return false;
+}
 
 
 

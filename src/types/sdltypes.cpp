@@ -32,13 +32,13 @@ bool CRC::comparison(const rect_* f, const int len, const rect_* s) const
     return false;
 }
 
-bool CRC::operator==(const CRC& crc)
+/*bool CRC::operator==(const CRC& crc)
 {
     return (arrLen < crc.arrLen)? comparison(array, arrLen, crc.array):
                                   comparison(crc.array, crc.arrLen, array);
-}
+}*/
 
-bool CRC::operator==(const CRC* crc)
+bool CRC::operator==(CRC* crc)
 {
     return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array):
                                     comparison(crc->array, crc->arrLen, array);

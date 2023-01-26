@@ -7,6 +7,8 @@ AlienLazer::AlienLazer(const plot* start, const texture_* t):
     Velocities()->y = 0;
 }
 
+
+/*Проверка на столкновение лазера алиена и героя*/
 bool AlienLazer::operator==(NHero& hero)
 {
     if (obj_texture->main_rect == *hero.GetMainRect())
