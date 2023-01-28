@@ -34,6 +34,7 @@ bool Engine::makeAlienFleetOne(const tc* collection)
     #undef DOWN
 }
 
+/*Движение флота алиенов*/
 void Engine::MoveAlienFleetOne(NHero* hero, status_t& status)
 {
     /*Если герой подбит, то не двигаем флот прямо*/
@@ -92,12 +93,17 @@ void Engine::MoveAlienFleetOne(NHero* hero, status_t& status)
  
 }
 
-void Engine::CheckAleinFleetOneHitsHero(NHero* hero, status_t& status)
+/*Проверка на столкновение алиена и героя*/
+void Engine::Checks_AleinFleetOneHitsHero(NHero* hero, status_t& status)
 {
+    #define ALIEN_IS_ABSENT !(*(alienFleetOneStorage))[alien]
+    #define ALIEN_isnot_ONSCREEN (*(alienFleetOneStorage))[alien]->OnScreen()\
+                                                                       == false
+
     for (int alien = 0; alien < alienFleetOneStorage->GetCounter(); ++alien)
     {
-        if (!(*(alienFleetOneStorage))[alien]) continue;
-        if ((*(alienFleetOneStorage))[alien]->OnScreen() == false) break;
+        if (ALIEN_IS_ABSENT) continue;
+        if (ALIEN_isnot_ONSCREEN) break;
         if (*(*(alienFleetOneStorage))[alien] == hero)
         {
             alienFleetOneStorage->Remove(alien);
@@ -107,6 +113,9 @@ void Engine::CheckAleinFleetOneHitsHero(NHero* hero, status_t& status)
             return;
         }
     }
+
+    #undef ALIEN_IS_ABSENT
+    #undef ALIEN_isnot_ONSCREEN
 }
 
 void Engine::ShowAlienFleetOne(const Sdl* sdl) const
@@ -153,6 +162,9 @@ void Engine::ShowAlienFleetOne(const Sdl* sdl) const
 /*Временное хранилище алиенов для ухода с экрана*/
 bool Engine::make_tmpAlienFleetOneStorage(status_t& status)
 {
+    #define ALIEN_IS_ABSENT !(*(alienFleetOneStorage))[alien]
+    #define ALIEN_IS_ON_SCREEN (*(alienFleetOneStorage))[alien]->OnScreen()
+
     /*Если список действующих алиенов не пустой*/
     if (alienFleetOneStorage->IsEmpty() == false)
     {
@@ -160,14 +172,14 @@ bool Engine::make_tmpAlienFleetOneStorage(status_t& status)
         int lastOnScreen = 0;
         for (int alien = 0; alien < ALIENFLEET_ONE_CAP; ++alien)
         {
-            if (!(*(alienFleetOneStorage))[alien]) continue;
-            if ((*(alienFleetOneStorage))[alien]->OnScreen()) lastOnScreen++;
+            if (ALIEN_IS_ABSENT) continue;
+            if (ALIEN_IS_ON_SCREEN) lastOnScreen++;
             else break;
         }
         if (lastOnScreen <= 0) return false;
         /*Создаем временное хранилище*/
         alienFleetTmpStorage = 
-                new (std::nothrow) AlienFleet_oneStorage {lastOnScreen};
+                new (std::nothrow) AlienStorage {lastOnScreen};
         if (!alienFleetTmpStorage || alienFleetTmpStorage->Status() == false)
         {
             status.gameQuit = true;
@@ -175,8 +187,8 @@ bool Engine::make_tmpAlienFleetOneStorage(status_t& status)
         }
         for (int alien = 0; alien < ALIENFLEET_ONE_CAP; ++alien)
         {
-            if (!(*(alienFleetOneStorage))[alien]) continue;
-            if ((*(alienFleetOneStorage))[alien]->OnScreen())
+            if (ALIEN_IS_ABSENT) continue;
+            if (ALIEN_IS_ON_SCREEN)
             {
                 //Толкаем во временное хранилище алиена
                 alienFleetTmpStorage->Push((*(alienFleetOneStorage))[alien]);
@@ -190,4 +202,7 @@ bool Engine::make_tmpAlienFleetOneStorage(status_t& status)
         return true;
     }
     return false;
+
+    #undef ALIEN_IS_ON_SCREEN
+    #undef ALIEN_IS_ABSENT
 }

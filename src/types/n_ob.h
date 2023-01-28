@@ -1,61 +1,24 @@
 #ifndef N_OB_H
 #define N_OB_H
 
+//#include "elementaryobject.h"
+//#include "complexobject.h"
+//#include "nhero.h"
+#include "objectslist.h"
+
 //#include "sdlclass.h"
-#include "gametypes.h"
+//#include "gametypes.h"
 #include "../consts/gameconsts.h"
 #include "test.h"
 #include "texturescollection.h"
 #include "gameInfoClass.h"
-#include "sdlclass.h"
-
-/*Абстрактный класс - основа всех объектов*/
-class ElementaryObject
-{
-    protected:
-    bool init {true};
-    bool isOnScreen {false};
-    bool isGone {false};
-    texture_*  obj_texture    {nullptr};
-    plot*      obj_velocities {nullptr};
-    plot*      obj_center     {nullptr};
-    void setUpLeftCorner(const int x, const int y);
-    void resetUpLeftCorner();
-    void resetUpLeftCorner_x(const int x);
-    void resetUpLeftCorner_y(const int y);
-    void ShowObj(const Sdl* sdl) const;
-    void resetCenter();
+/*#include "sdlclass.h"*/
+#include "diecomplex.h"
 
 
-    public:
-    ElementaryObject(const texture_* t);
-    ElementaryObject(const ElementaryObject&) = delete;
-    ElementaryObject& operator=(const ElementaryObject& ) = delete;
-    virtual ~ElementaryObject();
-    bool Status() const {return init;}
-
-    rect_& MainRect() const {return obj_texture->main_rect;}
-    rect_* GetMainRect() const {return &obj_texture->main_rect;}
-
-    bool OnScreen() const {return isOnScreen;}
-    void ResetOnScreen(bool visibility) {isOnScreen = visibility;}
-    int  GetMainRect_x() const {return obj_texture->main_rect.x;}
-    int  GetMainRect_y() const {return obj_texture->main_rect.y;}
-    int  GetMainRect_w() const {return obj_texture->main_rect.w;}
-    int  GetMainRect_h() const {return obj_texture->main_rect.h;}
-    int  GetMainRectW() const {return obj_texture->main_rect.x+
-                                obj_texture->main_rect.w;}
-    int GetMainRectH()  const {return obj_texture->main_rect.y+
-                                obj_texture->main_rect.h;}
-    int GetMainRectH_Half() const {return obj_texture->main_rect.y+
-                                obj_texture->main_rect.h / 2;}
-    plot* Velocities() {return obj_velocities;}
-    bool IsItGone() {return isGone;} 
-    void ItIsGoneNow() {isGone = true;}
-};
 
 /*Сложный класс для объектов с прямоугольниками пересечений*/
-class ComplexObject: public ElementaryObject
+/*class ComplexObject: public ElementaryObject
 {
     protected:
     CRC* cr;
@@ -79,24 +42,22 @@ class ComplexObject: public ElementaryObject
     void Show(const Sdl* sdl) const;
     CRC* CR() const {return cr;}
 
-};
+};*/
 
 /*Пересечения*/
-namespace re
+/*namespace re
 {
-    /*прям. пересечений героя*/
     enum  heros {one, two, three, four, five, allR};
 
-    /*алиен тип первый*/
     enum  alien_t1 {t1_one, t1_two, t1_three, t1_allR};
 }
 
 namespace scores
 {
     enum weight {plainAlien = 5,};
-}
+}*/
 
-class NHero: public ComplexObject
+/*class NHero: public ComplexObject
 {
     private:
     plot*   heroStopIntro {nullptr};
@@ -126,17 +87,16 @@ class NHero: public ComplexObject
     void HeroLeft();
     void HeroStop();
     void Move();
-    //void Move() override;
     
     echelon* GetHeroEchelon() const {return heroEchelon;}
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
-};
+};*/
 
 
 
 
-template<class T>
+/*template<class T>
 class ObjectsList
 {
     private:
@@ -241,16 +201,16 @@ void ObjectsList<T>::Check_and_clear()
         }
         else current = &(*current)->next;
     }
-}
+}*/
 
 
 /*Проверка на столкновение с героем*/
-template<class T>
+/*template<class T>
 bool ObjectsList<T>::Check_withObject(NHero* hero)
 {
     if (!first) return false;
 
-    /*Если герой уже подбит, выходим*/
+    Если герой уже подбит, выходим
     if (hero->IsItGone() == true) return false;
 
     current = &first;
@@ -280,7 +240,7 @@ void ObjectsList<T>::Move()
         tmp->data->Move();
         tmp = tmp->next;
     }
-}
+}*/
 
 
 
@@ -376,6 +336,9 @@ class ArrStorageABC
     ArrStorageABC(const int capacity);
     ArrStorageABC(const ArrStorageABC&) = delete;
     ArrStorageABC& operator=(const ArrStorageABC&) = delete;
+
+    ElementaryObject* operator[](const int index);
+
     virtual ~ArrStorageABC() = 0;
     bool Status() const {return init;}
     void Clear();
@@ -404,18 +367,18 @@ class HeroLazerStorage: public ArrStorageABC
 };
 
 
-class AlienFleet_oneStorage: public ArrStorageABC
+class AlienStorage: public ArrStorageABC
 {
     public:
-    explicit AlienFleet_oneStorage(const int capacity);
-    ~AlienFleet_oneStorage() {}
-    AlienFleet_oneStorage(const AlienFleet_oneStorage&) = delete;
-    AlienFleet_oneStorage& operator=(const AlienFleet_oneStorage&) = delete;
+    explicit AlienStorage(const int capacity);
+    ~AlienStorage() {}
+    AlienStorage(const AlienStorage&) = delete;
+    AlienStorage& operator=(const AlienStorage&) = delete;
     Alien* operator[](const int index);
 };
 
 
-class DieObject: public ElementaryObject
+/*class DieObject: public ElementaryObject
 {
     
    private:
@@ -431,11 +394,11 @@ class DieObject: public ElementaryObject
    void Move();
    void Show(const Sdl* sdl) const;
 
-};
+};*/
 
 
 
-class DieComplex
+/*class DieComplex
 {
     private:
     enum {firstTexture, secondTexture, maxTexture,};
@@ -454,10 +417,70 @@ class DieComplex
     void Show(const Sdl* sdl) const;
     bool IsItGone() const {return complex[firstTexture]->IsItGone();}
     
+};*/
+
+class GameFleet_ABC
+{
+    protected:
+    bool init {true};
+    const tc* tcollection;
+    const texture_* digits;
+    int fleetStorage_livesize;
+    int tmp_fleetStorage_livesize;
+    AlienStorage* fleetStorage;
+    AlienStorage* tmp_fleetStorage;
+    ObjectsList<AlienLazer>* fleetLazerStorage;
+
+
+    public:
+    GameFleet_ABC(const tc* collection, const texture_* heap_digits);
+    virtual ~GameFleet_ABC() = 0;
+
+    bool Status() const {return init;}
+    bool FleetStorageEmpty()    const {return fleetStorage_livesize == 0;}
+    bool TmpFleetStorageEmpty() const {return tmp_fleetStorage == 0;}
+
+    virtual void MoveFleet(NHero* hero, status_t&  status) = 0;
+    virtual void MoveFleetLazers() = 0;
+
+    virtual void ShowFleet(const Sdl* sdl) const = 0;
+    virtual void ShowFleetLazers(const Sdl* sdl) const = 0;
+
+    virtual void CheckFleetCrashHero(NHero* hero, status_t& status,
+                                ObjectsList<DieComplex>* dieStorage) = 0;
+    virtual void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
+                                ObjectsList<DieComplex>* dieStorage) = 0;
+
+    virtual void ClearFleetLazers() = 0;
+    ArrStorageABC* Fleet() {return fleetStorage;}
+
+
 };
 
 
+class FirstFleet: public GameFleet_ABC
+{
+    private:
+    bool makeFirstFleet(tc* collection);
 
+    public:
+    FirstFleet(const tc* collection, const texture_* heap_digits);
+    FirstFleet(const FirstFleet&) = delete;
+    FirstFleet& operator=(const FirstFleet&) = delete;
+
+    void MoveFleet(NHero* hero, status_t& status) override;
+    void MoveFleetLazers() override;
+
+    void ShowFleet(const Sdl* sdl) const override;
+    void ShowFleetLazers(const Sdl* sdl) const override;
+
+    void CheckFleetCrashHero(NHero* hero, status_t& status,
+                            ObjectsList<DieComplex>* dieStorage) override;
+    void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
+                            ObjectsList<DieComplex>* dieStorage) override;
+    void ClearFleetLazers() override;
+                    
+};
 
 
 /*Место для хранения объектов*/
@@ -468,32 +491,37 @@ class Engine
     const tc* tcollection;
     const texture_* digits;
     HeroLazerStorage* heroLazerStorage;
-    AlienFleet_oneStorage* alienFleetOneStorage;
-    AlienFleet_oneStorage* alienFleetTmpStorage;
+    AlienStorage* alienFleetOneStorage;
+    AlienStorage* alienFleetTmpStorage;
+
 
     ObjectsList<DieComplex>* dieStorage;
     ObjectsList<AlienLazer>* alienLazerStorage;
 
     DieComplex* make_DieComplex(const plot* ship_center, const int score);
     DieComplex* make_DieComplex(const plot* ship_center);
-    bool make_tmpAlienFleetOneStorage(status_t& status);
 
+    bool make_tmpAlienFleetOneStorage(status_t& status);
     bool makeAlienFleetOne(const tc* collection);
     bool makeHeroLazer(const plot* start);
+
     void MoveHeroLazers();
-    void ShowHeroLazers(const Sdl* sdl) const;
     void MoveAlienFleetOne(NHero* hero, status_t& status);
-    void CheckAleinFleetOneHitsHero(NHero* hero, status_t& status);
-    void ShowAlienFleetOne(const Sdl* sdl) const;
-    void ShowAlienFleetOneLazers(const Sdl* sdl) const;
-    bool Checks_herolazer_hitsAlien(status_t& status);
-    void Checks_alienlazer_hitsHero(NHero* hero, status_t& status);
-    void ShowDieScores(const Sdl* sdl) const;
     void MoveDieScores();
     void MoveAlienFleetOneLazers();
+
+    void ShowHeroLazers(const Sdl* sdl) const;
+    void ShowAlienFleetOne(const Sdl* sdl) const;
+    void ShowAlienFleetOneLazers(const Sdl* sdl) const;
+    void ShowDieScores(const Sdl* sdl) const;
+
+    void Checks_AleinFleetOneHitsHero(NHero* hero, status_t& status);
+    bool Checks_herolazer_hitsAlien(status_t& status);
+    void Checks_alienlazer_hitsHero(NHero* hero, status_t& status);
+    void Checks_isHeroDead(status_t& status);
+
     void ClearDieScores();
     void ClearAlienLazers();   
-    void Checks_isHeroDead(status_t& status);
     
 
     public:

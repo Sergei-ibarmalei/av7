@@ -19,7 +19,7 @@ Engine::Engine(const tc* collection, const texture_* heap_digits)
         init = false; return;
     }
     alienFleetOneStorage = new (std::nothrow) 
-                                    AlienFleet_oneStorage{ALIENFLEET_ONE_CAP};
+                                    AlienStorage{ALIENFLEET_ONE_CAP};
     if (!alienFleetOneStorage)
     {
         init = false; return;
@@ -42,6 +42,8 @@ Engine::Engine(const tc* collection, const texture_* heap_digits)
         init = false; return;
     }
 
+    
+
     alienFleetTmpStorage = nullptr;
 
 }
@@ -61,6 +63,7 @@ Engine::~Engine()
     alienFleetTmpStorage = nullptr;
 }
 
+/*Движение выстрелянных лазеров героя*/
 void Engine::MoveHeroLazers()
 {
     bool flag_StartSort = false;
@@ -109,6 +112,7 @@ bool Engine::makeHeroLazer(const plot* start)
     #undef COUNTER
 }
 
+/*Проверка на попадание лазера алиена в героя*/
 void  Engine::Checks_alienlazer_hitsHero(NHero* hero, status_t& status)
 {
     if (alienLazerStorage->Check_withObject(hero))
@@ -120,6 +124,7 @@ void  Engine::Checks_alienlazer_hitsHero(NHero* hero, status_t& status)
 }
 
 
+/*Проверка на попадание лазера героя в алиена*/
 bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
 {
     #define HEROLAZER *(*(heroLazerStorage))[l]
@@ -225,6 +230,7 @@ void Engine::ShowDieScores(const Sdl* sdl) const
     dieStorage->Show(sdl);
 }
 
+/*Движение score после подбития алиена*/
 void Engine::MoveDieScores()
 {
     dieStorage->Move();
@@ -269,7 +275,7 @@ void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl,
     if (GAMEOVER) return;
     ShowAlienFleetOne(sdl);
     MoveAlienFleetOne(hero, status);
-    CheckAleinFleetOneHitsHero(hero, status);
+    Checks_AleinFleetOneHitsHero(hero, status);
     ShowHeroLazers(sdl);
     MoveHeroLazers();
     if (Checks_herolazer_hitsAlien(status))
@@ -299,6 +305,7 @@ void Engine::InPause(const Sdl* sdl, status_t& status,
     gameInfo->ShowGameInfo(sdl, status);
 }
 
+/*Проврка состояния героя - жив или не очень*/
 void Engine::Checks_isHeroDead(status_t& status)
 {
     #define NOSCORES_NOLAZERS dieStorage->IsEmpty()&&\

@@ -212,9 +212,10 @@ void GameClass::pauseIsPressed()
     {
         SDL_RenderClear(sdl_->Renderer());
         nHero->Show(sdl_);
+
+        borderSky_show_moving();
         engine->InPause(sdl_, status, gameInfo);
         showPause();
-        borderSky_show_moving();
         
         while (SDL_PollEvent(&sdl_->event()) != 0)
         {

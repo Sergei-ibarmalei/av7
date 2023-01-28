@@ -57,6 +57,21 @@ namespace dir
     enum direction {right, left, up, down};
 }
 
+/*Пересечения*/
+namespace re
+{
+    /*прям. пересечений героя*/
+    enum  heros {one, two, three, four, five, allR};
+
+    /*алиен тип первый*/
+    enum  alien_t1 {t1_one, t1_two, t1_three, t1_allR};
+}
+
+namespace scores
+{
+    enum weight {plainAlien = 5,};
+}
+
 
 
 #endif

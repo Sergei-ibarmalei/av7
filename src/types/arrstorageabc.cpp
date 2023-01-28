@@ -100,3 +100,9 @@ bool ArrStorageABC::Push(ElementaryObject* ob)
     return true;
 }
 
+ElementaryObject* ArrStorageABC::operator[](const int index)
+{
+    if (index < 0 || index >= counter) return nullptr;
+    return storage[index];
+}
+

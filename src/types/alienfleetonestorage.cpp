@@ -1,6 +1,6 @@
 #include "n_ob.h"
 
-AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity): 
+AlienStorage::AlienStorage(const int capacity): 
                                                 ArrStorageABC(capacity)
 {
     if (!init) return;
@@ -8,7 +8,7 @@ AlienFleet_oneStorage::AlienFleet_oneStorage(const int capacity):
 
 
 
-Alien* AlienFleet_oneStorage::operator[](const int index)
+Alien* AlienStorage::operator[](const int index)
 {
     if (index < 0 || index >= counter)
     {

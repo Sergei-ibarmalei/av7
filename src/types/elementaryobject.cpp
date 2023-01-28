@@ -86,6 +86,11 @@ void ElementaryObject::resetUpLeftCorner_y(const int y)
     resetCenter();
 }
 
+bool ElementaryObject::operator==(const echelon* heroEchelon)
+{
+    return *GetMainRect() == *heroEchelon;
+}
+
 
 
 
