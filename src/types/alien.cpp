@@ -80,7 +80,7 @@ bool Alien::operator==(const NHero* hero)
 {
     if (obj_texture->main_rect == *hero->GetMainRect())
     {   
-        return cr == hero->CR();
+        return *cr == hero->CR();
     }
     return false;
 }

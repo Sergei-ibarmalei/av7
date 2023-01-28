@@ -43,34 +43,6 @@ ElementaryObject::ElementaryObject(const texture_* t)
 
 }
 
-ElementaryObject::ElementaryObject(const ElementaryObject& eo)
-{
-    obj_texture = new (std::nothrow) texture_;
-    obj_texture->texture = eo.obj_texture->texture;
-    obj_texture->main_rect = eo.obj_texture->main_rect;
-    obj_velocities = new (std::nothrow) plot;
-    obj_velocities->x = eo.obj_velocities->x;
-    obj_velocities->y = eo.obj_velocities->y;
-}
-
-ElementaryObject& ElementaryObject::operator=(const ElementaryObject& eo)
-{
-    if (this == &eo) return *this;
-    obj_texture->texture = nullptr;
-    delete obj_texture;
-    delete obj_center;
-    delete obj_velocities;
-    obj_texture = new (std::nothrow) texture_;
-    obj_texture->texture = eo.obj_texture->texture;
-    obj_texture->main_rect = eo.obj_texture->main_rect;
-    obj_center = new (std::nothrow) plot;
-    obj_center = eo.obj_center;
-    obj_velocities = eo.obj_velocities;
-    return *this;
-}
-
-
-
 void ElementaryObject::ShowObj(const Sdl* sdl) const
 {
     sdl->TextureRender(obj_texture->texture, &obj_texture->main_rect);

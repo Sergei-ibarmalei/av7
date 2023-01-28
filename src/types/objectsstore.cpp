@@ -42,6 +42,8 @@ Engine::Engine(const tc* collection, const texture_* heap_digits)
         init = false; return;
     }
 
+    alienFleetTmpStorage = nullptr;
+
 }
 
 Engine::~Engine()
@@ -55,6 +57,8 @@ Engine::~Engine()
     dieStorage = nullptr;
     delete alienLazerStorage;
     alienLazerStorage = nullptr;
+    delete alienFleetTmpStorage;
+    alienFleetTmpStorage = nullptr;
 }
 
 void Engine::MoveHeroLazers()
@@ -83,7 +87,6 @@ bool Engine::makeHeroLazer(const plot* start)
         HeroLazer* lazer = new (std::nothrow) HeroLazer{start,
                                     &tcollection->Pictures()[tn::blue_laser]};
         if (!lazer || (lazer->Status() == false)) return false;
-            return heroLazerStorage->Push(lazer);
 
         return heroLazerStorage->Push(lazer);
     }
@@ -106,10 +109,14 @@ bool Engine::makeHeroLazer(const plot* start)
     #undef COUNTER
 }
 
-void  Engine::Checks_alienlazer_hitsHero(NHero* hero)
+void  Engine::Checks_alienlazer_hitsHero(NHero* hero, status_t& status)
 {
-    alienLazerStorage->Check_withObject(hero);
-    //если героя подбили, устанавливаем статус hero_dead = true
+    if (alienLazerStorage->Check_withObject(hero))
+    {
+        /*Если героя подбивают, показываем череп*/
+        dieStorage->Push(make_DieComplex(hero->GetCenter()));
+        status.hero_dead = true;
+    }
 }
 
 
@@ -130,7 +137,7 @@ bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
     for (int l = 0; l < heroLazerStorage->GetCounter(); ++l)
     {
         if ( CURRENT_HEROLAZER_ABSENT ) break;
-        for (int a = 0; a < alienFleetOneStorage->GetCapacity(); ++a)
+        for (int a = 0; a < alienFleetOneStorage->GetCounter(); ++a)
         {
             if ( ALIEN_ABSENT ) continue;
             if (ALIEN_outSCREEN) break;
@@ -164,23 +171,23 @@ bool  Engine::Checks_herolazer_hitsAlien(status_t& status)
 }
 
 
+DieComplex* Engine::make_DieComplex(const plot* ship_center)
+{
+    DieComplex* dsc = 
+    new (std::nothrow) DieComplex(ship_center, 
+                                &tcollection->Pictures()[tn::scull]);
+    if (!dsc || dsc->Status() == false) return nullptr;
+    return dsc;
+}
+
 /// @brief Создание комплекса летающего счета или черепа
 /// @param ship_center - центр корабля для отсчета координат
 /// @param score - счет, из которого создается комплекс
 /// @param scull - true - если нужно создать череп героя вместо счета
 /// @return 
 DieComplex* Engine::make_DieComplex(const plot* ship_center,
-                                                const int score, bool scull)
+                                                const int score)
 {
-    if (scull)
-    {
-        DieComplex* dsc = 
-        new (std::nothrow) DieComplex(ship_center, 
-                                    &tcollection->Pictures()[tn::scull]);
-        if (!dsc || dsc->Status() == false) return nullptr;
-        return dsc;
-    }
-    
     if (score <= 0) return nullptr;
 
     int complexLength = score / 10;
@@ -252,13 +259,17 @@ bool Engine::MakeHeroLazer(const plot* start)
 }
 
 
+
+
 void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl, 
                         status_t& status, GameInfoClass* gameInfo)
 {
+    #define GAMEOVER status.gameIsOver == true
 
-
+    if (GAMEOVER) return;
     ShowAlienFleetOne(sdl);
-    MoveAlienFleetOne(hero);
+    MoveAlienFleetOne(hero, status);
+    CheckAleinFleetOneHitsHero(hero, status);
     ShowHeroLazers(sdl);
     MoveHeroLazers();
     if (Checks_herolazer_hitsAlien(status))
@@ -267,12 +278,14 @@ void Engine::DoGameAlgorithm(NHero* hero, const Sdl* sdl,
     ShowAlienFleetOneLazers(sdl);
     MoveAlienFleetOneLazers();
     //
-    Checks_alienlazer_hitsHero(hero);
+    Checks_alienlazer_hitsHero(hero, status);
     //
     ClearAlienLazers();
     MoveDieScores();
     ClearDieScores(); 
-
+    Checks_isHeroDead(status);
+    
+    #undef GAMEOVER
 
 }
 
@@ -285,4 +298,34 @@ void Engine::InPause(const Sdl* sdl, status_t& status,
     ShowAlienFleetOneLazers(sdl);
     gameInfo->ShowGameInfo(sdl, status);
 }
+
+void Engine::Checks_isHeroDead(status_t& status)
+{
+    #define NOSCORES_NOLAZERS dieStorage->IsEmpty()&&\
+                                    alienLazerStorage->IsEmpty()
+    /*if (status.hero_dead)
+    {
+        //status.HeroLives--;
+        if (status.HeroLives <=0)
+        {
+            status.gameIsOver = true;
+            return;
+        }
+    }*/
+
+    if (status.hero_dead && NOSCORES_NOLAZERS)
+    {
+
+        status.hero_dead = false;
+        /*TODO*/
+        if (make_tmpAlienFleetOneStorage(status)) 
+        {
+            status.aliens_go_back = true;
+        }
+    }
+
+    #undef NOSCORES_NOLAZERS
+}
+
+
 

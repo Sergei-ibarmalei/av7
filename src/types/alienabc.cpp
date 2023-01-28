@@ -2,12 +2,14 @@
 #include "../core/checkcrossing.h"
 
 
+
 AlienABC::AlienABC(const texture_* t, 
                              const int arrLen, 
                              const plot* start,
                              const texture_* lazer): ComplexObject(t, arrLen)
 {
     //std::cout << "In AlienABC ctor.\n";
+    //alienID = id;
     lazerMainRect = new rect_;
     lazerMainRect->w = lazer->main_rect.w;
     lazerMainRect->h = lazer->main_rect.h;
@@ -54,7 +56,7 @@ void AlienABC::show(const Sdl* sdl) const
     ComplexObject::Show(sdl);
 }
 
-void AlienABC::StrightMove(NHero* hero)
+void AlienABC::StrightMove()
 {
     resetUpLeftCorner();
     setCr();
@@ -64,18 +66,14 @@ void AlienABC::StrightMove(NHero* hero)
     if (hasCrossedRight_fromOut(ElementaryObject::GetMainRect_x()))
     {
         if (!OnScreen())
+        {
             ResetOnScreen(true);
+        }
         stepsWithoutFire++;
     }
 
     /*Проверка на столкновение алиена и героя*/
-    if (obj_texture->main_rect == *hero->GetMainRect())
-    {
-        if (*hero->CR() == cr)
-        {
-            hero->ItIsGoneNow();
-        }
-    }
+    /*проверка проходит в Engine::CheckAlienFleetOneHitsHero*/
 
     //Если вышли за левую границу экрана, то удаляемся
     if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))

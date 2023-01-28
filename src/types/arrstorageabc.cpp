@@ -9,6 +9,7 @@ ArrStorageABC::ArrStorageABC(const int capacity)
     }
     storageCapacity = capacity;
     counter = 0;
+    live_size = 0;
     storage = new (std::nothrow) ElementaryObject*[capacity] {nullptr};
     if (!storage) init = false;
 }
@@ -27,29 +28,23 @@ void ArrStorageABC::Clear()
     counter = 0;
 }
 
-/*Смещение всех значений storage после удаления элем. под номером indexClean*/
-bool ArrStorageABC::cleaning(const int indexClean)
-{
-    if (indexClean < 0 || indexClean >= storageCapacity) return false;
-    if (indexClean == (storageCapacity - 1)) return true;
 
-    for (int i = indexClean; i < (storageCapacity-1); ++i)
-    {
-        storage[i] = storage[i+1];
-        storage[i+1] = nullptr;
-    }
-    counter -= 1;
-    return true;
-}
 
 void ArrStorageABC::Remove(const int index)
 {
     if (index < 0 || index >= storageCapacity) return;
     delete storage[index];
     storage[index] = nullptr;
+    live_size--;
 }
 
-
+bool ArrStorageABC::Clear_at(const int index)
+{
+    if (index < 0 || index >= storageCapacity) return false;
+    storage[index] = nullptr;
+    --live_size;
+    return true;
+}
 
 void ArrStorageABC::Sort(const int arrLen)
 {
@@ -91,6 +86,7 @@ ArrStorageABC::~ArrStorageABC()
         delete storage[i];
         storage[i] = nullptr;
     }
+    
     delete [] storage;
     storage = nullptr;
 }
@@ -100,6 +96,7 @@ bool ArrStorageABC::Push(ElementaryObject* ob)
     if (!ob) return false;
     if (counter >= storageCapacity) return false;
     storage[counter++] = ob;
+    live_size++;
     return true;
 }
 

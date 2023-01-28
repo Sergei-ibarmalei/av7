@@ -22,7 +22,7 @@ using echelon = Echelon;
 
 struct Rect: public SDL_Rect
 {
-    Rect() {x = y = w = h = 0;}
+    Rect() {/*x = y = w = h = 0;*/}
 
     bool operator==(const struct Rect& r) const
     {
@@ -74,7 +74,7 @@ class CRC
     bool   init {true};
     bool   cmp_oneTomany(const rect_* r);
     bool   comparison(const rect_* first, 
-                      const int len, const rect_* second) const;
+                      const int shortlen, const rect_* second, const int longlen) const;
 
     public:
     CRC(const int len);

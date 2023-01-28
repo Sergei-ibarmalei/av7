@@ -23,25 +23,24 @@ CRC::CRC(const int len)
 
 
 
-bool CRC::comparison(const rect_* f, const int len, const rect_* s) const
+bool CRC::comparison(const rect_* f, const int shortlen, const rect_* s, const int longlen) const
 {
-    for (int rect = 0; rect < len; ++rect)
+    for (int shortrect = 0; shortrect < shortlen; ++shortrect)
     {
-        if (f[rect] == s[rect]) return true;
+        for (int longrect = 0; longrect < longlen; ++longrect)
+        {
+            if (f[shortrect] == s[longrect]) return true;
+        }
     }
     return false;
 }
 
-/*bool CRC::operator==(const CRC& crc)
-{
-    return (arrLen < crc.arrLen)? comparison(array, arrLen, crc.array):
-                                  comparison(crc.array, crc.arrLen, array);
-}*/
 
 bool CRC::operator==(CRC* crc)
 {
-    return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array):
-                                    comparison(crc->array, crc->arrLen, array);
+    return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array, crc->arrLen):
+                                    comparison(crc->array, crc->arrLen, array, arrLen);
+    //return comparison(array, arrLen, crc->array, crc->arrLen);
 }
 
 bool CRC::operator==(const rect_* r)

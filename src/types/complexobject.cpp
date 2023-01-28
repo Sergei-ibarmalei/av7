@@ -36,6 +36,7 @@ ComplexObject::ComplexObject(const texture_* t, const int arrLen):
 
 void ComplexObject::Show(const Sdl* sdl) const
 {
+    if (isGone == true) return;
     ElementaryObject::ShowObj(sdl);
     #ifdef SHOW_COL_R
         SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);

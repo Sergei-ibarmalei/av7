@@ -1,7 +1,7 @@
 #include "gameInfoClass.h"
 #include "../consts/gameconsts.h"
 
-GameInfoClass::GameInfoClass(tc& collection)
+GameInfoClass::GameInfoClass(tc& collection, status_t& status)
 {
 
     if (!(initScoreBanner_heap(collection)))
@@ -16,9 +16,15 @@ GameInfoClass::GameInfoClass(tc& collection)
     }
 
 
-    initHeroLives(collection);
+    if (!initHeroLives(collection, status)) 
+    {
+        init = false; return;
+    }
 
-    initScoreBanner();
+    if (!initScoreBanner())
+    {
+        init = false;
+    }
 }
 
 GameInfoClass::~GameInfoClass()
@@ -64,15 +70,39 @@ bool GameInfoClass::initScoreBanner()
 
 }
 
-void GameInfoClass::initHeroLives(tc& collection)
+bool GameInfoClass::initHeroLives(tc& collection, status_t& status)
 {
-
+    if (status.HeroLives != HERO_LIVES) return false;
     /*Берем уменьшенную текстуру героя из коллекции*/
     hero_texture = &collection.Pictures()[tn::hero_scale_mult];
     /*Множитель изначально ставим в х3*/
-    heroLivesMult = &heap_heroLivesMult[x3];
+    heroLivesMult = nullptr;
+    heroLivesMult = &heap_heroLivesMult[5];
     setHeroLivesCoords();
+    return true;
 }
+
+bool GameInfoClass::initHeroLives_heap(tc& collection)
+{
+    int offSet = tn::x1;
+    heap_heroLivesMult = new (std::nothrow) texture_[heroLivesLen];
+    if (!heap_heroLivesMult) return false;
+
+
+    for (int t = 0; t < heroLivesLen; ++t)
+    {
+        
+        heap_heroLivesMult[t] = collection.Strings()[t+offSet];
+    }
+    return true;
+}
+
+/*bool GameInfoClass::ChangeHeroLives(status_t& status)
+{
+    if (status.HeroLives <= 0) return false;
+    heroLivesMult = &heap_heroLivesMult[status.HeroLives-1];
+    return true;
+}*/
 
 void GameInfoClass::setScoreBannerCoords()
 {
@@ -142,7 +172,11 @@ void GameInfoClass::ShowGameInfo(const Sdl* sdl, status_t& gameStatus)
     sdl->TextureRender(hero_texture->texture, &hero_texture->main_rect);
 
     /*Рисуем множитель*/
-    heroLivesMult = &heap_heroLivesMult[gameStatus.HeroLives-1];
+    if (gameStatus.HeroLives <= 0)
+    {
+        heroLivesMult = &heap_heroLivesMult[0];
+    }
+    else heroLivesMult = &heap_heroLivesMult[gameStatus.HeroLives-1];
 
     sdl->TextureRender(heroLivesMult->texture, &heroLivesMult->main_rect);
 
@@ -165,20 +199,7 @@ bool GameInfoClass::initScoreBanner_heap(tc& collection)
     return true;
 }
 
-bool GameInfoClass::initHeroLives_heap(tc& collection)
-{
-    int offSet = tn::x1;
-    heap_heroLivesMult = new (std::nothrow) texture_[heroLivesLen];
-    if (!heap_heroLivesMult) return false;
 
-
-    for (int t = 0; t < heroLivesLen; ++t)
-    {
-        
-        heap_heroLivesMult[t] = collection.Strings()[t+offSet];
-    }
-    return true;
-}
 
 /*Изменение счета на велечину delta*/
 void GameInfoClass::ChangeScore(status_t& status)
@@ -198,7 +219,9 @@ void GameInfoClass::ChangeScore(status_t& status)
         count /= 10;
         if (heap_scoreBanner[first].texture == nullptr)
         {
-            std::cout << "nullptr\n";
+            status.gameQuit = true; 
+            std::cout << "Something wrong has happened. Abort!";
+            return;
         }
         scoreBanner[segment].texture = heap_scoreBanner[first].texture;
         if (count)

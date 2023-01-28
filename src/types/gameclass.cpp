@@ -39,7 +39,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
     initPause(collection);
 
     nHero = new NHero(&collection.Pictures()[tn::hero]);
-    if (nHero->Status() == false)
+    if (!nHero || nHero->Status() == false)
     {
         gameClassStatus = false;
         return;
@@ -48,7 +48,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
     
     engine = new (std::nothrow) Engine(&collection, 
                                         gameInfo->HeapDigits());
-    if (engine->Status() == false)
+    if (!engine || engine->Status() == false)
     {
         gameClassStatus = false; return;
     }
@@ -79,27 +79,22 @@ void GameClass::initPause(tc& collection)
 
 bool GameClass::initGameInfo(tc& collection)
 {
-    gameInfo = new (std::nothrow) GameInfoClass(collection);
-    if (!gameInfo)
-    {
-        return false;
-    }
-    return gameInfo->Status();
+    gameInfo = new (std::nothrow) GameInfoClass(collection, status);
+    if (!gameInfo || gameInfo->Status() == false) return false;
+    return true;
 }
 
 bool GameClass::initBorder()
 {
     border = new (std::nothrow) Border();
-    if (!border) return false;
-    if (border->Status() == false) return false;
+    if (!border || border->Status() == false) return false;
     return true;
 }
 
 bool GameClass::initSky(texture_* starTexture)
 {
     sky = new (std::nothrow) Sky(starTexture);
-    if (!sky) return false;
-    if (sky->Status() == false) return false;
+    if (!sky || sky->Status() == false) return false;
     return true;
 }
 
@@ -127,6 +122,7 @@ void GameClass::initStatus()
 {
     status.heroIntro = true;
     status.gameQuit = false;
+    status.gameIsOver = false;
     status.mainMenu = true;
     status.pause = false;
     status.partOne = false;
@@ -134,6 +130,11 @@ void GameClass::initStatus()
     status.HeroLives = HERO_LIVES;
     status.gameScore = 0;
     status.hero_dead = false;
+    status.aliens_go_back = false;
+
+    #ifdef STOP_FLEET_MOVING
+        status.stop_fleet_moving = false;
+    #endif
 }
 
 bool GameClass::flow()
@@ -186,8 +187,15 @@ void GameClass::check_key_events()
                 case SDLK_SPACE:
                 {
                     status.gameQuit = 
-                        !engine->MakeHeroLazer(nHero->LazerStart());
+                        !engine->MakeHeroLazer(nHero->LazerStart()); break;
                 }
+                #ifdef STOP_FLEET_MOVING
+                    case SDLK_z:
+                    {
+                        status.stop_fleet_moving = !status.stop_fleet_moving;
+                        break;
+                    }
+                #endif
                  
                 default: {}
             }

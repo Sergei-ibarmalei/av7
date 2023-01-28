@@ -58,13 +58,13 @@ void NHero::setCr()
     #define FOUR re::heros::four
     #define FIVE re::heros::five
 
-    #define MAINR_UPLEFT_X ElementaryObject::GetMainRect_x()
-    #define MAINR_UPLEFT_Y ElementaryObject::GetMainRect_y()
+    #define MAINR_UPLEFT_X GetMainRect_x()
+    #define MAINR_UPLEFT_Y GetMainRect_y()
 
     CR[ONE].x = MAINR_UPLEFT_X + 2;
     CR[ONE].y = MAINR_UPLEFT_Y + 4;
-    CR[ONE].w = 45;
     CR[ONE].h = 17;
+    CR[ONE].w = 45;
 
 
     CR[TWO].x = MAINR_UPLEFT_X + 19;
@@ -74,18 +74,18 @@ void NHero::setCr()
 
     CR[THREE].x = CR[TWO].x;
     CR[THREE].y = CR[TWO].y + CR[TWO].h;
-    CR[THREE].w = 117;
     CR[THREE].h = 36;
+    CR[THREE].w = 117;
 
     CR[FOUR].x = CR[TWO].x;
     CR[FOUR].y = CR[THREE].y + CR[THREE].h;
-    CR[FOUR].w = CR[TWO].w;
     CR[FOUR].h = 16;
+    CR[FOUR].w = CR[TWO].w;
 
     CR[FIVE].x = CR[ONE].x;
     CR[FIVE].y = CR[FOUR].y + CR[FOUR].h;
-    CR[FIVE].w = CR[ONE].w;
     CR[FIVE].h = CR[ONE].h;
+    CR[FIVE].w = CR[ONE].w;
 
 
     #undef MAINR_UPLEFT_X
@@ -178,6 +178,7 @@ void NHero::HeroStop()
 
 void NHero::Move()
 {
+    if (IsItGone() == true) return;
     if (isGonnaCrossUp())    return;
     if (isGonnaCrossDown())  return;
     if (isGonnaCrossRight()) return;

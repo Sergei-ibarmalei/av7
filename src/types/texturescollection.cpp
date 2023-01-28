@@ -117,7 +117,7 @@ bool TexturesCollection::makeStringsTextures()
                          &gameFonts[tn::ScoresBanner]) == false)
             return false;
     }
-    /*MAKING TEXTURE FOR LIVE MULTIPLIVCATION*/
+    /*MAKING TEXTURE FOR LIVE MULTIPLICATION*/
 
     for (texture = tn::x1; texture < tn::allStringTextures; ++texture)
     {

@@ -29,11 +29,10 @@ class ElementaryObject
 
     public:
     ElementaryObject(const texture_* t);
-    ElementaryObject(const ElementaryObject& eo);
-    ElementaryObject& operator=(const ElementaryObject& eo);
+    ElementaryObject(const ElementaryObject&) = delete;
+    ElementaryObject& operator=(const ElementaryObject& ) = delete;
     virtual ~ElementaryObject();
     bool Status() const {return init;}
-    //virtual void Move() = 0;
 
     rect_& MainRect() const {return obj_texture->main_rect;}
     rect_* GetMainRect() const {return &obj_texture->main_rect;}
@@ -163,11 +162,18 @@ class ObjectsList
     void Push(T* data);
     void Show(const Sdl* sdl) const;
     void Check_and_clear();
-    void Check_withObject(NHero* hero);
+    bool Check_withObject(NHero* hero);
     void Move();
+    bool IsEmpty();
 
 
 };
+
+template<class T>
+bool ObjectsList<T>::IsEmpty()
+{
+    return (first == nullptr);
+}
 
 template<class T>
 ObjectsList<T>::ObjectsList()
@@ -240,9 +246,13 @@ void ObjectsList<T>::Check_and_clear()
 
 /*Проверка на столкновение с героем*/
 template<class T>
-void ObjectsList<T>::Check_withObject(NHero* hero)
+bool ObjectsList<T>::Check_withObject(NHero* hero)
 {
-    if (!first) return;
+    if (!first) return false;
+
+    /*Если герой уже подбит, выходим*/
+    if (hero->IsItGone() == true) return false;
+
     current = &first;
     while(*current)
     {
@@ -253,9 +263,11 @@ void ObjectsList<T>::Check_withObject(NHero* hero)
             delete tmp;
             //отмечаем,что героя подбили
             hero->ItIsGoneNow();
+            return true;
         }
         else current = &(*current)->next;
     }
+    return false;
 }
 
 template<class T>
@@ -313,6 +325,7 @@ class AlienABC: public ComplexObject
     int stepsWithoutFire;
     rect_* lazerMainRect;
 
+    
     void setToStartPos(const int x, const int y) override;
     virtual void setCr() = 0;
     void initLazerStart()      override;
@@ -328,7 +341,7 @@ class AlienABC: public ComplexObject
     int GetScoreWeight() const {return scoreWeight;}
     int GetStepsWithoutFire() const {return stepsWithoutFire;}
     void ResetStepsWithoutFire() {stepsWithoutFire = 0;}
-    void StrightMove(NHero* hero);
+    void StrightMove();
 
 };
 
@@ -338,7 +351,6 @@ class Alien: public AlienABC
 {
     private:
     void setCr();
-
     public:
     Alien(const texture_* t, const plot* start, const texture_* lazer);
     ~Alien();
@@ -357,8 +369,8 @@ class ArrStorageABC
     bool init {true};
     int storageCapacity;
     int counter;
+    int live_size;
     ElementaryObject** storage;
-    bool cleaning(const int indexClean);
 
     public:
     ArrStorageABC(const int capacity);
@@ -368,11 +380,13 @@ class ArrStorageABC
     bool Status() const {return init;}
     void Clear();
     bool Push(ElementaryObject* ob);
+    bool Clear_at(const int index);
 
-    int GetCapacity() const {return storageCapacity;}
     int GetCounter()   {return counter;}
     void  Remove(const int index);
     void Sort(const int arrLen);
+    bool IsEmpty() const {return live_size == 0;}
+    
 
 };
 
@@ -455,28 +469,31 @@ class Engine
     const texture_* digits;
     HeroLazerStorage* heroLazerStorage;
     AlienFleet_oneStorage* alienFleetOneStorage;
+    AlienFleet_oneStorage* alienFleetTmpStorage;
 
     ObjectsList<DieComplex>* dieStorage;
     ObjectsList<AlienLazer>* alienLazerStorage;
 
-    DieComplex* make_DieComplex(const plot* ship_center, 
-                                    const int score = 5, bool scull = false);
+    DieComplex* make_DieComplex(const plot* ship_center, const int score);
+    DieComplex* make_DieComplex(const plot* ship_center);
+    bool make_tmpAlienFleetOneStorage(status_t& status);
 
     bool makeAlienFleetOne(const tc* collection);
     bool makeHeroLazer(const plot* start);
     void MoveHeroLazers();
     void ShowHeroLazers(const Sdl* sdl) const;
-    void MoveAlienFleetOne(NHero* hero);
+    void MoveAlienFleetOne(NHero* hero, status_t& status);
+    void CheckAleinFleetOneHitsHero(NHero* hero, status_t& status);
     void ShowAlienFleetOne(const Sdl* sdl) const;
     void ShowAlienFleetOneLazers(const Sdl* sdl) const;
     bool Checks_herolazer_hitsAlien(status_t& status);
-    void Checks_alienlazer_hitsHero(NHero* hero);
+    void Checks_alienlazer_hitsHero(NHero* hero, status_t& status);
     void ShowDieScores(const Sdl* sdl) const;
     void MoveDieScores();
     void MoveAlienFleetOneLazers();
     void ClearDieScores();
     void ClearAlienLazers();   
-    
+    void Checks_isHeroDead(status_t& status);
     
 
     public:
