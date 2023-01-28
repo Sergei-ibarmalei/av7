@@ -5,17 +5,13 @@ Alien::Alien(const texture_* t,
                              const texture_* lazer):AlienABC(t,
                              re::alien_t1::t1_allR, start, lazer)
 {
-    //std::cout << "In Alien ctor.\n";
     ElementaryObject::Velocities()->x = -ALIENFLEET_ONE_VELOCITY;
     ElementaryObject::Velocities()->y = 0;
     scoreWeight = scores::plainAlien;
     stepsWithoutFire = 0;
 }
 
-Alien::~Alien()
-{
-    //std::cout << "In Alien dtor.\n";
-}
+
 
 void Alien::Show(const Sdl* sdl)
 {

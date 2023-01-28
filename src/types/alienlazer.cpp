@@ -12,7 +12,7 @@ AlienLazer::AlienLazer(const plot* start, const texture_* t):
 bool AlienLazer::operator==(NHero& hero)
 {
     /*Если герой уже убит, то ничего не проверяем*/
-    //if (hero.IsItGone() == true) return false;
+    if (hero.IsItGone() == true) return false;
     if (obj_texture->main_rect == *hero.GetMainRect())
     {
         return hero == obj_texture->main_rect;

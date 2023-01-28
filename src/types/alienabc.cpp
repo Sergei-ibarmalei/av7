@@ -8,8 +8,6 @@ AlienABC::AlienABC(const texture_* t,
                              const plot* start,
                              const texture_* lazer): ComplexObject(t, arrLen)
 {
-    //std::cout << "In AlienABC ctor.\n";
-    //alienID = id;
     lazerMainRect = new rect_;
     lazerMainRect->w = lazer->main_rect.w;
     lazerMainRect->h = lazer->main_rect.h;
@@ -20,7 +18,6 @@ AlienABC::AlienABC(const texture_* t,
 
 AlienABC::~AlienABC()
 {
-    //std::cout << "In AlienABC dtor.\n";
     delete lazerMainRect;
     lazerMainRect = nullptr;
     delete lazerStart;

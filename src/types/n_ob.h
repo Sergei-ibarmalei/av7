@@ -353,7 +353,7 @@ class Alien: public AlienABC
     void setCr();
     public:
     Alien(const texture_* t, const plot* start, const texture_* lazer);
-    ~Alien();
+    ~Alien() {}
     Alien(const Alien&) = delete;
     Alien& operator=(const Alien&) = delete;
     bool operator==(const HeroLazer& hl);

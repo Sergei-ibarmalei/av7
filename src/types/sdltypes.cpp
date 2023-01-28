@@ -2,7 +2,8 @@
 
 std::ostream& operator<<(std::ostream& os, const Rect& r)
 {
-    os << "[x: " << r.x << ", y: " << r.y << ", w: " << r.w << ", h: " << r.h << "]\n";
+    os << "[x: " << r.x << ", y: " << r.y <<
+                             ", w: " << r.w << ", h: " << r.h << "]\n";
     return os;
 }
 
@@ -23,7 +24,8 @@ CRC::CRC(const int len)
 
 
 
-bool CRC::comparison(const rect_* f, const int shortlen, const rect_* s, const int longlen) const
+bool CRC::comparison(const rect_* f, const int shortlen, const rect_* s, 
+                                                    const int longlen) const
 {
     for (int shortrect = 0; shortrect < shortlen; ++shortrect)
     {
@@ -38,9 +40,10 @@ bool CRC::comparison(const rect_* f, const int shortlen, const rect_* s, const i
 
 bool CRC::operator==(CRC* crc)
 {
-    return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array, crc->arrLen):
-                                    comparison(crc->array, crc->arrLen, array, arrLen);
-    //return comparison(array, arrLen, crc->array, crc->arrLen);
+    return (arrLen < crc->arrLen)? comparison(array, arrLen, crc->array, 
+                                                                crc->arrLen):
+                                    comparison(crc->array, crc->arrLen, array, 
+                                                                arrLen);
 }
 
 bool CRC::operator==(const rect_* r)

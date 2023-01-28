@@ -23,6 +23,7 @@ set(SOURCES
     src/types/dieobject.cpp
     src/types/diecomplex.cpp
     src/types/elementaryobject.cpp
+    src/types/engine.cpp
     src/types/fleets.cpp
     src/types/gameclass.cpp  
     src/types/herolazer.cpp
@@ -30,7 +31,6 @@ set(SOURCES
     src/types/gameInfoClass.cpp
     src/types/mainmenu.cpp 
     src/types/nhero.cpp
-    src/types/objectsstore.cpp
     src/types/partone.cpp
     src/types/sdlclass.cpp
     src/types/sdltypes.cpp
