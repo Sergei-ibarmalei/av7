@@ -3,7 +3,6 @@
 
 
 #include "gamefonts.h"
-#include "../loging/loging.h"
 #include "texturesnames.h"
 
 class TexturesCollection

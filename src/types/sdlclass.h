@@ -2,7 +2,6 @@
 #define SDLCLASS_H
 
 #include "sdltypes.h"
-#include "../loging/loging.h"
 
 class Sdl
 {

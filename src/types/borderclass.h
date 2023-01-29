@@ -4,7 +4,6 @@
 #include "sdlclass.h"
 #include "gametypes.h"
 #include "../consts/gameconsts.h"
-#include "../loging/loging.h"
 
 class Border
 {

@@ -3,7 +3,6 @@
 
 #include "sdlclass.h"
 #include "../consts/gameconsts.h"
-#include "../loging/loging.h"
 
 class Sky
 {

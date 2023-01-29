@@ -6,7 +6,6 @@
 #include "texturescollection.h"
 #include "sdlclass.h"
 #include "gametypes.h"
-#include "../loging/loging.h"
 #include "../consts/gameconsts.h"
 
 class GameInfoClass
