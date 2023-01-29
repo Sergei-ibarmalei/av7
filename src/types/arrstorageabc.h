@@ -9,7 +9,9 @@ class ArrStorageABC
     bool init {true};
     int storageCapacity;
     int counter;
+    //Подсчет живых
     int live_size;
+
     ElementaryObject** storage;
 
     public:
@@ -25,10 +27,12 @@ class ArrStorageABC
     bool Push(ElementaryObject* ob);
     bool Clear_at(const int index);
 
-    int GetCounter()   {return counter;}
-    void  Remove(const int index);
+    int  GetCounter()   {return counter;}
+    void Remove(const int index);
     void Sort(const int arrLen);
     bool IsEmpty() const {return live_size == 0;}
+    int  GetLiveSize() const {return live_size;}
+    void DecrementLiveSize();
     
 
 };

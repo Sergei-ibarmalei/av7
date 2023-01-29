@@ -3,10 +3,16 @@
 #include "../core/core.h"
 
 FirstFleet::FirstFleet(const tc* collection,
-        const texture_* heap_digits): GameFleet_ABC(collection, heap_digits)
+        const texture_* heap_digits, const int fleetCap): 
+                                     GameFleet_ABC(collection, heap_digits)
 {
     if (!init) return;
-    fleetStorage = new (std::nothrow) AlienStorage {ALIENFLEET_ONE_CAP};
+    if (fleetCap <= 0)
+    {
+        init = false; return;
+    }
+    fleetCapacity = fleetCap;
+    fleetStorage = new (std::nothrow) AlienStorage {fleetCapacity};
     if (!fleetStorage || fleetStorage->Status() == false)
     {
         init = false; return;
@@ -16,7 +22,7 @@ FirstFleet::FirstFleet(const tc* collection,
     {
         init = false; return;
     }
-    if (!makeFirstFleet(collection))
+    if (!makeFleet(collection))
     {
         init = false;
     }
@@ -25,7 +31,7 @@ FirstFleet::FirstFleet(const tc* collection,
 
 
 
-bool FirstFleet::makeFirstFleet(const tc* collection)
+bool FirstFleet::makeFleet(const tc* collection)
 {
     #define RIGHT_SIDE RIGHT_BORDER_X+RIGHT_BORDER_W
     #define SHIP_MAINRECT_H collection->Pictures()[tn::alien_one].main_rect.h
@@ -35,7 +41,7 @@ bool FirstFleet::makeFirstFleet(const tc* collection)
     #define ALIEN_LASER_TEXTURE &collection->Pictures()[tn::alien_laser01]
 
     plot alien_start;
-    for (int count = 0; count < ALIENFLEET_ONE_CAP; ++count)
+    for (int count = 0; count < fleetCapacity; ++count)
     {
         alien_start.x = RIGHT_SIDE +
             (count * ALIENFLEET_ONE_SPACE_BETWEEN);
@@ -62,7 +68,20 @@ void FirstFleet::MoveFleet(NHero* hero, status_t& status)
 {
 
     /*Если герой подбит, то не двигаем флот прямо*/
-    if (status.hero_dead) return;
+    if (status.hero_dead)
+    {
+        if (tmp_fleetStorage->IsEmpty()) return;
+        for (int alien = 0; alien < tmp_fleetStorage->GetCounter(); ++alien)
+        {
+            if ( !(*(tmp_fleetStorage))[alien]) continue;
+            (*(tmp_fleetStorage))[alien]->BackMove();
+            if ( (*(tmp_fleetStorage))[alien]->IsItGone())
+                tmp_fleetStorage->Remove(alien);
+        }
+        return;
+    }
+
+
     #ifdef STOP_FLEET_MOVING
         if (status.stop_fleet_moving) return;
     #endif
@@ -87,7 +106,7 @@ void FirstFleet::MoveFleet(NHero* hero, status_t& status)
             if (HERO_IS_ALIVE && ALIEN_IN_HEROECHELON && 
                                             ALIEN_WALKED_ENOUGH_WITHOUT_FIRE)
             {
-                 AlienLazer* lazer = new (std::nothrow) 
+                AlienLazer* lazer = new (std::nothrow) 
                 AlienLazer{(*(fleetStorage))[alien]->GetLazerStart(),
                                 &tcollection->Pictures()[tn::alien_laser01]};
                 if (!lazer || (lazer->Status() == false)) continue;
@@ -187,6 +206,12 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
             dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
             hero->ItIsGoneNow();
             status.hero_dead = true;
+            status.HeroLives -= 1;
+            //При столкновении героя и алиена, количество живых алиенов
+            //не уменьшается
+
+            //создание временного хранилища алиенов
+            makeTmpFleetStorage(status);
             return;
         }
     }
@@ -210,6 +235,39 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
 
 void FirstFleet::ClearFleetLazers()
 {
+    if (fleetLazerStorage->IsEmpty()) return;
     fleetLazerStorage->Check_and_clear();
+}
+
+void FirstFleet::RemakeFleet(status_t& status)
+{
+    int size_of_storage = fleetStorage->GetLiveSize();
+    if (size_of_storage <= 0 || size_of_storage < (fleetCapacity / 2))
+        size_of_storage = fleetCapacity / 2 + 1;
+
+    else
+        size_of_storage = fleetStorage->GetLiveSize();
+    
+    delete tmp_fleetStorage;
+    tmp_fleetStorage = nullptr;
+    delete fleetStorage;
+    fleetStorage = nullptr;
+
+    fleetStorage = new (std::nothrow) AlienStorage {fleetCapacity};
+    if (!fleetStorage || fleetStorage->Status() == false)
+    {
+        std::cout << "Something went wrong, abort\n";       
+        status.gameQuit = true;
+        return;
+    }
+
+    if (!makeFleet(tcollection))
+    {
+        std::cout << "Something went wrong, abort\n";
+        status.gameQuit = true;
+        return;
+    }
+    status.hero_dead = false;
+    status.heroIntro = true;
 }
 

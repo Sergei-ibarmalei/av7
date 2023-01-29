@@ -1,4 +1,4 @@
-#include "n_ob.h"
+//#include "n_ob.h"
 #include "../core/rand.h"
 #include "../core/core.h"
 

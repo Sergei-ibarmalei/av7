@@ -28,6 +28,7 @@ class AlienABC: public ComplexObject
     int GetStepsWithoutFire() const {return stepsWithoutFire;}
     void ResetStepsWithoutFire() {stepsWithoutFire = 0;}
     void StrightMove();
+    void BackMove();
 
 };
 

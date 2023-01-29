@@ -38,6 +38,7 @@ class NHero: public ComplexObject
     echelon* GetHeroEchelon() const {return heroEchelon;}
     const plot* LazerStart() const {return ComplexObject::GetLazerStart();}
     bool Status() const {return ElementaryObject::Status();}
+    void Reincarnate();
 };
 
 #endif

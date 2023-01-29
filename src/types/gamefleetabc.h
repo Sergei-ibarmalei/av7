@@ -15,11 +15,13 @@ class GameFleet_ABC
     bool fleetIsOver {false};
     const tc* tcollection;
     const texture_* digits;
-    int fleetStorage_livesize;
-    int tmp_fleetStorage_livesize;
+    int fleetCapacity;
     AlienStorage* fleetStorage;
     AlienStorage* tmp_fleetStorage;
     ObjectsList<AlienLazer>* fleetLazerStorage;
+
+    bool makeTmpFleetStorage(status_t& status);
+    virtual bool makeFleet(const tc* collection) = 0;
 
 
     public:
@@ -27,8 +29,6 @@ class GameFleet_ABC
     virtual ~GameFleet_ABC() = 0;
 
     bool Status() const {return init;}
-    bool FleetStorageEmpty()    const {return fleetStorage_livesize == 0;}
-    bool TmpFleetStorageEmpty() const {return tmp_fleetStorage == 0;}
     bool CheckHeroLazerHitsFleet(HeroLazerStorage* heroLazerStorage, 
                         ObjectsList<DieComplex>* dieStorage, status_t& status);
     void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
@@ -47,7 +47,8 @@ class GameFleet_ABC
     virtual void ClearFleetLazers() = 0;
     ArrStorageABC* Fleet() {return fleetStorage;}
     bool FleetIsOver() const {return fleetIsOver;}
-
+    bool TmpFleetIsEmpty() const;
+    virtual void RemakeFleet(status_t& status) = 0;
 
 };
 

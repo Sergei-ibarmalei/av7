@@ -3,6 +3,8 @@
 
 #include "graphconsts.h"
 
+#define VELOCITY_FOR_RUNBACK 1
+
 #define HERO_LIVES 3
 #define HERO_VELOCITY_X 3
 #define HERO_VELOCITY_Y 3

@@ -34,14 +34,14 @@ void ArrStorageABC::Remove(const int index)
     if (index < 0 || index >= storageCapacity) return;
     delete storage[index];
     storage[index] = nullptr;
-    live_size--;
+    live_size -= 1;
 }
 
 bool ArrStorageABC::Clear_at(const int index)
 {
     if (index < 0 || index >= storageCapacity) return false;
     storage[index] = nullptr;
-    --live_size;
+    live_size -= 1;
     return true;
 }
 
@@ -103,5 +103,11 @@ ElementaryObject* ArrStorageABC::operator[](const int index)
 {
     if (index < 0 || index >= counter) return nullptr;
     return storage[index];
+}
+
+/*Уменьшаем количество живых алиенов*/
+void ArrStorageABC::DecrementLiveSize()
+{
+    live_size -= 1;
 }
 

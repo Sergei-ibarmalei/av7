@@ -10,7 +10,6 @@ GameFleet_ABC::GameFleet_ABC(const tc* colleciton, const texture_* heap_digits)
     }
     fleetStorage = nullptr;
     tmp_fleetStorage = nullptr;
-    fleetStorage_livesize = tmp_fleetStorage_livesize = 0;
     tcollection = colleciton;
     digits = heap_digits;
 
@@ -63,6 +62,7 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                 score_changed = true;
                 dieStorage->Push(Make_DieComplex(digits, ALIEN_CENTER, 
                                                             ALIEN_SCORE));
+                fleetStorage->DecrementLiveSize();
 
                 break;
             }
@@ -95,6 +95,66 @@ void GameFleet_ABC::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
     {
         /*Если героя подбивают, показываем череп*/
         dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
+        makeTmpFleetStorage(status);
         status.hero_dead = true;
+        status.HeroLives -= 1;
     }
 }
+
+/*Создание временного хранилища из алиенов, оставшихся на экране*/
+bool GameFleet_ABC::makeTmpFleetStorage(status_t& status)
+{
+    #define ALIEN_IS_ABSENT !(*(fleetStorage))[alien]
+    #define ALIEN_IS_ON_SCREEN (*(fleetStorage))[alien]->OnScreen()
+
+    /*Если действующий флот не пустой*/
+    if (fleetStorage->IsEmpty() == false)
+    {
+        /*Подсчитываем количество оставшихся на экране алиенов*/
+        int lastOnScreen = 0;
+        for (int alien = 0; alien < fleetCapacity; ++alien)
+        {
+            if (ALIEN_IS_ABSENT) continue;
+            if (ALIEN_IS_ON_SCREEN) lastOnScreen++;
+            else break;
+        }
+        if (lastOnScreen <= 0) return false;
+        /*Создаем временное хранилище*/
+        tmp_fleetStorage = 
+            new (std::nothrow) AlienStorage {lastOnScreen};
+        if (!tmp_fleetStorage || tmp_fleetStorage->Status() == false)
+        {
+            std::cout << "Something went wrong, abort.\n";
+            status.gameQuit = true;
+            return false;
+        }
+
+        for (int alien = 0; alien < fleetCapacity; ++alien)
+        {
+            if (ALIEN_IS_ABSENT) continue;
+            if (ALIEN_IS_ON_SCREEN)
+            {
+                //Толкаем во временное хранилище алиена
+                tmp_fleetStorage->Push((*(fleetStorage))[alien]);
+                //В постоянном хранилище на старом месте заносим nullptr
+                fleetStorage->Clear_at(alien);
+                continue;
+            }
+            //Всех остальных в постоянном хранилище удаляем
+            fleetStorage->Remove(alien);
+        }
+        return true;
+    }
+    return false;
+
+    #undef ALIEN_IS_ON_SCREEN
+    #undef ALIEN_IS_ABSENT
+}
+
+
+bool GameFleet_ABC::TmpFleetIsEmpty() const
+{
+    if (!tmp_fleetStorage) return false;
+    return (tmp_fleetStorage->IsEmpty());
+}
+

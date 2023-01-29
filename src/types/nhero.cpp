@@ -22,6 +22,24 @@ NHero::NHero(const texture_* t): ComplexObject(t, re::heros::allR)
     #undef HEROSTART_Y
 }
 
+void NHero::Reincarnate()
+{
+    #define HEROSTART_X -BORDER_THICKNESS\
+             - ElementaryObject::obj_texture->main_rect.w
+    #define HEROSTART_Y S_H / 2\
+             - ElementaryObject::obj_texture->main_rect.h / 2
+
+
+    Velocities()->x = Velocities()->y = 0;
+    initHeroStopIntro();
+    setToStartPos(HEROSTART_X, HEROSTART_Y);
+    setCr();
+    initLazerStart();
+    
+    #undef HEROSTART_X
+    #undef HEROSTART_Y
+}
+
 
 void NHero::recomputeHeroEchelon()
 {

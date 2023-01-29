@@ -23,6 +23,7 @@ class ElementaryObject
     plot*      obj_center     {nullptr};
     void setUpLeftCorner(const int x, const int y);
     void resetUpLeftCorner();
+    void resetUpLeftCornerForBackward(const int vx = 0, const int vy = 0);
     void resetUpLeftCorner_x(const int x);
     void resetUpLeftCorner_y(const int y);
     void ShowObj(const Sdl* sdl) const;
@@ -55,5 +56,6 @@ class ElementaryObject
     plot* Velocities() {return obj_velocities;}
     bool IsItGone() {return isGone;} 
     void ItIsGoneNow() {isGone = true;}
+    void IsLiveNow() {isGone = false;}
 };
 #endif

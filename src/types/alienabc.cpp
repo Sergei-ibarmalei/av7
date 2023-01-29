@@ -53,6 +53,7 @@ void AlienABC::show(const Sdl* sdl) const
     ComplexObject::Show(sdl);
 }
 
+/*Обычное движение справа на лево*/
 void AlienABC::StrightMove()
 {
     resetUpLeftCorner();
@@ -74,6 +75,19 @@ void AlienABC::StrightMove()
 
     //Если вышли за левую границу экрана, то удаляемся
     if (hasCrossedLeft_fromScreen(ElementaryObject::GetMainRectW()))
+    {
+        ResetOnScreen(false);
+        ItIsGoneNow();
+    }
+}
+
+/*Движение при отходе за экран при гибели героя*/
+void AlienABC::BackMove()
+{
+    resetUpLeftCornerForBackward(VELOCITY_FOR_RUNBACK);
+
+    //Если вышли за экран 
+    if (hasCrossedRight_fromScreen(GetMainRect_x()))
     {
         ResetOnScreen(false);
         ItIsGoneNow();

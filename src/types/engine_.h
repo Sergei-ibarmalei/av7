@@ -41,6 +41,7 @@ class Engine_
     void checkFleetCrashHero(NHero* hero, status_t& status);
     bool checkHeroLazerHitsFleet(status_t& status);
     void checkFleetLazerHitsHero(NHero* hero, status_t& status);
+    bool checkHeroStatus(NHero* hero, status_t& status);
 
     void clearFleetLazers();
     void clearDieStorage();

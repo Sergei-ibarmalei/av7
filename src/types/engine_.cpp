@@ -21,7 +21,8 @@ Engine_::Engine_(const tc* collection, const texture_* digits)
     
 
     gameFleetsArray[fleets::firstfleet] = 
-                        new (std::nothrow) FirstFleet{collection, digits};
+                        new (std::nothrow) FirstFleet{collection, digits,
+                                                        ALIENFLEET_ONE_CAP};
     if (!gameFleetsArray[fleets::firstfleet] ||
         gameFleetsArray[fleets::firstfleet]->Status() == false)
     {
@@ -167,11 +168,14 @@ void Engine_::checkFleetLazerHitsHero(NHero* hero, status_t& status)
 void Engine_::clearFleetLazers()
 {
     if (CURRENTFLEET_ALIVE)
+    {
         CURRENTFLEET->ClearFleetLazers();
+    }
 }
 
 void Engine_::clearDieStorage()
 {
+    if (dieStorage->IsEmpty()) return;
     dieStorage->Check_and_clear();
 }
 
@@ -208,8 +212,23 @@ void Engine_::InGameFlow(const Sdl* sdl, NHero* hero, status_t& status,
     moveDieStorage();
     clearDieStorage();
     //Check: is hero dead??
+    if (checkHeroStatus(hero, status) == true) return;
 
     #undef GAME_OVER
+}
+
+bool Engine_::checkHeroStatus(NHero* hero, status_t& status)
+{
+    /*Если временные ушли за экран*/
+    if (gameFleetsArray[currentFleet]->TmpFleetIsEmpty())
+    {
+        gameFleetsArray[currentFleet]->RemakeFleet(status);
+        hero->ResetOnScreen(true);
+        hero->IsLiveNow();
+        hero->Reincarnate();
+        return true;
+    }
+    return false;
 }
 
 

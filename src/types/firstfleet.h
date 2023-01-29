@@ -6,10 +6,11 @@
 class FirstFleet: public GameFleet_ABC
 {
     private:
-    bool makeFirstFleet(const tc* collection);
+    bool makeFleet(const tc* collection) override;
 
     public:
-    FirstFleet(const tc* collection, const texture_* heap_digits);
+    FirstFleet(const tc* collection, const texture_* heap_digits,
+                const int fleetCap);
     FirstFleet(const FirstFleet&) = delete;
     ~FirstFleet() {}
     FirstFleet& operator=(const FirstFleet&) = delete;
@@ -25,6 +26,7 @@ class FirstFleet: public GameFleet_ABC
 
 
     void ClearFleetLazers() override;
+    void RemakeFleet(status_t& status);
                     
 };
 

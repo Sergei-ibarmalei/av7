@@ -66,6 +66,12 @@ void ElementaryObject::resetUpLeftCorner()
     resetCenter();
 }
 
+void ElementaryObject::resetUpLeftCornerForBackward(const int vx, const int vy)
+{
+    obj_texture->main_rect.x += vx;
+    obj_texture->main_rect.y += vy;
+}
+
 void ElementaryObject::setUpLeftCorner(const int x, const int y)
 {
     obj_texture->main_rect.x = x;
