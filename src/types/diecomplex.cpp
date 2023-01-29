@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "diecomplex.h"
 
 DieComplex::DieComplex(const plot* ship_center, const texture_* f,       
                                     const texture_* s)

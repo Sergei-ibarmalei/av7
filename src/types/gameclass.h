@@ -7,7 +7,7 @@
 #include "skyclass.h"
 
 
-#include "n_ob.h"
+#include "engine_.h"
 
 
 class GameClass
@@ -25,7 +25,7 @@ class GameClass
     bool     gameClassStatus = true;
 
     NHero* nHero;
-    Engine* engine;
+    Engine_*  engine;
     
 
 

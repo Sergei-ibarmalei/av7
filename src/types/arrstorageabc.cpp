@@ -1,5 +1,4 @@
-#include "n_ob.h"
-
+#include "arrstorageabc.h"
 
 ArrStorageABC::ArrStorageABC(const int capacity)
 {

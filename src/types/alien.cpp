@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "alien.h"
 
 Alien::Alien(const texture_* t,
                              const plot* start,

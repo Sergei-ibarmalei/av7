@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "herolazer.h"
 
 HeroLazer::HeroLazer(const plot* start, const texture_* t):
     BaseLazer(start, dir::right, t)

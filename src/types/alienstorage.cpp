@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "alienstorage.h"
 
 AlienStorage::AlienStorage(const int capacity): 
                                                 ArrStorageABC(capacity)

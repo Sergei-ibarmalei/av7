@@ -1,4 +1,5 @@
-#include "n_ob.h"
+//#include "n_ob.h"
+#include "baselazer.h"
 #include "../core/checkcrossing.h"
 
 BaseLazer::BaseLazer(const plot* start, dir::direction d, const texture_* t):

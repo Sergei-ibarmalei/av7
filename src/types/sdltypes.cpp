@@ -7,6 +7,12 @@ std::ostream& operator<<(std::ostream& os, const Rect& r)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const plot_& p)
+{
+    os << "[x: " << p.x << ", y: " << p.y << "]\n";
+    return os;
+}
+
 CRC::CRC(const int len)
 {
     if (len <= 0)

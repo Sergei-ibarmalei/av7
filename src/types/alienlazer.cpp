@@ -1,4 +1,5 @@
-#include "n_ob.h"
+//#include "n_ob.h"
+#include "alienlazer.h"
 
 AlienLazer::AlienLazer(const plot* start, const texture_* t):
             BaseLazer(start, dir::left, t)

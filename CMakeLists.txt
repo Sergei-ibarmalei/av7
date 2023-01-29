@@ -14,7 +14,7 @@ set(SOURCES
     #types
     src/types/alien.cpp
     src/types/alienabc.cpp
-    src/types/alienfleetonestorage.cpp
+    src/types/alienstorage.cpp
     src/types/alienlazer.cpp
     src/types/arrstorageabc.cpp
     src/types/baselazer.cpp
@@ -23,9 +23,10 @@ set(SOURCES
     src/types/dieobject.cpp
     src/types/diecomplex.cpp
     src/types/elementaryobject.cpp
-    src/types/engine.cpp
+    #src/types/engine.cpp
+    src/types/engine_.cpp
     src/types/firstfleet.cpp
-    src/types/fleets.cpp
+    #src/types/fleets.cpp
     src/types/gameclass.cpp 
     src/types/gamefleetabc.cpp 
     src/types/herolazer.cpp

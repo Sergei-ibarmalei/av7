@@ -72,6 +72,11 @@ namespace scores
     enum weight {plainAlien = 5,};
 }
 
+namespace fleets
+{
+    enum {firstfleet, secondfleet, allFleets};
+}
+
 
 
 #endif

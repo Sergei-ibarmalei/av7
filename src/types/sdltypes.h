@@ -60,6 +60,8 @@ using texture_ = Texture;
 struct plot_
 {
     int x; int y;
+
+    friend std::ostream& operator<<(std::ostream& os, const plot_& p);
 };
 
 using plot = plot_;

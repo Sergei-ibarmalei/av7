@@ -2,6 +2,7 @@
 #define DIEOBJECT_H
 
 #include "elementaryobject.h"
+#include "../consts/gameconsts.h"
 
 class DieObject: public ElementaryObject
 {

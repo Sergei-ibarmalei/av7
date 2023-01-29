@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "herolazerstorage.h"
 
 HeroLazerStorage::HeroLazerStorage(const int capacity): ArrStorageABC(capacity)
 {

@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "elementaryobject.h"
 
 
 ElementaryObject::~ElementaryObject()

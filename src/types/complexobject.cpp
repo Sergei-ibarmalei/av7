@@ -1,5 +1,4 @@
-#include "n_ob.h"
-
+#include "complexobject.h"
 
 ComplexObject::~ComplexObject()
 {

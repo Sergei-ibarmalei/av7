@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "dieobject.h"
 
 DieObject::DieObject(const texture_* textures):
     ElementaryObject(textures)

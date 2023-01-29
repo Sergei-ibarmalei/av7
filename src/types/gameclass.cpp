@@ -46,7 +46,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
     }
 
     
-    engine = new (std::nothrow) Engine(&collection, 
+    engine = new (std::nothrow) Engine_(&collection, 
                                         gameInfo->HeapDigits());
     if (!engine || engine->Status() == false)
     {

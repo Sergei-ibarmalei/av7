@@ -1,5 +1,6 @@
 #include "n_ob.h"
 #include "../core/rand.h"
+#include "../core/core.h"
 
 bool Engine::makeAlienFleetOne(const tc* collection)
 {

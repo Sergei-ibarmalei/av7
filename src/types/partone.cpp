@@ -17,7 +17,7 @@ bool GameClass::partOne()
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();
         nHero->Show(sdl_);
-        engine->DoGameAlgorithm(nHero, sdl_, status, gameInfo);
+        engine->InGameFlow(sdl_, nHero, status, gameInfo);
 
 
         borderSky_show_moving();

@@ -1,4 +1,5 @@
 #include "n_ob.h"
+#include "../core/core.h"
 
 Engine::Engine(const tc* collection, const texture_* heap_digits)
 {

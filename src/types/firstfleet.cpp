@@ -1,4 +1,4 @@
-#include "n_ob.h"
+#include "firstfleet.h"
 #include "../core/rand.h"
 #include "../core/core.h"
 
@@ -11,9 +11,21 @@ FirstFleet::FirstFleet(const tc* collection,
     {
         init = false; return;
     }
+    fleetLazerStorage = new (std::nothrow) ObjectsList<AlienLazer>();
+    if (!fleetLazerStorage)
+    {
+        init = false; return;
+    }
+    if (!makeFirstFleet(collection))
+    {
+        init = false;
+    }
+
 }
 
-bool FirstFleet::makeFirstFleet(tc* collection)
+
+
+bool FirstFleet::makeFirstFleet(const tc* collection)
 {
     #define RIGHT_SIDE RIGHT_BORDER_X+RIGHT_BORDER_W
     #define SHIP_MAINRECT_H collection->Pictures()[tn::alien_one].main_rect.h
@@ -184,16 +196,16 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
 }
 
 
-void FirstFleet::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
+/*void FirstFleet::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
                     ObjectsList<DieComplex>* dieStorage)
 {
      if (fleetLazerStorage->Check_withObject(hero))
     {
-        /*Если героя подбивают, показываем череп*/
+        Если героя подбивают, показываем череп
         dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
         status.hero_dead = true;
     }   
-}
+}*/
 
 
 void FirstFleet::ClearFleetLazers()
