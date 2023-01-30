@@ -53,7 +53,7 @@ class Engine_
     Engine_& operator=(const Engine_&) = delete;
 
     bool Status() const {return init;}
-    bool MakeHeroLazer(const plot* start_pos);
+    void MakeHeroLazer(const plot* start_pos, status_t& status);
     void InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo);
     void InGameFlow(const Sdl* sdl, NHero* hero, status_t& status,
                     GameInfoClass* gameInfo);

@@ -32,6 +32,7 @@ class ObjectsList
     bool Check_withObject(NHero* hero);
     void Move();
     bool IsEmpty();
+    void ClearList();
 
 
 };
@@ -46,6 +47,18 @@ template<class T>
 ObjectsList<T>::ObjectsList()
 {
     first = nullptr;
+}
+
+template<class T>
+void ObjectsList<T>::ClearList()
+{
+    while (first)
+    {
+        struct Node<T>* tmp = first;
+        first = first->next;
+        delete tmp;
+        tmp = nullptr;
+    }
 }
 
 template<class T>

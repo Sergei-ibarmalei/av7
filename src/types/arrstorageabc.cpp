@@ -90,13 +90,13 @@ ArrStorageABC::~ArrStorageABC()
     storage = nullptr;
 }
 
-bool ArrStorageABC::Push(ElementaryObject* ob)
+void  ArrStorageABC::Push(ElementaryObject* ob)
 {
-    if (!ob) return false;
-    if (counter >= storageCapacity) return false;
+    if (!ob) return;
+    if (counter >= storageCapacity) return;
     storage[counter++] = ob;
     live_size++;
-    return true;
+    //return true;
 }
 
 ElementaryObject* ArrStorageABC::operator[](const int index)

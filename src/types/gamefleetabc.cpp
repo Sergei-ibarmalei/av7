@@ -158,3 +158,8 @@ bool GameFleet_ABC::TmpFleetIsEmpty() const
     return (tmp_fleetStorage->IsEmpty());
 }
 
+void GameFleet_ABC::DeletingAllLazers()
+{
+    fleetLazerStorage->ClearList();
+}
+

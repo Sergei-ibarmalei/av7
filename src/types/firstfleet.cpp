@@ -52,7 +52,8 @@ bool FirstFleet::makeFleet(const tc* collection)
         if (!alien || (alien->Status() == false)) return false;
 
 
-        if (!fleetStorage->Push(alien)) return false;
+        //if (!fleetStorage->Push(alien)) return false;
+        fleetStorage->Push(alien);
     }
     return true;
     

@@ -186,8 +186,8 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    status.gameQuit = 
-                        !engine->MakeHeroLazer(nHero->LazerStart()); break;
+                        engine->MakeHeroLazer(nHero->LazerStart(), status); 
+                        break;
                 }
                 #ifdef STOP_FLEET_MOVING
                     case SDLK_z:

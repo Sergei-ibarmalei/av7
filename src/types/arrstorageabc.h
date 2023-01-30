@@ -24,7 +24,7 @@ class ArrStorageABC
     virtual ~ArrStorageABC() = 0;
     bool Status() const {return init;}
     void Clear();
-    bool Push(ElementaryObject* ob);
+    void Push(ElementaryObject* ob);
     bool Clear_at(const int index);
 
     int  GetCounter()   {return counter;}

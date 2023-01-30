@@ -62,17 +62,17 @@ Engine_::~Engine_()
     gameFleetsArray = nullptr;
 }
 
-bool Engine_::MakeHeroLazer(const plot* start_pos)
+void  Engine_::MakeHeroLazer(const plot* start_pos, status_t& status)
 {
-    if (!start_pos) return false;
+    if (!start_pos) return;
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
         HeroLazer* lazer = new (std::nothrow) HeroLazer{start_pos,
                                     &tcollection->Pictures()[tn::blue_laser]};
-        if (!lazer || (lazer->Status() == false)) return false;
+        if (!lazer || (lazer->Status() == false)) return;
 
-        return heroLazerStorage->Push(lazer);
+        heroLazerStorage->Push(lazer);
     }
   
     #define COUNTER heroLazerStorage->GetCounter()
@@ -80,11 +80,14 @@ bool Engine_::MakeHeroLazer(const plot* start_pos)
     #define PREVLAZER_X PREVLAZER->Lazer_x()
     #define PREVLAZER_W PREVLAZER->Lazer_w()
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
-    if ( (PREVLAZER_X - start_pos->x) < PREVLAZER_W * 3) return true;
+    if ( (PREVLAZER_X - start_pos->x) < PREVLAZER_W * 3) return;
     HeroLazer* lazer = new (std::nothrow) HeroLazer{start_pos,
                                     &tcollection->Pictures()[tn::blue_laser]};
-    if (!lazer || (lazer->Status() == false)) return false;
-    return heroLazerStorage->Push(lazer);
+    if (!lazer || (lazer->Status() == false))
+    {
+        status.gameQuit = true; return;
+    }
+    heroLazerStorage->Push(lazer);
 
 
     #undef PREVLAZER_X
@@ -223,6 +226,8 @@ bool Engine_::checkHeroStatus(NHero* hero, status_t& status)
     if (gameFleetsArray[currentFleet]->TmpFleetIsEmpty())
     {
         gameFleetsArray[currentFleet]->RemakeFleet(status);
+        gameFleetsArray[currentFleet]->DeletingAllLazers();
+        heroLazerStorage->Clear();
         hero->ResetOnScreen(true);
         hero->IsLiveNow();
         hero->Reincarnate();
