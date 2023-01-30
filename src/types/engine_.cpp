@@ -227,6 +227,7 @@ bool Engine_::checkHeroStatus(NHero* hero, status_t& status)
     {
         gameFleetsArray[currentFleet]->RemakeFleet(status);
         gameFleetsArray[currentFleet]->DeletingAllLazers();
+        dieStorage->ClearList();
         heroLazerStorage->Clear();
         hero->ResetOnScreen(true);
         hero->IsLiveNow();

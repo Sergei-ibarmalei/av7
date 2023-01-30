@@ -52,6 +52,8 @@
 
 #define DIESCORE_VELOCITY -1
 
+#define GAMEOVER_CAPACITY 3
+
 
 /*Направление движения*/
 namespace dir
@@ -77,6 +79,11 @@ namespace scores
 namespace fleets
 {
     enum {firstfleet, secondfleet, allFleets};
+}
+
+namespace gameover
+{
+    enum gostatus {moves, stops,};
 }
 
 

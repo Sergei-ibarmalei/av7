@@ -1,6 +1,8 @@
 #ifndef TEXTURESNAMES_H
 #define TEXTURESNAMES_H
 
+
+/*Textures names*/
 namespace tn
 {
     enum {MainMenu, MainMenuBright, Scores, ScoresBanner,
@@ -8,6 +10,8 @@ namespace tn
     enum {hero, hero_scale_mult, alien_one, blue_laser, alien_laser01, star, 
             scull, all_pics};
 
+        
+    
     enum {
         new_game, rules, exit, new_game_bright, rules_bright, exit_bright,
         pause, pressEscape,
@@ -15,8 +19,11 @@ namespace tn
         sixScore, sevenScore, eightScore, nineScore,
         zeroScoreB, oneScoreB, twoScoreB, threeScoreB, fourScoreB,
         fiveScoreB, sixScoreB, sevenScoreB, eightScoreB, nineScoreB,
-        x1, x2, x3, allStringTextures,
+        x1, x2, x3, game, over, allStringTextures,
         };
+
+
+
 
 }
 

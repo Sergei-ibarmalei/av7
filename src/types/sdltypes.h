@@ -53,6 +53,12 @@ struct Texture
 {
     SDL_Texture* texture;
     rect_        main_rect;
+    constexpr Texture& operator=(const Texture& t)
+    {
+        texture = t.texture;
+        main_rect = t.main_rect;
+        return *this;
+    }
 };
 
 using texture_ = Texture;

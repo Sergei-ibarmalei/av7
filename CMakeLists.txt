@@ -26,7 +26,8 @@ set(SOURCES
     src/types/engine_.cpp
     src/types/firstfleet.cpp
     src/types/gameclass.cpp 
-    src/types/gamefleetabc.cpp 
+    src/types/gamefleetabc.cpp
+    src/types/gui.cpp 
     src/types/herolazer.cpp
     src/types/herolazerstorage.cpp 
     src/types/gameInfoClass.cpp

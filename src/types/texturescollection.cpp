@@ -63,6 +63,15 @@ bool TexturesCollection::makeStringsTextures()
         status = false;
         return status;
     }
+    /*MAKING TEXUTURES FOR GAME OVER*/
+    for (texture = tn::game; texture < tn::over; ++texture)
+    {
+        if (loadFromText(r,
+                         &strings[texture].texture,
+                         strings[texture].main_rect,
+                         names[texture],
+                         &gameFonts[tn::Pause]) == false) return false;
+    }
     /*MAKING TEXTURES FOR MAIN MENU*/
     for (texture = tn::new_game; texture < tn::new_game_bright; ++texture)
     {
