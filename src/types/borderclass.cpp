@@ -19,7 +19,7 @@ Border::~Border()
     border = nullptr;
 }
 
-void Border::ShowBorder(Sdl* sdl)
+void Border::ShowBorder(const Sdl* sdl) const
 {
     SDL_SetRenderDrawColor(sdl->Renderer(), 0xFF, 0, 0, 0xFF);
     SDL_RenderFillRect(sdl->Renderer(), &border[borderUp]);

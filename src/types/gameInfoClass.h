@@ -12,9 +12,9 @@ class GameInfoClass
 {
     private:
     enum {scoreBannerLen = 6};
-    enum {heroLivesLen = 3};
+    enum {heroLivesLen = 4};
     enum {textureOfZero};
-    enum {x1, x2, x3, all_x};
+    enum {x0, x1, x2, x3, all_x};
     enum {allDigits = 10,};
     texture_*  heap_scoreBanner {nullptr};
     texture_*  heap_heroLivesMult   {nullptr};

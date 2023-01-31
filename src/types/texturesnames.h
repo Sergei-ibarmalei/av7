@@ -19,7 +19,7 @@ namespace tn
         sixScore, sevenScore, eightScore, nineScore,
         zeroScoreB, oneScoreB, twoScoreB, threeScoreB, fourScoreB,
         fiveScoreB, sixScoreB, sevenScoreB, eightScoreB, nineScoreB,
-        x1, x2, x3, game, over, allStringTextures,
+        x0, x1, x2, x3, game, over, allStringTextures,
         };
 
 

@@ -17,10 +17,10 @@ bool GameClass::partOne()
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();
         nHero->Show(sdl_);
-        engine->InGameFlow(sdl_, nHero, status, gameInfo);
+        engine->InGameFlow(sdl_, nHero, status, gameInfo, border, sky, gui);
 
 
-        borderSky_show_moving();
+        borderSky_show_moving(sdl_, border, sky);
         gameInfo->ShowGameInfo(sdl_, status);
         if (status.pause) pauseIsPressed();
         SDL_RenderPresent(sdl_->Renderer());       

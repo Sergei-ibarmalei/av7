@@ -77,14 +77,14 @@ bool GameInfoClass::initHeroLives(tc& collection, status_t& status)
     hero_texture = &collection.Pictures()[tn::hero_scale_mult];
     /*Множитель изначально ставим в х3*/
     heroLivesMult = nullptr;
-    heroLivesMult = &heap_heroLivesMult[5];
+    heroLivesMult = &heap_heroLivesMult[0];
     setHeroLivesCoords();
     return true;
 }
 
 bool GameInfoClass::initHeroLives_heap(tc& collection)
 {
-    int offSet = tn::x1;
+    int offSet = tn::x0;
     heap_heroLivesMult = new (std::nothrow) texture_[heroLivesLen];
     if (!heap_heroLivesMult) return false;
 
@@ -142,7 +142,7 @@ void GameInfoClass::setHeroLivesCoords()
     /*Устанавливаем координаты х у для уменьшенной текстуры героя*/
     hero_texture->main_rect.x = LEFT_SIDE + BORDER_THICKNESS;
     hero_texture->main_rect.y = UP_SIDE - hero_texture->main_rect.h;
-    for (int t = x1; t < all_x; ++t)
+    for (int t = x0; t < all_x; ++t)
     {
         heap_heroLivesMult[t].main_rect.x = 
             HEROTEXTURE_W + 2 * BORDER_THICKNESS;
@@ -172,11 +172,11 @@ void GameInfoClass::ShowGameInfo(const Sdl* sdl, status_t& gameStatus)
     sdl->TextureRender(hero_texture->texture, &hero_texture->main_rect);
 
     /*Рисуем множитель*/
-    if (gameStatus.HeroLives <= 0)
+    if (gameStatus.HeroLives == 0)
     {
         heroLivesMult = &heap_heroLivesMult[0];
     }
-    else heroLivesMult = &heap_heroLivesMult[gameStatus.HeroLives-1];
+    else heroLivesMult = &heap_heroLivesMult[gameStatus.HeroLives];
 
     sdl->TextureRender(heroLivesMult->texture, &heroLivesMult->main_rect);
 

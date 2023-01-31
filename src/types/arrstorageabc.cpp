@@ -96,7 +96,6 @@ void  ArrStorageABC::Push(ElementaryObject* ob)
     if (counter >= storageCapacity) return;
     storage[counter++] = ob;
     live_size++;
-    //return true;
 }
 
 ElementaryObject* ArrStorageABC::operator[](const int index)
@@ -105,9 +104,4 @@ ElementaryObject* ArrStorageABC::operator[](const int index)
     return storage[index];
 }
 
-/*Уменьшаем количество живых алиенов*/
-void ArrStorageABC::DecrementLiveSize()
-{
-    live_size -= 1;
-}
 

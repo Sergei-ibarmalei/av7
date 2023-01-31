@@ -18,6 +18,6 @@ class Border
     Border& operator=(const Border& ) = delete;
     Border(const Border& ) = delete;
     bool Status() const {return init;}
-    void ShowBorder(Sdl* sdl);
+    void ShowBorder(const Sdl* sdl) const;
 };
 #endif

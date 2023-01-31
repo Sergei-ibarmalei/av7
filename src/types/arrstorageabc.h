@@ -32,7 +32,6 @@ class ArrStorageABC
     void Sort(const int arrLen);
     bool IsEmpty() const {return live_size == 0;}
     int  GetLiveSize() const {return live_size;}
-    void DecrementLiveSize();
     
 
 };

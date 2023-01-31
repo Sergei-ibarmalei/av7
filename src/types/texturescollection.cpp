@@ -64,7 +64,7 @@ bool TexturesCollection::makeStringsTextures()
         return status;
     }
     /*MAKING TEXUTURES FOR GAME OVER*/
-    for (texture = tn::game; texture < tn::over; ++texture)
+    for (texture = tn::game; texture < tn::allStringTextures; ++texture)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
@@ -117,7 +117,7 @@ bool TexturesCollection::makeStringsTextures()
                          &gameFonts[tn::Scores]) == false) return false;
     }
     /*MAKING TEXTURE FOR SCORE BANNER*/
-    for (texture = tn::zeroScoreB; texture < tn::x1; ++texture)
+    for (texture = tn::zeroScoreB; texture < tn::x0; ++texture)
     {
         if (loadFromText(r,
                          &strings[texture].texture,
@@ -128,7 +128,7 @@ bool TexturesCollection::makeStringsTextures()
     }
     /*MAKING TEXTURE FOR LIVE MULTIPLICATION*/
 
-    for (texture = tn::x1; texture < tn::allStringTextures; ++texture)
+    for (texture = tn::x0; texture < tn::game; ++texture)
     {
         if (loadFromText(r,
                          &strings[texture].texture,

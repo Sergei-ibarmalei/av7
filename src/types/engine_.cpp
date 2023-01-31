@@ -1,6 +1,7 @@
 #include "engine_.h"
+#include "../core/core.h"
 
-#define CURRENTFLEET_ALIVE gameFleetsArray[currentFleet]->FleetIsOver() == false
+#define CURRENTFLEET_ALIVE gameFleetsArray[currentFleet]->GetFleetOverStatus() == false
 #define CURRENTFLEET gameFleetsArray[currentFleet]
 
 Engine_::Engine_(const tc* collection, const texture_* digits)
@@ -10,6 +11,7 @@ Engine_::Engine_(const tc* collection, const texture_* digits)
         init = false; return;
     }
     tcollection = collection;
+    digits_ = digits;
 
     gameFleetsArray = 
                 new (std::nothrow) GameFleet_ABC* [fleets::allFleets] {nullptr};
@@ -19,36 +21,51 @@ Engine_::Engine_(const tc* collection, const texture_* digits)
     }
 
     
+    if (!fillGameFleetsArray(collection, digits)) return;
+    makeHeroLazerStorage();
+    makeDieStorage();
+}
 
+bool Engine_::makeHeroLazerStorage()
+{
+    heroLazerStorage = 
+                    new (std::nothrow) HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
+    if (!heroLazerStorage || heroLazerStorage->Status() == false)
+    {
+        init = false; return false;
+    }
+    return true;
+}
+
+bool Engine_::makeDieStorage()
+{
+    dieStorage = new (std::nothrow) ObjectsList<DieComplex>();
+    if (!dieStorage)
+    {
+        init = false; return false;
+    }
+    return true;
+}
+
+/*Заполнение флотов*/
+bool  Engine_::fillGameFleetsArray(const tc* collection, const texture_* digits)
+{
     gameFleetsArray[fleets::firstfleet] = 
                         new (std::nothrow) FirstFleet{collection, digits,
                                                         ALIENFLEET_ONE_CAP};
     if (!gameFleetsArray[fleets::firstfleet] ||
         gameFleetsArray[fleets::firstfleet]->Status() == false)
     {
-        init = false; return;
+        init = false; return false;
     }
-
-
-
-    heroLazerStorage = 
-                    new (std::nothrow) HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
-    if (!heroLazerStorage || heroLazerStorage->Status() == false)
-    {
-        init = false; return;
-    }
-
-    dieStorage = new (std::nothrow) ObjectsList<DieComplex>();
-    if (!dieStorage)
-    {
-        init = false; return;
-    }
-
+    return true;
 }
+
 
 Engine_::~Engine_()
 {
     tcollection = nullptr;
+    digits_ = nullptr;
     delete heroLazerStorage;
     heroLazerStorage = nullptr;
     delete dieStorage;
@@ -193,8 +210,8 @@ void Engine_::InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo)
     gameInfo->ShowGameInfo(sdl, status);
 }
 
-void Engine_::InGameFlow(const Sdl* sdl, NHero* hero, status_t& status,
-                            GameInfoClass* gameInfo)
+void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
+                        GameInfoClass* gameInfo, Border* b, Sky* s, Gui* gui)
 {
     #define GAME_OVER status.gameIsOver == true
 
@@ -214,14 +231,73 @@ void Engine_::InGameFlow(const Sdl* sdl, NHero* hero, status_t& status,
     clearFleetLazers();
     moveDieStorage();
     clearDieStorage();
-    //Check: is hero dead??
-    if (checkHeroStatus(hero, status) == true) return;
+    checkFleetsIsGone(status);
+    checkTmpFleetIsGone(hero, status);
+    if (IsGameOver(sdl, gameInfo, status, b, s, gui)) return;
 
     #undef GAME_OVER
 }
 
-bool Engine_::checkHeroStatus(NHero* hero, status_t& status)
+
+
+
+bool Engine_::IsGameOver(Sdl* sdl, GameInfoClass* gameInfo,
+                                status_t& status, Border* b, Sky* s, Gui* gui)
 {
+    if (status.gameIsOver)
+    {
+        while (!status.gameQuit)
+        {
+            SDL_RenderClear(sdl->Renderer());
+            borderSky_show_moving(sdl, b, s);
+            gameInfo->ShowGameInfo(sdl, status);
+            gui->ShowGameOver(sdl);
+            gui->MoveGameOver(); 
+            SDL_RenderPresent(sdl->Renderer());
+            if (gui->IsGameOverMoving()) continue;
+            while (SDL_PollEvent(&sdl->event()) != 0)
+            {
+                if (sdl->event().type == SDL_QUIT)
+                {
+                    status.gameQuit = true; return true;
+                }
+                else if (sdl->event().type == SDL_KEYDOWN &&
+                    sdl->event().key.repeat == 0)
+                {
+                    switch (sdl->event().key.keysym.sym)
+                    {
+                        default:
+                        {
+                            status.mainMenu = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    return false;
+}
+
+
+void Engine_::checkFleetsIsGone(status_t& status)
+{
+    if (gameFleetsArray[currentFleet]->GetFleetOverStatus())
+    {
+        currentFleet++;
+        if ( (currentFleet >= fleets::allFleets) || 
+                                            (!gameFleetsArray[currentFleet]))
+        {
+            status.gameIsOver = true;
+            Clear();
+        }
+    }
+}
+
+void  Engine_::checkTmpFleetIsGone(NHero* hero, status_t& status)
+{
+    if (status.gameIsOver) return;
     /*Если временные ушли за экран*/
     if (gameFleetsArray[currentFleet]->TmpFleetIsEmpty())
     {
@@ -232,9 +308,29 @@ bool Engine_::checkHeroStatus(NHero* hero, status_t& status)
         hero->ResetOnScreen(true);
         hero->IsLiveNow();
         hero->Reincarnate();
-        return true;
     }
-    return false;
+}
+
+void Engine_::Clear()
+{
+    /*Clearing gameFleetsArray*/
+    for (int f = 0; f < fleets::allFleets; ++f)
+    {
+        delete gameFleetsArray[f];
+        gameFleetsArray[f] = nullptr;
+    }
+    /*Clearing dieStorage*/
+    dieStorage->ClearList();
+    /*clearing heroLazerStorage*/
+    heroLazerStorage->Clear();
+}
+
+bool Engine_::Reincarnate()
+{
+    if (!fillGameFleetsArray(tcollection, digits_)) return false;
+    if (!makeHeroLazerStorage()) return false;
+    if (!makeDieStorage()) return false;
+    return true;
 }
 
 

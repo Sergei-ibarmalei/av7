@@ -23,7 +23,7 @@ class Sky
     Sky& operator=(const Sky& ) = delete;
     bool Status() const {return init;}
     void MoveSky();
-    void ShowSky(Sdl* sdl);
+    void ShowSky(const Sdl* sdl) const;
 
 
 };

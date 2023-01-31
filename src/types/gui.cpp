@@ -39,10 +39,8 @@ void Gui::makegameover(const texture_* stringsTextures)
     }
     /*Set GAME OVER coords*/
 
-    for (int string = 0; string < allGameOvered; ++string)
-    {
-        gameoverTextures[string] = stringsTextures[string];
-    }
+    gameoverTextures[game] = stringsTextures[tn::game];
+    gameoverTextures[over] = stringsTextures[tn::over];
    
     int fullLenght = gameoverTextures[game].main_rect.w +
         gameoverTextures[over].main_rect.w + space;
@@ -251,5 +249,10 @@ void Gui::ShowGameOver(const Sdl* sdl) const
 void Gui::ResetGameOver()
 {
     resetGameOverCoords();
+}
+
+bool Gui::IsGameOverMoving() const
+{
+    return gostatus==gameover::moves? true : false;
 }
 

@@ -20,6 +20,8 @@ class GameFleet_ABC
     AlienStorage* tmp_fleetStorage;
     ObjectsList<AlienLazer>* fleetLazerStorage;
 
+    void checksIsFleetOver();
+    //bool fleetIsover() const {return fleetIsOver;}
     bool makeTmpFleetStorage(status_t& status);
     virtual bool makeFleet(const tc* collection) = 0;
 
@@ -47,9 +49,10 @@ class GameFleet_ABC
 
     virtual void ClearFleetLazers() = 0;
     ArrStorageABC* Fleet() {return fleetStorage;}
-    bool FleetIsOver() const {return fleetIsOver;}
     bool TmpFleetIsEmpty() const;
     virtual void RemakeFleet(status_t& status) = 0;
+    //bool CheckIsFleetOver () const {return fleetIsover();}
+    bool GetFleetOverStatus() const {return fleetIsOver;}
 
 };
 

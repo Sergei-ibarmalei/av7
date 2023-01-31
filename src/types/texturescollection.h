@@ -15,7 +15,7 @@ class TexturesCollection
             "PAUSE", "Press Esc to continue, Q to exit in Main menu",
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "x 1", "x 2", "x 3", "GAME", "OVER"
+            "x 0", "x 1", "x 2", "x 3", "GAME", "OVER"
         };
 
         const char* names_pics[tn::all_pics]

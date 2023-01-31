@@ -21,7 +21,6 @@ GameFleet_ABC::~GameFleet_ABC()
     fleetStorage = nullptr;
     delete tmp_fleetStorage;
     tmp_fleetStorage = nullptr;
-
     tcollection = nullptr;
     digits = nullptr;
 }
@@ -62,8 +61,8 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                 score_changed = true;
                 dieStorage->Push(Make_DieComplex(digits, ALIEN_CENTER, 
                                                             ALIEN_SCORE));
-                fleetStorage->DecrementLiveSize();
-
+                fleetStorage->Remove(alien);
+                checksIsFleetOver();
                 break;
             }
         }
@@ -98,6 +97,10 @@ void GameFleet_ABC::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
         makeTmpFleetStorage(status);
         status.hero_dead = true;
         status.HeroLives -= 1;
+        if (status.HeroLives <= 0)
+        {
+            status.gameIsOver = true;
+        }
     }
 }
 
@@ -161,5 +164,13 @@ bool GameFleet_ABC::TmpFleetIsEmpty() const
 void GameFleet_ABC::DeletingAllLazers()
 {
     fleetLazerStorage->ClearList();
+}
+
+void GameFleet_ABC::checksIsFleetOver()
+{
+    if (fleetStorage->GetLiveSize() == 0)
+    {
+        fleetIsOver = true;
+    }
 }
 

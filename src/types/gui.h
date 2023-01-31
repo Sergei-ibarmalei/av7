@@ -44,6 +44,7 @@ class Gui
     bool Status() const {return init;}
     void MoveGameOver();
     void ResetGameOver();
+    bool IsGameOverMoving() const;
 };
 
 

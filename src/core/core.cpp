@@ -62,4 +62,12 @@ DieComplex* Make_DieComplex(const texture_* digits, const plot* ship_center,
 }
 
 
+void borderSky_show_moving(const Sdl* sdl, Border* border, Sky* sky)
+{
+    border->ShowBorder(sdl);
+    sky->ShowSky(sdl);
+    sky->MoveSky();
+}
+
+
 

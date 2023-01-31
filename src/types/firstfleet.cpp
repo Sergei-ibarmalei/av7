@@ -126,6 +126,12 @@ void FirstFleet::MoveFleet(NHero* hero, status_t& status)
 
         if ((*(fleetStorage))[alien]->IsItGone())
             fleetStorage->Remove(alien);
+            
+        if (fleetStorage->GetLiveSize() == 0)
+        {
+            fleetIsOver = true;
+        }
+    
     }
 
     #undef COUNTER
@@ -208,6 +214,15 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
             hero->ItIsGoneNow();
             status.hero_dead = true;
             status.HeroLives -= 1;
+
+            //---GAME OVER----
+            if (status.HeroLives <=0)
+            {
+                status.gameIsOver = true;
+                return;
+            }
+            //-----------------
+
             //При столкновении героя и алиена, количество живых алиенов
             //не уменьшается
 
@@ -220,18 +235,6 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
     #undef ALIEN_IS_ABSENT
     #undef ALIEN_isnot_ONSCREEN   
 }
-
-
-/*void FirstFleet::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
-                    ObjectsList<DieComplex>* dieStorage)
-{
-     if (fleetLazerStorage->Check_withObject(hero))
-    {
-        Если героя подбивают, показываем череп
-        dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
-        status.hero_dead = true;
-    }   
-}*/
 
 
 void FirstFleet::ClearFleetLazers()

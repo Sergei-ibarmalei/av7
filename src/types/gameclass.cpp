@@ -4,7 +4,12 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
 {
     sdl_ = &sdl;
     initStatus();
-    mm = new (std::nothrow) MainMenu(collection.Strings());
+    gui = new (std::nothrow) Gui(collection.Strings());
+    if (!gui || gui->Status() == false)
+    {
+        gameClassStatus = false; return;
+    }
+    /*mm = new (std::nothrow) MainMenu(collection.Strings());
     if (!mm)
     {
         gameClassStatus = false;
@@ -14,7 +19,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
     {
         gameClassStatus = false;
         return;
-    }
+    }*/
     if (!(initBorder()))
     {
         gameClassStatus = false; return;
@@ -30,13 +35,13 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
         gameClassStatus = false; return;
     }
 
-    pause = new (std::nothrow) texture_[2];
+    /*pause = new (std::nothrow) texture_[2];
     if (!pause)
     {
         gameClassStatus = false;
         return;       
     }
-    initPause(collection);
+    initPause(collection);*/
 
     nHero = new NHero(&collection.Pictures()[tn::hero]);
     if (!nHero || nHero->Status() == false)
@@ -57,7 +62,7 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
 
 }
 
-void GameClass::initPause(tc& collection)
+/*void GameClass::initPause(tc& collection)
 {
 
     pause[pause_] = collection.Strings()[tn::pause];
@@ -75,7 +80,7 @@ void GameClass::initPause(tc& collection)
     pause[pressEscape].main_rect.y = 
         centerPrEsc_y - pause[pressEscape].main_rect.h / 2;
 
-}
+}*/
 
 bool GameClass::initGameInfo(tc& collection)
 {
@@ -101,16 +106,16 @@ bool GameClass::initSky(texture_* starTexture)
 GameClass::~GameClass()
 {
     sdl_ = nullptr;
-    delete mm; mm = nullptr;
+    //delete mm; mm = nullptr;
     delete border; border = nullptr;
     delete sky; sky = nullptr;
     delete gameInfo; gameInfo = nullptr;
 
-    for (int t = 0; t < 2; ++t)
+    /*for (int t = 0; t < 2; ++t)
     {
         pause[t].texture = nullptr;
     }
-    delete[] pause;
+    delete[] pause;*/
 
     delete nHero; nHero = nullptr;
     delete engine;
@@ -144,7 +149,8 @@ bool GameClass::flow()
         SDL_RenderClear(sdl_->Renderer());
         if (status.mainMenu)
         {
-            mm->ShowMainMenu(sdl_, status);
+            //mm->ShowMainMenu(sdl_, status);
+            gui->ShowMainMenu(sdl_, status);
         }
         if (status.partOne)
         {
@@ -213,9 +219,10 @@ void GameClass::pauseIsPressed()
         SDL_RenderClear(sdl_->Renderer());
         nHero->Show(sdl_);
 
-        borderSky_show_moving();
+        borderSky_show_moving(sdl_, border, sky);
         engine->InPause(sdl_, status, gameInfo);
-        showPause();
+        //showPause();
+        gui->ShowPause(sdl_);
         
         while (SDL_PollEvent(&sdl_->event()) != 0)
         {
@@ -253,7 +260,7 @@ void GameClass::showHeroIntro()
         SDL_RenderClear(sdl_->Renderer());
         if (status.heroIntro == false) return;
         nHero->Show(sdl_);
-        borderSky_show_moving();
+        borderSky_show_moving(sdl_, border, sky);
         gameInfo->ShowGameInfo(sdl_, status);
         nHero->HeroMovesInIntro(status);
 
@@ -284,17 +291,17 @@ void GameClass::showHeroIntro()
     }
 }
 
-void GameClass::borderSky_show_moving()
+/*void GameClass::borderSky_show_moving()
 {
     border->ShowBorder(sdl_);
     sky->ShowSky(sdl_);
     sky->MoveSky();
-}
+}*/
 
-void GameClass::showPause()
+/*void GameClass::showPause()
 {
     sdl_->TextureRender(pause[pause_].texture, &pause[pause_].main_rect);
     sdl_->TextureRender(pause[pressEscape].texture, 
                         &pause[pressEscape].main_rect);
-}
+}*/
 

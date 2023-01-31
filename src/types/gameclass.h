@@ -8,24 +8,28 @@
 
 
 #include "engine_.h"
+#include "gui.h"
+#include "../core/core.h"
 
 
 class GameClass
 {
     private:
     enum {pause_, pressEscape};
-    MainMenu*      mm {nullptr};
+    //MainMenu*      mm {nullptr};
+    Gui* gui {nullptr};
     Border*        border {nullptr};
     Sky*           sky {nullptr};
     GameInfoClass* gameInfo {nullptr};
 
     Sdl*      sdl_ {nullptr};
     status_t status;
-    texture_* pause {nullptr};
+    //texture_* pause {nullptr};
     bool     gameClassStatus = true;
 
     NHero* nHero;
     Engine_*  engine;
+
     
 
 
@@ -35,11 +39,11 @@ class GameClass
     bool initSky(texture_* starTexture);
     bool partOne();
     void check_key_events();
-    void borderSky_show_moving();
+    //void borderSky_show_moving();
     bool initGameInfo(tc& collection);
-    void initPause(tc& collection);
+    //void initPause(tc& collection);
     void pauseIsPressed();
-    void showPause();
+    //void showPause();
     void showHeroIntro();
 
     public:

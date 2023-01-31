@@ -27,7 +27,7 @@ Sky::Sky(texture_* t)
 
 }
 
-void Sky::ShowSky(Sdl* sdl)
+void Sky::ShowSky(const Sdl* sdl) const
 {
     for (int star = 0; star < fastStarMax; ++star)
     {
