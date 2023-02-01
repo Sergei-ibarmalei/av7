@@ -32,8 +32,7 @@ DieComplex* Make_DieComplex(const texture_* digits, const plot* ship_center,
 
     int complexLength = score / 10;
     int hi, low;
-    if (complexLength < 1) complexLength = 1;
-    else complexLength = 2;
+    complexLength < 1 ? complexLength = 1: complexLength = 2;
 
 
     switch (complexLength)
