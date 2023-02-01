@@ -1,4 +1,3 @@
-//#include "types/sdltypes.h"
 #include "core/core.h"
 
 int main()

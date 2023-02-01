@@ -7,10 +7,6 @@ set(SOURCES
     src/core/core.cpp
     src/core/rand.cpp
 
-
-    #loging
-    #src/loging/loging.cpp
-
     #types
     src/types/alien.cpp
     src/types/alienabc.cpp
@@ -31,7 +27,6 @@ set(SOURCES
     src/types/herolazer.cpp
     src/types/herolazerstorage.cpp 
     src/types/gameInfoClass.cpp
-    src/types/mainmenu.cpp 
     src/types/nhero.cpp
     src/types/partone.cpp
     src/types/sdlclass.cpp
@@ -55,4 +50,4 @@ target_link_libraries(${PROJECT_NAME}
     SDL2_ttf)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-$<$<NOT:$<C_COMPILER_ID:MSVC>>:-g  -Wall -Wextra -Wpedantic>)
+$<$<NOT:$<C_COMPILER_ID:MSVC>>:-O3  -Wall -Wextra -Wpedantic>)

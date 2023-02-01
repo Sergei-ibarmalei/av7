@@ -2,7 +2,6 @@
 
 ComplexObject::~ComplexObject()
 {
-    //std::cout << "In ComplexObject dtor.\n";
 
     //В этом конструкторе не удаляем lazerStart, поскольку
     //lazerStart может быть массивом для нескольких точек
@@ -29,7 +28,6 @@ ComplexObject::ComplexObject(const texture_* t, const int arrLen):
     {
         init = false; return;
     }
-    //cr = nullptr;
 }
 
 

@@ -1,7 +1,8 @@
 #include "engine_.h"
 #include "../core/core.h"
 
-#define CURRENTFLEET_ALIVE gameFleetsArray[currentFleet]->GetFleetOverStatus() == false
+#define CURRENTFLEET_ALIVE gameFleetsArray[currentFleet]->GetFleetOverStatus()\
+                                                             == false
 #define CURRENTFLEET gameFleetsArray[currentFleet]
 
 Engine_::Engine_(const tc* collection, const texture_* digits)
@@ -124,13 +125,11 @@ void Engine_::showDieStoreage(const Sdl* sdl) const
     dieStorage->Show(sdl);
 }
 
-//---------------------------------------------------------------------------
 void Engine_::showFleet(const Sdl* sdl) const
 {
     if (CURRENTFLEET_ALIVE)
         CURRENTFLEET->ShowFleet(sdl);
 }
-//---------------------------------------------------------------------------
 
 void Engine_::showFleetLazers(const Sdl* sdl) const
 {
@@ -233,7 +232,10 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
     clearDieStorage();
     checkFleetsIsGone(status);
     checkTmpFleetIsGone(hero, status);
-    if (IsGameOver(sdl, gameInfo, status, b, s, gui)) return;
+    if (IsGameOver(sdl, gameInfo, status, b, s, gui))
+    {
+        hero->Reincarnate(); return;
+    }
 
     #undef GAME_OVER
 }
@@ -246,6 +248,8 @@ bool Engine_::IsGameOver(Sdl* sdl, GameInfoClass* gameInfo,
 {
     if (status.gameIsOver)
     {
+
+        gui->ResetGameOver();
         while (!status.gameQuit)
         {
             SDL_RenderClear(sdl->Renderer());
@@ -274,7 +278,6 @@ bool Engine_::IsGameOver(Sdl* sdl, GameInfoClass* gameInfo,
                     }
                 }
             }
-
         }
     }
     return false;
@@ -290,7 +293,6 @@ void Engine_::checkFleetsIsGone(status_t& status)
                                             (!gameFleetsArray[currentFleet]))
         {
             status.gameIsOver = true;
-            Clear();
         }
     }
 }
@@ -311,19 +313,7 @@ void  Engine_::checkTmpFleetIsGone(NHero* hero, status_t& status)
     }
 }
 
-void Engine_::Clear()
-{
-    /*Clearing gameFleetsArray*/
-    for (int f = 0; f < fleets::allFleets; ++f)
-    {
-        delete gameFleetsArray[f];
-        gameFleetsArray[f] = nullptr;
-    }
-    /*Clearing dieStorage*/
-    dieStorage->ClearList();
-    /*clearing heroLazerStorage*/
-    heroLazerStorage->Clear();
-}
+
 
 bool Engine_::Reincarnate()
 {

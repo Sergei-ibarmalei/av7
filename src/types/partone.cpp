@@ -3,6 +3,7 @@
 
 bool GameClass::partOne()
 {
+
     while (!status.gameQuit)
     {
  
@@ -13,6 +14,7 @@ bool GameClass::partOne()
             if (status.pause) pauseIsPressed();
             continue;
         }
+
         check_key_events();
         SDL_RenderClear(sdl_->Renderer());
         nHero->Move();

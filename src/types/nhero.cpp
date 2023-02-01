@@ -35,6 +35,8 @@ void NHero::Reincarnate()
     setToStartPos(HEROSTART_X, HEROSTART_Y);
     setCr();
     initLazerStart();
+    isOnScreen = true;
+    isGone = false;
     
     #undef HEROSTART_X
     #undef HEROSTART_Y

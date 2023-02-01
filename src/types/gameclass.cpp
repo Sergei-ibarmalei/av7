@@ -7,82 +7,60 @@ GameClass::GameClass(Sdl& sdl, tc& collection)
     gui = new (std::nothrow) Gui(collection.Strings());
     if (!gui || gui->Status() == false)
     {
-        gameClassStatus = false; return;
+        init = false; return;
     }
-    /*mm = new (std::nothrow) MainMenu(collection.Strings());
-    if (!mm)
-    {
-        gameClassStatus = false;
-        return;
-    }
-    if (mm->Status() == false)
-    {
-        gameClassStatus = false;
-        return;
-    }*/
+
     if (!(initBorder()))
     {
-        gameClassStatus = false; return;
+        init = false; return;
     }
 
     if (!(initSky(&collection.Pictures()[tn::star])))
     {
-        gameClassStatus = false; return;
+        init = false; return;
     }
 
     if (!(initGameInfo(collection)))
     {
-        gameClassStatus = false; return;
+        init = false; return;
     }
 
-    /*pause = new (std::nothrow) texture_[2];
-    if (!pause)
-    {
-        gameClassStatus = false;
-        return;       
-    }
-    initPause(collection);*/
 
     nHero = new NHero(&collection.Pictures()[tn::hero]);
     if (!nHero || nHero->Status() == false)
     {
-        gameClassStatus = false;
-        return;
+        init = false; return;
     }
 
-    
-    engine = new (std::nothrow) Engine_(&collection, 
-                                        gameInfo->HeapDigits());
-    if (!engine || engine->Status() == false)
+    if (!initEngine(collection))
     {
-        gameClassStatus = false; return;
-    }
-
+        init = false; return;
+    } 
    
 
 }
 
-/*void GameClass::initPause(tc& collection)
+bool GameClass::RestartEngine(const tc& collection)
 {
+    delete engine;
+    engine = nullptr;
+    delete gameInfo;
+    gameInfo = nullptr;
+    restartStatus();
+    if (!initGameInfo(collection)) return false;
+    if (!initEngine(collection)) return false;
+    return true;
+}
 
-    pause[pause_] = collection.Strings()[tn::pause];
-    pause[pressEscape] = collection.Strings()[tn::pressEscape];
+bool GameClass::initEngine(const tc& collection)
+{
+    engine = new (std::nothrow) Engine_(&collection, 
+                                        gameInfo->HeapDigits());
+    if (!engine || engine->Status() == false) return false;
+    return true;
+}
 
-    int centerPause_x = S_W / 2;
-    int centerPause_y = S_H / 2;
-    int centerPrEsc_x = S_W / 2;
-    int centerPrEsc_y = S_H - 100;
-
-    pause[pause_].main_rect.x = centerPause_x - pause[pause_].main_rect.w / 2;
-    pause[pause_].main_rect.y = centerPause_y - pause[pause_].main_rect.h / 2;
-    pause[pressEscape].main_rect.x = 
-        centerPrEsc_x - pause[pressEscape].main_rect.w / 2;
-    pause[pressEscape].main_rect.y = 
-        centerPrEsc_y - pause[pressEscape].main_rect.h / 2;
-
-}*/
-
-bool GameClass::initGameInfo(tc& collection)
+bool GameClass::initGameInfo(const tc& collection)
 {
     gameInfo = new (std::nothrow) GameInfoClass(collection, status);
     if (!gameInfo || gameInfo->Status() == false) return false;
@@ -106,16 +84,10 @@ bool GameClass::initSky(texture_* starTexture)
 GameClass::~GameClass()
 {
     sdl_ = nullptr;
-    //delete mm; mm = nullptr;
     delete border; border = nullptr;
     delete sky; sky = nullptr;
     delete gameInfo; gameInfo = nullptr;
 
-    /*for (int t = 0; t < 2; ++t)
-    {
-        pause[t].texture = nullptr;
-    }
-    delete[] pause;*/
 
     delete nHero; nHero = nullptr;
     delete engine;
@@ -142,18 +114,39 @@ void GameClass::initStatus()
     #endif
 }
 
-bool GameClass::flow()
+void GameClass::restartStatus()
+{
+    status.heroIntro = true;
+    status.gameQuit = false;
+    status.gameIsOver = false;
+    status.pause = false;
+    status.partOne = false;
+    status.partTwo = false;
+    status.HeroLives = HERO_LIVES;
+    status.gameScore = 0;
+    status.hero_dead = false;
+    status.aliens_go_back = false;
+
+    #ifdef STOP_FLEET_MOVING
+        status.stop_fleet_moving = false;
+    #endif
+}
+
+bool GameClass::flow(const tc& collection)
 {
     while (!status.gameQuit)
     {
         SDL_RenderClear(sdl_->Renderer());
         if (status.mainMenu)
         {
-            //mm->ShowMainMenu(sdl_, status);
             gui->ShowMainMenu(sdl_, status);
         }
         if (status.partOne)
         {
+
+            if (!RestartEngine(collection))
+                status.gameQuit = true;
+
             if (!partOne()) return false;
         }
     }
@@ -221,7 +214,6 @@ void GameClass::pauseIsPressed()
 
         borderSky_show_moving(sdl_, border, sky);
         engine->InPause(sdl_, status, gameInfo);
-        //showPause();
         gui->ShowPause(sdl_);
         
         while (SDL_PollEvent(&sdl_->event()) != 0)
@@ -291,17 +283,4 @@ void GameClass::showHeroIntro()
     }
 }
 
-/*void GameClass::borderSky_show_moving()
-{
-    border->ShowBorder(sdl_);
-    sky->ShowSky(sdl_);
-    sky->MoveSky();
-}*/
-
-/*void GameClass::showPause()
-{
-    sdl_->TextureRender(pause[pause_].texture, &pause[pause_].main_rect);
-    sdl_->TextureRender(pause[pressEscape].texture, 
-                        &pause[pressEscape].main_rect);
-}*/
 

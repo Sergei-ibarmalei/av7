@@ -70,7 +70,6 @@ class Engine_
                     GameInfoClass* gameInfo, Border* b, Sky* s, Gui* gui);
     bool IsGameOver(Sdl* sdl, GameInfoClass* gameInfo, 
                     status_t& status, Border* b, Sky* s, Gui* gui);
-    void Clear();
     bool Reincarnate();
 };
 

@@ -37,7 +37,6 @@ void Gui::makegameover(const texture_* stringsTextures)
     {
         init = false; return;
     }
-    /*Set GAME OVER coords*/
 
     gameoverTextures[game] = stringsTextures[tn::game];
     gameoverTextures[over] = stringsTextures[tn::over];
@@ -54,6 +53,7 @@ void Gui::makegameover(const texture_* stringsTextures)
 
 
 
+/*Set GAME OVER coords*/
 void Gui::resetGameOverCoords()
 {
     gameoverTextures[game].main_rect.x = S_W;

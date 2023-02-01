@@ -1,7 +1,7 @@
 #include "gameInfoClass.h"
 #include "../consts/gameconsts.h"
 
-GameInfoClass::GameInfoClass(tc& collection, status_t& status)
+GameInfoClass::GameInfoClass(const tc& collection, status_t& status)
 {
 
     if (!(initScoreBanner_heap(collection)))
@@ -43,12 +43,16 @@ GameInfoClass::~GameInfoClass()
     delete[] heap_heroLivesMult;
     heap_heroLivesMult = nullptr;
 
-    for (int segment = 0; segment < scoreBannerLen; ++segment)
+    if (scoreBanner)
     {
-        scoreBanner[segment].texture = nullptr;
+        for (int segment = 0; segment < scoreBannerLen; ++segment)
+        {
+            scoreBanner[segment].texture = nullptr;
+        }
+        delete[] scoreBanner;
+        scoreBanner = nullptr;
     }
-    delete[] scoreBanner;
-    scoreBanner = nullptr;
+
     heroLivesMult = nullptr;
     hero_texture = nullptr;
 }
@@ -70,7 +74,7 @@ bool GameInfoClass::initScoreBanner()
 
 }
 
-bool GameInfoClass::initHeroLives(tc& collection, status_t& status)
+bool GameInfoClass::initHeroLives(const tc& collection, status_t& status)
 {
     if (status.HeroLives != HERO_LIVES) return false;
     /*Берем уменьшенную текстуру героя из коллекции*/
@@ -82,7 +86,7 @@ bool GameInfoClass::initHeroLives(tc& collection, status_t& status)
     return true;
 }
 
-bool GameInfoClass::initHeroLives_heap(tc& collection)
+bool GameInfoClass::initHeroLives_heap(const tc& collection)
 {
     int offSet = tn::x0;
     heap_heroLivesMult = new (std::nothrow) texture_[heroLivesLen];
@@ -97,12 +101,7 @@ bool GameInfoClass::initHeroLives_heap(tc& collection)
     return true;
 }
 
-/*bool GameInfoClass::ChangeHeroLives(status_t& status)
-{
-    if (status.HeroLives <= 0) return false;
-    heroLivesMult = &heap_heroLivesMult[status.HeroLives-1];
-    return true;
-}*/
+
 
 void GameInfoClass::setScoreBannerCoords()
 {
@@ -133,7 +132,7 @@ void GameInfoClass::setHeroLivesCoords()
 {
 
     #define LEFT_SIDE LEFT_BORDER_W + BORDER_THICKNESS
-    #define UP_SIDE UP_BORDER_Y //- hero_texture->rect.h
+    #define UP_SIDE UP_BORDER_Y 
     #define HEROTEXTURE_H hero_texture->rect.h
     #define XTEXTURE_H heap_heroLivesMult[textureOfZero].main_rect.h 
     #define HEROTEXTURE_W  hero_texture->main_rect.x + hero_texture->main_rect.w
@@ -183,7 +182,7 @@ void GameInfoClass::ShowGameInfo(const Sdl* sdl, status_t& gameStatus)
 }
 
 /*Куча текстур цифр для отображения счета*/
-bool GameInfoClass::initScoreBanner_heap(tc& collection)
+bool GameInfoClass::initScoreBanner_heap(const tc& collection)
 {
     int offSet = tn::zeroScoreB;
     heap_scoreBanner = new (std::nothrow) texture_[allDigits];
@@ -220,7 +219,6 @@ void GameInfoClass::ChangeScore(status_t& status)
         if (heap_scoreBanner[first].texture == nullptr)
         {
             status.gameQuit = true; 
-            std::cout << "Something wrong has happened. Abort!";
             return;
         }
         scoreBanner[segment].texture = heap_scoreBanner[first].texture;
@@ -240,7 +238,6 @@ void GameInfoClass::ChangeScore(status_t& status)
 /*Очистка текстур в ScoreBanner*/
 void GameInfoClass::clearScoreBanner()
 {
-    //if (!scoreBanner) return;
     for (int segment = 0; segment < scoreBannerLen; ++segment)
     {
         scoreBanner[segment].texture = nullptr;

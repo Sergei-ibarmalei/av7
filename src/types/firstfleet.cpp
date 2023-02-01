@@ -52,7 +52,6 @@ bool FirstFleet::makeFleet(const tc* collection)
         if (!alien || (alien->Status() == false)) return false;
 
 
-        //if (!fleetStorage->Push(alien)) return false;
         fleetStorage->Push(alien);
     }
     return true;
@@ -122,13 +121,17 @@ void FirstFleet::MoveFleet(NHero* hero, status_t& status)
             (*(fleetStorage))[alien]->ResetStepsWithoutFire();
         }
 
+        /*Двигаем алиен*/
         (*(fleetStorage))[alien]->StrightMove();
 
+        /*Если алиен вышел за экран, или стал не видим, удаляем*/
         if ((*(fleetStorage))[alien]->IsItGone())
             fleetStorage->Remove(alien);
             
+        /*проверяем сколько алиенов осталось в живых всего*/
         if (fleetStorage->GetLiveSize() == 0)
         {
+            /*если не осталось, ставим флаг об окончании флота*/
             fleetIsOver = true;
         }
     
@@ -260,14 +263,12 @@ void FirstFleet::RemakeFleet(status_t& status)
     fleetStorage = new (std::nothrow) AlienStorage {fleetCapacity};
     if (!fleetStorage || fleetStorage->Status() == false)
     {
-        std::cout << "Something went wrong, abort\n";       
         status.gameQuit = true;
         return;
     }
 
     if (!makeFleet(tcollection))
     {
-        std::cout << "Something went wrong, abort\n";
         status.gameQuit = true;
         return;
     }

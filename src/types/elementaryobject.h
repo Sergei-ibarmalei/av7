@@ -1,11 +1,6 @@
 #ifndef ELEMENTARYOBJECT_H
 #define ELEMENTARYOBJECT_H
 
-/*#include "gametypes.h"
-#include "../consts/gameconsts.h"
-#include "test.h"
-#include "texturescollection.h"
-#include "gameInfoClass.h"*/
 #include "sdlclass.h"
 
 

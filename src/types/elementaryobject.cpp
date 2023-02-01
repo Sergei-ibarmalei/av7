@@ -3,7 +3,6 @@
 
 ElementaryObject::~ElementaryObject()
 {
-    //std::cout << "In ElementaryObject dtor.\n";
 
     obj_texture->texture = nullptr;
     delete obj_texture;
@@ -15,7 +14,6 @@ ElementaryObject::~ElementaryObject()
 
 ElementaryObject::ElementaryObject(const texture_* t)
 {
-    //std::cout << "In ElementaryObject ctor.\n";
     if (!t)
     {
         init = false;

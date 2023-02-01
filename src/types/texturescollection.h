@@ -52,7 +52,7 @@ class TexturesCollection
         TexturesCollection& operator=(const TexturesCollection&) = delete;
         bool Status() const {return status;}
         texture_* Pictures() const {return pictures;}
-        texture_* Strings()  {return strings;}
+        texture_* Strings() const  {return strings;}
 
 };
 

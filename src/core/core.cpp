@@ -9,7 +9,7 @@ bool mainCore()
     if (collection.Status() == false) return false;
     GameClass gc(sdl, collection);
     if (gc.Status() == false) return false;
-    if (!gc.flow()) return false;
+    if (!gc.flow(collection)) return false;
 
 
     return true;

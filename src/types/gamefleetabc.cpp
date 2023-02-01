@@ -127,7 +127,6 @@ bool GameFleet_ABC::makeTmpFleetStorage(status_t& status)
             new (std::nothrow) AlienStorage {lastOnScreen};
         if (!tmp_fleetStorage || tmp_fleetStorage->Status() == false)
         {
-            std::cout << "Something went wrong, abort.\n";
             status.gameQuit = true;
             return false;
         }

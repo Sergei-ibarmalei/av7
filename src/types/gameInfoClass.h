@@ -22,23 +22,22 @@ class GameInfoClass
     texture_*  scoreBanner {nullptr};
     texture_*  heroLivesMult   {nullptr};
     bool       init {true};
-    bool       initScoreBanner_heap(tc& collection);
-    bool       initHeroLives_heap(tc& collection);
+    bool       initScoreBanner_heap(const tc& collection);
+    bool       initHeroLives_heap(const tc& collection);
     bool       initScoreBanner();
-    bool       initHeroLives(tc& collection, status_t& status);
+    bool       initHeroLives(const tc& collection, status_t& status);
     void       setScoreBannerCoords();
     void       setHeroLivesCoords();
     void       clearScoreBanner();
 
     public:
-    explicit GameInfoClass(tc& collection, status_t& status);
+    explicit GameInfoClass(const tc& collection, status_t& status);
     GameInfoClass(const GameInfoClass& gi) = delete;
     GameInfoClass& operator=(const GameInfoClass& ) = delete;
     ~GameInfoClass();
     bool Status() const {return init;}
     void ShowGameInfo(const Sdl* sdl, status_t& gameStatus);
     void ChangeScore(status_t& status);
-    //bool ChangeHeroLives(status_t& status);
     texture_* HeapDigits() const {return heap_scoreBanner;}
 };
 
