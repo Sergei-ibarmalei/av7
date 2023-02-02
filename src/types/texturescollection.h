@@ -23,7 +23,7 @@ class TexturesCollection
             "images/hero.png", "images/hero_scale_mult.png",
             "images/alien_one.png",
             "images/laserBlue01.png", "images/alien_laser01.png",
-            "images/one_star.png", "images/scull_grey.png"
+            "images/one_star.png", "images/scull_grey_01.png"
         };
         const char* names_smoky[tn::allsmokyblow]
         {

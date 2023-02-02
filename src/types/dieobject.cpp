@@ -13,7 +13,7 @@ void DieObject::move_object()
     if (IsItGone()) return;
     resetUpLeftCorner();
     stepsCount++;
-    if (stepsCount == pathLength) ItIsGoneNow();
+    if (stepsCount == DIEOBJECT_PATHLENGTH) ItIsGoneNow();
 }
 
 void DieObject::Move()

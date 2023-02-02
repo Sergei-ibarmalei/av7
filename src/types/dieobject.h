@@ -8,7 +8,6 @@ class DieObject: public ElementaryObject
 {
     
    private:
-   enum {pathLength = 60,};
    int stepsCount;
    void move_object();
 

@@ -54,6 +54,8 @@
 
 #define GAMEOVER_CAPACITY 3
 
+#define DIEOBJECT_PATHLENGTH 120
+
 
 /*Направление движения*/
 namespace dir

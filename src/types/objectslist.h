@@ -136,6 +136,7 @@ void ObjectsList<T>::Check_and_clear()
             struct Node<T>* tmp = *current;
             *current = (*current)->next;
             delete tmp;
+            tmp = nullptr;
         }
         else current = &(*current)->next;
     }
