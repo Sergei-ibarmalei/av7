@@ -22,9 +22,30 @@ Engine_::Engine_(const tc* collection, const texture_* digits)
     }
 
     
-    if (!fillGameFleetsArray(collection, digits)) return;
-    makeHeroLazerStorage();
-    makeDieStorage();
+    if (!fillGameFleetsArray(collection, digits))
+    {
+        init = false; return;
+    }
+    if (!makeHeroLazerStorage())
+    {
+        init = false; return;
+    }
+    if (!makeDieStorage())
+    {
+        init = false; return;
+    }
+    if (!makeAnimatedList())
+    {
+        init = false; return;
+    }
+}
+
+
+bool Engine_::makeAnimatedList()
+{
+    animatedList = new (std::nothrow) ObjectsList<Apack>();
+    if (!animatedList) return false;
+    return true;
 }
 
 bool Engine_::makeHeroLazerStorage()
@@ -33,7 +54,7 @@ bool Engine_::makeHeroLazerStorage()
                     new (std::nothrow) HeroLazerStorage{HERO_LAZERSTORAGE_CAP};
     if (!heroLazerStorage || heroLazerStorage->Status() == false)
     {
-        init = false; return false;
+        return false;
     }
     return true;
 }
@@ -43,7 +64,7 @@ bool Engine_::makeDieStorage()
     dieStorage = new (std::nothrow) ObjectsList<DieComplex>();
     if (!dieStorage)
     {
-        init = false; return false;
+         return false;
     }
     return true;
 }
@@ -78,6 +99,8 @@ Engine_::~Engine_()
     }
     delete gameFleetsArray;
     gameFleetsArray = nullptr;
+    delete animatedList;
+    animatedList = nullptr;
 }
 
 void  Engine_::MakeHeroLazer(const plot* start_pos, status_t& status)
@@ -125,6 +148,16 @@ void Engine_::showDieStoreage(const Sdl* sdl) const
     dieStorage->Show(sdl);
 }
 
+void Engine_::showAnimated_repeated(const Sdl* sdl) const
+{
+    animatedList->Show(sdl, tn::flow::repeated);
+}
+
+void Engine_::showAnimated_once(const Sdl* sdl) const
+{
+    animatedList->Show(sdl, tn::flow::once);
+}
+
 void Engine_::showFleet(const Sdl* sdl) const
 {
     if (CURRENTFLEET_ALIVE)
@@ -167,14 +200,15 @@ void Engine_::moveDieStorage()
 void Engine_::checkFleetCrashHero(NHero* hero, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
-        CURRENTFLEET->CheckFleetCrashHero(hero, status, dieStorage);
+        CURRENTFLEET->CheckFleetCrashHero(hero, status, dieStorage, animatedList);
 }
 
 bool Engine_::checkHeroLazerHitsFleet(status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
         return CURRENTFLEET->CheckHeroLazerHitsFleet(heroLazerStorage, 
-                                                     dieStorage, status);
+                                                     dieStorage, status,
+                                                     animatedList);
     return false;
 }
 
@@ -198,6 +232,12 @@ void Engine_::clearDieStorage()
     dieStorage->Check_and_clear();
 }
 
+void Engine_::clearAnimated()
+{
+    if (animatedList->IsEmpty()) return;
+    animatedList->Check_and_clear();
+}
+
 
 
 void Engine_::InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo)
@@ -218,17 +258,23 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
 
     showFleet(sdl);
     moveFleet(hero, status);
-    checkFleetCrashHero(hero, status);
+    checkFleetCrashHero(hero, status); // здесь есть анимация
     showHeroLazers(sdl);
     moveHeroLazers();
     if (checkHeroLazerHitsFleet(status))
         gameInfo->ChangeScore(status);
     showDieStoreage(sdl);
+    //
+    showAnimated_repeated(sdl);
+    //
     showFleetLazers(sdl);
     moveFleetLazers();
     checkFleetLazerHitsHero(hero, status);
     clearFleetLazers();
     moveDieStorage();
+    //
+    clearAnimated();
+    //
     clearDieStorage();
     checkFleetsIsGone(status);
     checkTmpFleetIsGone(hero, status);

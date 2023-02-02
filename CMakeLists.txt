@@ -12,6 +12,7 @@ set(SOURCES
     src/types/alienabc.cpp
     src/types/alienstorage.cpp
     src/types/alienlazer.cpp
+    src/types/animatedpack.cpp
     src/types/arrstorageabc.cpp
     src/types/baselazer.cpp
     src/types/borderclass.cpp

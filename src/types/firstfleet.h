@@ -3,6 +3,7 @@
 
 #include "gamefleetabc.h"
 
+
 class FirstFleet: public GameFleet_ABC
 {
     private:
@@ -22,7 +23,8 @@ class FirstFleet: public GameFleet_ABC
     void ShowFleetLazers(const Sdl* sdl) const override;
 
     void CheckFleetCrashHero(NHero* hero, status_t& status,
-                            ObjectsList<DieComplex>* dieStorage) override;
+                            ObjectsList<DieComplex>* dieStorage,
+                            ObjectsList<Apack>* animatedList) override;
 
 
     void ClearFleetLazers() override;

@@ -8,6 +8,8 @@
 #include "texturescollection.h"
 #include "diecomplex.h"
 
+#include "animatedpack.h"
+
 class GameFleet_ABC
 {
     protected:
@@ -31,7 +33,8 @@ class GameFleet_ABC
 
     bool Status() const {return init;}
     bool CheckHeroLazerHitsFleet(HeroLazerStorage* heroLazerStorage, 
-                        ObjectsList<DieComplex>* dieStorage, status_t& status);
+                        ObjectsList<DieComplex>* dieStorage, status_t& status,
+                        ObjectsList<Apack>* animatedList);
     void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
                             ObjectsList<DieComplex>* dieStorage);
     void DeletingAllLazers();
@@ -43,7 +46,8 @@ class GameFleet_ABC
     virtual void ShowFleetLazers(const Sdl* sdl) const = 0;
 
     virtual void CheckFleetCrashHero(NHero* hero, status_t& status,
-                                ObjectsList<DieComplex>* dieStorage) = 0;
+                                ObjectsList<DieComplex>* dieStorage,
+                                ObjectsList<Apack>* animatedList) = 0;
 
 
     virtual void ClearFleetLazers() = 0;

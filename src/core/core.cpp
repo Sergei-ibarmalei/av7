@@ -15,6 +15,14 @@ bool mainCore()
     return true;
 }
 
+Apack* MakeAnimated(texture_* animPack, const int animPackCap, plot* center)
+{
+    Apack* apack =
+    new (std::nothrow) Apack {animPack, animPackCap, center};
+    if (!apack || apack->Status() == false) return nullptr;
+    return apack;
+}
+
 DieComplex* Make_DieComplex(const plot* ship_center, const tc* collection)
 {
     DieComplex* dsc = 

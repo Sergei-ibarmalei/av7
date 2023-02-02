@@ -200,11 +200,13 @@ void FirstFleet::ShowFleetLazers(const Sdl* sdl) const
 }
 
 void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
-                                        ObjectsList<DieComplex>* dieStorage)
+                                        ObjectsList<DieComplex>* dieStorage,
+                                        ObjectsList<Apack>* animatedList)
 {
     #define ALIEN_IS_ABSENT !(*(fleetStorage))[alien]
     #define ALIEN_isnot_ONSCREEN (*(fleetStorage))[alien]->OnScreen()\
                                                                        == false
+    #define ALIEN_CENTER (*(fleetStorage))[alien]->GetCenter()
 
     for (int alien = 0; alien < fleetStorage->GetCounter(); ++alien)
     {
@@ -212,8 +214,15 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
         if (ALIEN_isnot_ONSCREEN) break;
         if (*(*(fleetStorage))[alien] == hero)
         {
+            //-----Apack List-----
+
+            animatedList->Push(MakeAnimated(tcollection->Smoky(), 
+                    tn::allsmokyblow, ALIEN_CENTER));
+            //--------------------
             fleetStorage->Remove(alien);
             dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
+
+
             hero->ItIsGoneNow();
             status.hero_dead = true;
             status.HeroLives -= 1;
@@ -236,7 +245,8 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
     }
 
     #undef ALIEN_IS_ABSENT
-    #undef ALIEN_isnot_ONSCREEN   
+    #undef ALIEN_isnot_ONSCREEN  
+    #undef ALIEN_CENTER 
 }
 
 

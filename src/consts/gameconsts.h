@@ -10,8 +10,8 @@
 #define HERO_VELOCITY_Y 3
 #define HERO_LAZERSTORAGE_CAP 5
 
-#define HERO_ECHELON_HI 70
-#define HERO_ECHELON_LOW 70
+#define HERO_ECHELON_HI 120
+#define HERO_ECHELON_LOW 120
 
 #define BORDER_THICKNESS 5
 #define UP_BORDER_X 0
@@ -85,6 +85,8 @@ namespace gameover
 {
     enum gostatus {moves, stops,};
 }
+
+
 
 
 

@@ -2,6 +2,8 @@
 #define OBJECTSLIST_H
 
 #include "nhero.h"
+#include "texturesnames.h"
+
 
 template<class T>
 class ObjectsList
@@ -28,6 +30,7 @@ class ObjectsList
     ObjectsList& operator=(const ObjectsList&) = delete;
     void Push(T* data);
     void Show(const Sdl* sdl) const;
+    void Show(const Sdl* sdl, tn::flow f);
     void Check_and_clear();
     bool Check_withObject(NHero* hero);
     void Move();
@@ -105,6 +108,21 @@ void ObjectsList<T>::Show(const Sdl* sdl) const
         tmp = tmp->next;
     }
 
+}
+
+template<class T>
+void ObjectsList<T>::Show(const Sdl* sdl, tn::flow f)
+{
+    if (!first) 
+    {
+        return;
+    }
+    struct Node<T>* tmp = first;
+    while (tmp)
+    {
+        tmp->data->Show(sdl, f);
+        tmp = tmp->next;
+    }
 }
 
 template<class T>

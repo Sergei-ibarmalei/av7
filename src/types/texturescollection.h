@@ -25,14 +25,25 @@ class TexturesCollection
             "images/laserBlue01.png", "images/alien_laser01.png",
             "images/one_star.png", "images/scull_grey.png"
         };
+        const char* names_smoky[tn::allsmokyblow]
+        {
+            "images/smoky/explosion00.png", "images/smoky/explosion01.png",
+            "images/smoky/explosion02.png", "images/smoky/explosion03.png",
+            "images/smoky/explosion04.png", "images/smoky/explosion05.png",
+            "images/smoky/explosion06.png", "images/smoky/explosion07.png",
+            "images/smoky/explosion08.png"
+        };
+
         SDL_Renderer* r = nullptr;
         bool status = true;
         gamefont_* gameFonts = nullptr;
         texture_*  pictures = nullptr;
         texture_*  strings  = nullptr;
+        texture_*  smoky_pictures = nullptr;
         bool initGameFonts();
         void setFontsProperties();
         bool makePicturesTextures();
+        bool makeSmokyPicturesTextures();
         bool makeStringsTextures();
         void textureFree(SDL_Texture* t);
         bool loadFromFile(SDL_Renderer* r,
@@ -52,7 +63,8 @@ class TexturesCollection
         TexturesCollection& operator=(const TexturesCollection&) = delete;
         bool Status() const {return status;}
         texture_* Pictures() const {return pictures;}
-        texture_* Strings() const  {return strings;}
+        texture_* Strings()  const {return strings;}
+        texture_* Smoky()    const {return smoky_pictures;}
 
 };
 

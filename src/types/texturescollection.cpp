@@ -25,6 +25,11 @@ TexturesCollection::TexturesCollection(SDL_Renderer* const renderer)
         status = false; return;
     }
 
+    if (!makeSmokyPicturesTextures())
+    {
+        status = false; return;
+    }
+
 }
 
 
@@ -53,6 +58,24 @@ bool TexturesCollection::makePicturesTextures()
     }
     return true;
 }
+
+bool TexturesCollection::makeSmokyPicturesTextures()
+{
+    int texture;
+    smoky_pictures = new (std::nothrow) texture_[tn::allsmokyblow];
+    if (!smoky_pictures) return false;
+    for (texture = tn::smokyblow_zero; texture < tn::smokyblow_eight; ++texture)
+    {
+        smoky_pictures[texture].texture = nullptr;
+        if (loadFromFile(r,
+                         &smoky_pictures[texture].texture,
+                         smoky_pictures[texture].main_rect,
+                         names_smoky[texture]) == false) return false;
+    }
+    return true;
+}
+
+
 
 bool TexturesCollection::makeStringsTextures()
 {
@@ -219,6 +242,17 @@ TexturesCollection::~TexturesCollection()
     }
     delete[] pictures;
     pictures = nullptr;
+
+    for (object = tn::smokyblow_zero; object < tn::smokyblow_eight; ++object)
+    {
+        if (smoky_pictures[object].texture)
+        {
+            textureFree(smoky_pictures[object].texture);
+            smoky_pictures[object].texture = nullptr;
+        }
+    }
+    delete smoky_pictures;
+    smoky_pictures = nullptr;
 
 
     for (object = tn::new_game; object < tn::allStringTextures; ++object)

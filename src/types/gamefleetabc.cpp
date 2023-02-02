@@ -27,7 +27,8 @@ GameFleet_ABC::~GameFleet_ABC()
 
 bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                                             ObjectsList<DieComplex> *dieStorage,
-                                            status_t &status)
+                                            status_t &status,
+                                            ObjectsList<Apack>* animatedList)
 {
     #define HEROLAZER *(*(heroLazerStorage))[lazer]
     #define ALIEN *(*(fleetStorage))[alien]
@@ -61,6 +62,12 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                 score_changed = true;
                 dieStorage->Push(Make_DieComplex(digits, ALIEN_CENTER, 
                                                             ALIEN_SCORE));
+
+                //-----Apack List-----
+
+                animatedList->Push(MakeAnimated(tcollection->Smoky(), 
+                    tn::allsmokyblow, ALIEN_CENTER));
+                //--------------------
                 fleetStorage->Remove(alien);
                 checksIsFleetOver();
                 break;

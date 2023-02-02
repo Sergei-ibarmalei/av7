@@ -19,6 +19,8 @@
 #include "skyclass.h"
 #include "gui.h"
 
+#include "animatedpack.h"
+
 
 
 class Engine_
@@ -32,12 +34,17 @@ class Engine_
     HeroLazerStorage* heroLazerStorage;
 
     ObjectsList<DieComplex>* dieStorage;
+    //ApackList* animatedList;
+    ObjectsList<Apack>* animatedList;
 
     bool  fillGameFleetsArray(const tc* collection, const texture_* digits);
     bool  makeHeroLazerStorage();
     bool  makeDieStorage();
+    bool  makeAnimatedList();
 
     void showDieStoreage(const Sdl* sdl) const;
+    void showAnimated_repeated(const Sdl* sdl) const;
+    void showAnimated_once(const Sdl* sdl) const;
     void showHeroLazers(const Sdl* sdl) const;
     void showFleet(const Sdl* sdl) const;
     void showFleetLazers(const Sdl* sdl) const;
@@ -54,6 +61,7 @@ class Engine_
 
     void clearFleetLazers();
     void clearDieStorage();
+    void clearAnimated();
 
     void checkFleetsIsGone(status_t& status);
 
