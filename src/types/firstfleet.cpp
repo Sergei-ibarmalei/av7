@@ -214,7 +214,7 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
         if (ALIEN_isnot_ONSCREEN) break;
         if (*(*(fleetStorage))[alien] == hero)
         {
-            //-----Apack List-----
+            //-----Добавляем анимацию взрыва-----
 
             animatedList->Push(MakeAnimated(tcollection->Smoky(), 
                     tn::allsmokyblow, ALIEN_CENTER));

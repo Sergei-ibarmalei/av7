@@ -215,7 +215,8 @@ bool Engine_::checkHeroLazerHitsFleet(status_t& status)
 void Engine_::checkFleetLazerHitsHero(NHero* hero, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
-        CURRENTFLEET->CheckFleetLazerHitsHero(hero, status, dieStorage);
+        CURRENTFLEET->CheckFleetLazerHitsHero(hero, status, dieStorage, 
+                                                animatedList);
 }
 
 void Engine_::clearFleetLazers()
@@ -261,7 +262,7 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
     checkFleetCrashHero(hero, status); // здесь есть анимация
     showHeroLazers(sdl);
     moveHeroLazers();
-    if (checkHeroLazerHitsFleet(status))
+    if (checkHeroLazerHitsFleet(status)) //здесь тоже анимация
         gameInfo->ChangeScore(status);
     showDieStoreage(sdl);
     //

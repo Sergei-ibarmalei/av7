@@ -63,7 +63,7 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                 dieStorage->Push(Make_DieComplex(digits, ALIEN_CENTER, 
                                                             ALIEN_SCORE));
 
-                //-----Apack List-----
+                //-----Добавляем анимацию взрыва-----
 
                 animatedList->Push(MakeAnimated(tcollection->Smoky(), 
                     tn::allsmokyblow, ALIEN_CENTER));
@@ -95,10 +95,15 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
 }
 
 void GameFleet_ABC::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
-            ObjectsList<DieComplex>* dieStorage)
+                                            ObjectsList<DieComplex>* dieStorage, 
+                                            ObjectsList<Apack>* animatedList)
 {
      if (fleetLazerStorage->Check_withObject(hero))
     {
+        //---Добавляем анимацию взрыва----
+        animatedList->Push(MakeAnimated(tcollection->Smoky(), tn::allsmokyblow,
+                                        hero->GetCenter()));
+        //
         /*Если героя подбивают, показываем череп*/
         dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
         makeTmpFleetStorage(status);

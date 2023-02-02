@@ -31,7 +31,11 @@ class TexturesCollection
             "images/smoky/explosion02.png", "images/smoky/explosion03.png",
             "images/smoky/explosion04.png", "images/smoky/explosion05.png",
             "images/smoky/explosion06.png", "images/smoky/explosion07.png",
-            "images/smoky/explosion08.png"
+            "images/smoky/explosion08.png", "images/smoky/explosion09.png",
+            "images/smoky/explosion10.png", "images/smoky/explosion11.png",
+            "images/smoky/explosion12.png", "images/smoky/explosion13.png",
+            "images/smoky/explosion14.png", "images/smoky/explosion15.png",
+            "images/smoky/explosion16.png", "images/smoky/explosion17.png"
         };
 
         SDL_Renderer* r = nullptr;

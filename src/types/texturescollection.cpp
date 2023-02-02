@@ -64,7 +64,7 @@ bool TexturesCollection::makeSmokyPicturesTextures()
     int texture;
     smoky_pictures = new (std::nothrow) texture_[tn::allsmokyblow];
     if (!smoky_pictures) return false;
-    for (texture = tn::smokyblow_zero; texture < tn::smokyblow_eight; ++texture)
+    for (texture = 0; texture < tn::allsmokyblow; ++texture)
     {
         smoky_pictures[texture].texture = nullptr;
         if (loadFromFile(r,
@@ -243,7 +243,7 @@ TexturesCollection::~TexturesCollection()
     delete[] pictures;
     pictures = nullptr;
 
-    for (object = tn::smokyblow_zero; object < tn::smokyblow_eight; ++object)
+    for (object = 0; object < tn::allsmokyblow; ++object)
     {
         if (smoky_pictures[object].texture)
         {

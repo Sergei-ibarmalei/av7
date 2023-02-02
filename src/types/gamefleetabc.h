@@ -36,7 +36,8 @@ class GameFleet_ABC
                         ObjectsList<DieComplex>* dieStorage, status_t& status,
                         ObjectsList<Apack>* animatedList);
     void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
-                            ObjectsList<DieComplex>* dieStorage);
+                            ObjectsList<DieComplex>* dieStorage,
+                            ObjectsList<Apack>* animatedList);
     void DeletingAllLazers();
 
     virtual void MoveFleet(NHero* hero, status_t&  status) = 0;

@@ -15,9 +15,7 @@ namespace tn
     enum kind {firstfleet, allPacks,};
     enum flow {repeated, once, };
 
-    enum {smokyblow_zero, smokyblow_one, smokyblow_two, smokyblow_three,
-          smokyblow_four, smokyblow_five, smokyblow_six, smokyblow_seven,
-          smokyblow_eight, allsmokyblow};
+    enum {allsmokyblow = 18};
     
     enum {
         new_game, rules, exit, new_game_bright, rules_bright, exit_bright,
