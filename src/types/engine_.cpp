@@ -153,9 +153,9 @@ void Engine_::showAnimated_repeated(const Sdl* sdl) const
     animatedList->Show(sdl, tn::flow::repeated);
 }
 
-void Engine_::showAnimated_once(const Sdl* sdl) const
+void Engine_::showAnimated_once(const Sdl* sdl, bool stop) const
 {
-    animatedList->Show(sdl, tn::flow::once);
+    animatedList->Show(sdl, tn::flow::once, stop);
 }
 
 void Engine_::showFleet(const Sdl* sdl) const
@@ -253,6 +253,8 @@ void Engine_::InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo)
     showHeroLazers(sdl);
     showFleet(sdl);
     showDieStoreage(sdl);
+    showAnimated_once(sdl, true);
+
     showFleetLazers(sdl);
     gameInfo->ShowGameInfo(sdl, status);
 }
@@ -277,7 +279,7 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
         gameInfo->ChangeScore(status);
     showDieStoreage(sdl);
     //
-    showAnimated_repeated(sdl);
+    showAnimated_once(sdl);
     //
     showFleetLazers(sdl);
     moveFleetLazers();

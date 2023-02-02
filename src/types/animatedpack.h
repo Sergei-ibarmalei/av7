@@ -24,38 +24,16 @@ class Apack
     Apack(const Apack&) = delete;
     Apack& operator=(const Apack&) = delete;
      ~Apack();
-    void Show(const Sdl* sdl, const tn::flow f);
+     
+    /// @brief Показ анимации
+    /// @param sdl  sdl 
+    /// @param f анимация с повтором(repeated) или без (once)
+    /// @param stop В паузе анимация останавливается
+    void Show(const Sdl* sdl, const tn::flow f, bool stop = false);
     bool IsItGone() const {return frame == (packCapacity-1);}
     bool Status() const {return init;}
 };
 
-
-/*class ApackList
-{
-    private:
-    struct Node
-    {
-        Apack* data;
-        struct Node* next;
-        ~Node()
-        {
-            delete data;
-            data = nullptr;
-        }
-    };
-    struct Node* first;
-    struct Node** current;
-    public:
-
-    ApackList();
-    ~ApackList();
-    ApackList(const ApackList&) = delete;
-    ApackList& operator=(const ApackList&) = delete;
-    void Push(Apack* data);
-    void Show(const Sdl* sdl, const tn::flow f);
-    void Check_and_clear();
-
-};*/
 
 
 

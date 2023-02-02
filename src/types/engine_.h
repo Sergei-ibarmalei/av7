@@ -44,7 +44,7 @@ class Engine_
 
     void showDieStoreage(const Sdl* sdl) const;
     void showAnimated_repeated(const Sdl* sdl) const;
-    void showAnimated_once(const Sdl* sdl) const;
+    void showAnimated_once(const Sdl* sdl, bool stop = false) const;
     void showHeroLazers(const Sdl* sdl) const;
     void showFleet(const Sdl* sdl) const;
     void showFleetLazers(const Sdl* sdl) const;

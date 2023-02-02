@@ -28,7 +28,7 @@ void Apack::setCoords(plot* center)
 
 }
 
-void Apack::Show(const Sdl* sdl, const tn::flow f)
+void Apack::Show(const Sdl* sdl, const tn::flow f, bool stop)
 {
     switch (f)
     {
@@ -37,7 +37,8 @@ void Apack::Show(const Sdl* sdl, const tn::flow f)
             if (frame == packCapacity-1) frame = 0;
             sdl->TextureRender(tpack[frame].texture,
                                     &tpack[frame].main_rect);
-            frame += 1;
+            if (!stop) frame += 1;
+            //frame += 1;
             break;
         }
         case tn::flow::once:
@@ -45,73 +46,13 @@ void Apack::Show(const Sdl* sdl, const tn::flow f)
             if (frame == packCapacity-1) return;
             sdl->TextureRender(tpack[frame].texture, 
                                                 &tpack[frame].main_rect);
-            frame += 1;
+            if (!stop) frame += 1;
+            //frame += 1;
             break;
         }
         default: {}
     }
 }
-
-/*ApackList::ApackList()
-{
-    first = nullptr;
-}
-
-ApackList::~ApackList()
-{
-    while (first)
-    {
-        struct Node* tmp = first;
-        first = first->next;
-        delete tmp;
-        tmp = nullptr;
-    }
-}
-
-void ApackList::Push(Apack* data)
-{
-    if (!data) return;
-    struct Node* tmp = new (std::nothrow) Node;
-    if (!tmp) return;
-    tmp->data = data;
-    if (!first)
-    {
-        tmp->next = nullptr;
-        first = tmp;
-        return;
-    }
-    tmp->next = first;
-    first = tmp;
-}
-
-void ApackList::Show(const Sdl* sdl, const tn::flow f)
-{
-    if (!first) return;
-    struct Node* tmp = first;
-    while (tmp)
-    {
-        tmp->data->ShowApack(sdl, f);
-        tmp = tmp->next;
-    }
-}
-
-void ApackList::Check_and_clear()
-{
-    current = &first;
-    while (*current)
-    {
-        if ( (*current)->data->ShowIsGone())
-        {
-            struct Node* tmp = *current;
-            *current = (*current)->next;
-            delete tmp;
-        }
-        else current = &(*current)->next;
-    }
-}*/
-
-
-
 
 
 

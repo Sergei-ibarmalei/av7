@@ -30,7 +30,7 @@ class ObjectsList
     ObjectsList& operator=(const ObjectsList&) = delete;
     void Push(T* data);
     void Show(const Sdl* sdl) const;
-    void Show(const Sdl* sdl, tn::flow f);
+    void Show(const Sdl* sdl, tn::flow f, bool stop = false);
     void Check_and_clear();
     bool Check_withObject(NHero* hero);
     void Move();
@@ -111,7 +111,7 @@ void ObjectsList<T>::Show(const Sdl* sdl) const
 }
 
 template<class T>
-void ObjectsList<T>::Show(const Sdl* sdl, tn::flow f)
+void ObjectsList<T>::Show(const Sdl* sdl, tn::flow f, bool stop)
 {
     if (!first) 
     {
@@ -120,7 +120,7 @@ void ObjectsList<T>::Show(const Sdl* sdl, tn::flow f)
     struct Node<T>* tmp = first;
     while (tmp)
     {
-        tmp->data->Show(sdl, f);
+        tmp->data->Show(sdl, f, stop);
         tmp = tmp->next;
     }
 }
