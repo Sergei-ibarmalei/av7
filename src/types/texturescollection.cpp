@@ -42,42 +42,56 @@ void TexturesCollection::textureFree(SDL_Texture* t)
     }
 }
 
-bool TexturesCollection::makePicturesTextures()
+bool TexturesCollection::fromFile(texture_* arrayOftextures,
+                                  SDL_Renderer* r,
+                                  const char** arrayOfnames,
+                                  const int start, const int stop)
 {
-    int texture;
-    pictures = new (std::nothrow)texture_[tn::all_pics];
-    if (!pictures) return false;
-    for (texture = tn::hero; texture < tn::all_pics; ++texture)
+    for (int texture = start; texture < stop; ++ texture)
     {
-        pictures[texture].texture = nullptr;
-        if (loadFromFile(r,
-                         &pictures[texture].texture,
-                         pictures[texture].main_rect,
-                         names_pics[texture]) == false)
-            {
-                pictures[texture].texture = nullptr;
-                return false;
-            }
+        arrayOftextures[texture].texture = nullptr;
+        if (loadFromFile(r, &arrayOftextures[texture].texture,
+                            arrayOftextures[texture].main_rect,
+                            arrayOfnames[texture]) == false) 
+        {
+            arrayOftextures[texture].texture = nullptr;
+            return false;
+        }
     }
     return true;
 }
 
+bool TexturesCollection::makePicturesTextures()
+{
+    pictures = new (std::nothrow)texture_[tn::all_pics];
+    if (!pictures) return false;
+    return fromFile(pictures, r, names_pics, tn::hero, tn::all_pics);
+}
+
 bool TexturesCollection::makeSmokyPicturesTextures()
 {
-    int texture;
     smoky_pictures = new (std::nothrow) texture_[tn::allsmokyblow];
     if (!smoky_pictures) return false;
-    for (texture = 0; texture < tn::allsmokyblow; ++texture)
+    return fromFile(smoky_pictures, r, names_smoky, 0, tn::allsmokyblow);
+}
+
+bool TexturesCollection::fromText(texture_* arrayOftextures,
+                                  SDL_Renderer* r,
+                                  const char** arrayOfnames,
+                                  gamefont_* font,
+                                  const int start, const int stop)
+{
+    for (int texture = start; texture < stop; ++ texture)
     {
-        smoky_pictures[texture].texture = nullptr;
-        if (loadFromFile(r,
-                         &smoky_pictures[texture].texture,
-                         smoky_pictures[texture].main_rect,
-                         names_smoky[texture]) == false)
-            {
-                smoky_pictures[texture].texture = nullptr;
-                return false;
-            }
+        arrayOftextures[texture].texture = nullptr;
+        if (loadFromText(r, &arrayOftextures[texture].texture,
+                            arrayOftextures[texture].main_rect,
+                            arrayOfnames[texture],
+                            font) == false)
+        {
+            arrayOftextures[texture].texture = nullptr;
+            return false;
+        }
     }
     return true;
 }
@@ -86,7 +100,6 @@ bool TexturesCollection::makeSmokyPicturesTextures()
 
 bool TexturesCollection::makeStringsTextures()
 {
-    int texture;
     strings = new (std::nothrow) texture_[tn::allStringTextures];
     if (!strings)
     {
@@ -94,109 +107,44 @@ bool TexturesCollection::makeStringsTextures()
         return status;
     }
     /*MAKING TEXUTURES FOR GAME OVER*/
-    for (texture = tn::game; texture < tn::allStringTextures; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::Pause]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            }
-    }
+    if (!fromText(strings, r, names, &gameFonts[tn::Pause], 
+                    tn::game, tn::allStringTextures))
+        return false;
+
     /*MAKING TEXTURES FOR MAIN MENU*/
-    for (texture = tn::new_game; texture < tn::new_game_bright; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::MainMenu]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            }
-    }
-    /*MAKING TEXTURES FOR MAIN MENU BRIGHT*/
-    for (texture = tn::new_game_bright; texture < tn::pause; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::MainMenuBright]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            } 
-    }
+
+    if (!fromText(strings, r, names, &gameFonts[tn::MainMenu], 
+                    tn::new_game, tn::new_game_bright))
+        return false;
+
+    if (!fromText(strings, r, names, &gameFonts[tn::MainMenuBright], 
+                    tn::new_game_bright, tn::pause))
+        return false;
 
     /*MAKING TEXTURES FOR PAUSE*/
-    texture = tn::pause;
-    if (loadFromText(r,
-                     &strings[texture].texture,
-                     strings[texture].main_rect,
-                     names[texture],
-                     &gameFonts[tn::Pause]) == false)
-        {
-            strings[texture].texture = nullptr;
-            return false;
-        }
+
+    if (!fromText(strings, r, names, &gameFonts[tn::Pause], 
+                    tn::pause, tn::pressEscape))
+        return false;
     /*MAKING TEXTURE FOR PRESS ESC..*/
 
-    texture = tn::pressEscape;
-    if (loadFromText(r,
-                     &strings[texture].texture,
-                     strings[texture].main_rect,
-                     names[texture],
-                     &gameFonts[tn::PressEsc]) == false)
-        {
-            strings[texture].texture = nullptr;
-            return false;
-        }
+    if (!fromText(strings, r, names, &gameFonts[tn::PressEsc], 
+                    tn::pressEscape, tn::zeroScore))
+        return false;
     /*MAKING TEXTURE FOR SCORES*/
-    for (texture = tn::zeroScore; texture < tn::zeroScoreB; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::Scores]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            }
-    }
-    /*MAKING TEXTURE FOR SCORE BANNER*/
-    for (texture = tn::zeroScoreB; texture < tn::x0; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::ScoresBanner]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            }
-    }
-    /*MAKING TEXTURE FOR LIVE MULTIPLICATION*/
+    if (!fromText(strings, r, names, &gameFonts[tn::Scores], 
+                    tn::zeroScore, tn::zeroScoreB))
+        return false;
 
-    for (texture = tn::x0; texture < tn::game; ++texture)
-    {
-        if (loadFromText(r,
-                         &strings[texture].texture,
-                         strings[texture].main_rect,
-                         names[texture],
-                         &gameFonts[tn::LiveMult]) == false)
-            {
-                strings[texture].texture = nullptr;
-                return false;
-            }
-    }
-    
+    /*MAKING TEXTURE FOR SCORE BANNER*/
+    if (!fromText(strings, r, names, &gameFonts[tn::ScoresBanner], 
+                    tn::zeroScoreB, tn::x0))
+        return false;
+
+    /*MAKING TEXTURE FOR LIVE MULTIPLICATION*/
+    if (!fromText(strings, r, names, &gameFonts[tn::LiveMult], 
+                    tn::x0, tn::game))
+        return false;
 
     return true;
 }

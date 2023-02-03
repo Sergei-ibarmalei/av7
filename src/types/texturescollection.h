@@ -59,6 +59,15 @@ class TexturesCollection
                           rect_& mainRect,
                           const char* textToTexture,
                           gamefont_* font);
+        bool fromFile(texture_* arrayOftextures,
+                      SDL_Renderer* r,
+                      const char** arrayOfnames,
+                      const int start, const int stop);
+        bool fromText(texture_* arrayOftextures,
+                      SDL_Renderer* r,
+                      const char** arrayOfnames,
+                      gamefont_* font,
+                      const int start, const int stop);
 
     public:
         explicit TexturesCollection(SDL_Renderer* const r);

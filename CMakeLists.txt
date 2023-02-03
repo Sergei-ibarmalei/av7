@@ -52,4 +52,4 @@ target_link_libraries(${PROJECT_NAME}
     SDL2_ttf)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-$<$<NOT:$<C_COMPILER_ID:MSVC>>:-g  -Wall -Wextra -Wpedantic>)
+$<$<NOT:$<C_COMPILER_ID:MSVC>>:-O3  -Wall -Wextra -Wpedantic>)
