@@ -53,8 +53,11 @@ bool TexturesCollection::makePicturesTextures()
         if (loadFromFile(r,
                          &pictures[texture].texture,
                          pictures[texture].main_rect,
-                         names_pics[texture]) == false) return false;
-
+                         names_pics[texture]) == false)
+            {
+                pictures[texture].texture = nullptr;
+                return false;
+            }
     }
     return true;
 }
@@ -70,7 +73,11 @@ bool TexturesCollection::makeSmokyPicturesTextures()
         if (loadFromFile(r,
                          &smoky_pictures[texture].texture,
                          smoky_pictures[texture].main_rect,
-                         names_smoky[texture]) == false) return false;
+                         names_smoky[texture]) == false)
+            {
+                smoky_pictures[texture].texture = nullptr;
+                return false;
+            }
     }
     return true;
 }
@@ -93,7 +100,11 @@ bool TexturesCollection::makeStringsTextures()
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::Pause]) == false) return false;
+                         &gameFonts[tn::Pause]) == false)
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            }
     }
     /*MAKING TEXTURES FOR MAIN MENU*/
     for (texture = tn::new_game; texture < tn::new_game_bright; ++texture)
@@ -102,7 +113,11 @@ bool TexturesCollection::makeStringsTextures()
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::MainMenu]) == false) return false;
+                         &gameFonts[tn::MainMenu]) == false)
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            }
     }
     /*MAKING TEXTURES FOR MAIN MENU BRIGHT*/
     for (texture = tn::new_game_bright; texture < tn::pause; ++texture)
@@ -112,7 +127,10 @@ bool TexturesCollection::makeStringsTextures()
                          strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::MainMenuBright]) == false)
-            return false;
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            } 
     }
 
     /*MAKING TEXTURES FOR PAUSE*/
@@ -121,7 +139,11 @@ bool TexturesCollection::makeStringsTextures()
                      &strings[texture].texture,
                      strings[texture].main_rect,
                      names[texture],
-                     &gameFonts[tn::Pause]) == false) return false;
+                     &gameFonts[tn::Pause]) == false)
+        {
+            strings[texture].texture = nullptr;
+            return false;
+        }
     /*MAKING TEXTURE FOR PRESS ESC..*/
 
     texture = tn::pressEscape;
@@ -129,7 +151,11 @@ bool TexturesCollection::makeStringsTextures()
                      &strings[texture].texture,
                      strings[texture].main_rect,
                      names[texture],
-                     &gameFonts[tn::PressEsc]) == false) return false;
+                     &gameFonts[tn::PressEsc]) == false)
+        {
+            strings[texture].texture = nullptr;
+            return false;
+        }
     /*MAKING TEXTURE FOR SCORES*/
     for (texture = tn::zeroScore; texture < tn::zeroScoreB; ++texture)
     {
@@ -137,7 +163,11 @@ bool TexturesCollection::makeStringsTextures()
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::Scores]) == false) return false;
+                         &gameFonts[tn::Scores]) == false)
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            }
     }
     /*MAKING TEXTURE FOR SCORE BANNER*/
     for (texture = tn::zeroScoreB; texture < tn::x0; ++texture)
@@ -147,7 +177,10 @@ bool TexturesCollection::makeStringsTextures()
                          strings[texture].main_rect,
                          names[texture],
                          &gameFonts[tn::ScoresBanner]) == false)
-            return false;
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            }
     }
     /*MAKING TEXTURE FOR LIVE MULTIPLICATION*/
 
@@ -157,7 +190,11 @@ bool TexturesCollection::makeStringsTextures()
                          &strings[texture].texture,
                          strings[texture].main_rect,
                          names[texture],
-                         &gameFonts[tn::LiveMult]) == false) return false;
+                         &gameFonts[tn::LiveMult]) == false)
+            {
+                strings[texture].texture = nullptr;
+                return false;
+            }
     }
     
 
@@ -221,48 +258,58 @@ void TexturesCollection::setFontsProperties()
 TexturesCollection::~TexturesCollection()
 {
     int object;
-    for (object = tn::MainMenu; object < tn::allGameFonts; ++object)
+    if (gameFonts)
     {
-        if (gameFonts[object].font)
+        for (object = tn::MainMenu; object < tn::allGameFonts; ++object)
         {
-            TTF_CloseFont(gameFonts[object].font);
+            if (gameFonts[object].font)
+                TTF_CloseFont(gameFonts[object].font);
             gameFonts[object].font = nullptr;
         }
     }
     delete[] gameFonts;
     gameFonts = nullptr;
 
-    for (object = tn::hero; object < tn::all_pics; ++object)
+    if (strings)
     {
-        if (pictures[object].texture)
+        for (object = tn::new_game; object < tn::allStringTextures; ++object)
         {
-            textureFree(pictures[object].texture);
+            if(strings[object].texture)
+                textureFree(strings[object].texture);
+            strings[object].texture = nullptr;
+        }
+    }
+    delete[] strings;
+    strings = nullptr;
+
+    if (pictures)
+    {
+        for (object = tn::hero; object < tn::all_pics; ++object)
+        {
+            if (pictures[object].texture)
+                textureFree(pictures[object].texture);
             pictures[object].texture = nullptr;
         }
     }
     delete[] pictures;
     pictures = nullptr;
 
-    for (object = 0; object < tn::allsmokyblow; ++object)
+    if (smoky_pictures)
     {
-        if (smoky_pictures[object].texture)
+        for (object = 0; object < tn::allsmokyblow; ++object)
         {
-            textureFree(smoky_pictures[object].texture);
+            if (!smoky_pictures[object].texture) continue;
+            if (smoky_pictures[object].texture)
+            {
+                textureFree(smoky_pictures[object].texture);
+            }
             smoky_pictures[object].texture = nullptr;
         }
     }
+
+
     delete smoky_pictures;
     smoky_pictures = nullptr;
 
 
-    for (object = tn::new_game; object < tn::allStringTextures; ++object)
-    {
-        if(strings[object].texture)
-        {
-            textureFree(strings[object].texture);
-            strings[object].texture = nullptr;
-        }
-    }
-    delete[] strings;
-    strings = nullptr;
 }

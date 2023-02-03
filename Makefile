@@ -1,12 +1,16 @@
 CC=g++
 CFLAGS=-O3 -Wall -Wpedantic
-LDFLAGS= -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS= -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
-SOURCES=src/core/checkcrossing.cpp src/core/core.cpp src/core/rand.cpp $\
+SOURCES=
+    src/core/checkcrossing.cpp $\
+    src/core/core.cpp $\
+    src/core/rand.cpp $\
 	src/types/alienabc.cpp $\
 	src/types/alien.cpp $\
 	src/types/alienlazer.cpp $\
 	src/types/alienstorage.cpp $\
+	src/types/animatedpack.cpp $\
 	src/types/arrstorageabc.cpp $\
 	src/types/baselazer.cpp $\
 	src/types/borderclass.cpp $\
