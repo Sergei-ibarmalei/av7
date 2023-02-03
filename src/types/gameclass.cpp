@@ -184,8 +184,11 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                    engine->MakeHeroLazer(nHero->LazerStart(), status);
-                    Mix_PlayChannel(-1, sdl_->SoundEffects()->hero_laser, 0); 
+                    if (engine->MakeHeroLazer(nHero->LazerStart(), status))
+                    {
+                        Mix_PlayChannel(-1, 
+                                        sdl_->SoundEffects()->hero_laser, 0);
+                    }
                     break;
                 }
                 #ifdef STOP_FLEET_MOVING

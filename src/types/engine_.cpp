@@ -103,34 +103,36 @@ Engine_::~Engine_()
     animatedList = nullptr;
 }
 
-void  Engine_::MakeHeroLazer(const plot* start_pos, status_t& status)
+bool  Engine_::MakeHeroLazer(const plot* start_pos, status_t& status)
 {
-    if (!start_pos) return;
+    if (!start_pos) return false;
     /*Если это первый выстрел*/
     if (heroLazerStorage->GetCounter() == 0)
     {
         HeroLazer* lazer = new (std::nothrow) HeroLazer{start_pos,
                                     &tcollection->Pictures()[tn::blue_laser]};
-        if (!lazer || (lazer->Status() == false)) return;
+        if (!lazer || (lazer->Status() == false)) return false;
 
         heroLazerStorage->Push(lazer);
+        return true;
     }
   
     #define COUNTER heroLazerStorage->GetCounter()
     #define PREVLAZER heroLazerStorage->operator[](COUNTER - 1)
     #define PREVLAZER_X PREVLAZER->Lazer_x()
     #define PREVLAZER_W PREVLAZER->Lazer_w()
+    
     /*Если предыдущий выстрел слишком близко, то ничего не делаем*/
-    if ( (PREVLAZER_X - start_pos->x) < PREVLAZER_W * 3) return;
+    if ( (PREVLAZER_X - start_pos->x) < PREVLAZER_W * 3) return false;
     HeroLazer* lazer = new (std::nothrow) HeroLazer{start_pos,
                                     &tcollection->Pictures()[tn::blue_laser]};
     if (!lazer || (lazer->Status() == false))
     {
-        status.gameQuit = true; return;
+        status.gameQuit = true; return false;
     }
     heroLazerStorage->Push(lazer);
-
-
+    return true;
+    
     #undef PREVLAZER_X
     #undef PREVLAZER_W
     #undef PREVLAZER
