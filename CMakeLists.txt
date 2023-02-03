@@ -48,6 +48,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
     SDL2
     SDL2_image
+    SDL2_mixer
     SDL2_ttf)
 
 target_compile_options(${PROJECT_NAME} PRIVATE

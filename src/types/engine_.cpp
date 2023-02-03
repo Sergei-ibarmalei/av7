@@ -1,8 +1,8 @@
 #include "engine_.h"
 #include "../core/core.h"
 
-#define CURRENTFLEET_ALIVE gameFleetsArray[currentFleet]->GetFleetOverStatus()\
-                                                             == false
+#define CURRENTFLEET_ALIVE (gameFleetsArray[currentFleet]->GetFleetOverStatus()\
+                                                             == false)
 #define CURRENTFLEET gameFleetsArray[currentFleet]
 
 Engine_::Engine_(const tc* collection, const texture_* digits)
@@ -170,10 +170,10 @@ void Engine_::showFleetLazers(const Sdl* sdl) const
         CURRENTFLEET->ShowFleetLazers(sdl);
 }
 
-void Engine_::moveFleet(NHero* hero, status_t& status)
+void Engine_::moveFleet(const Sdl* sdl, NHero* hero, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
-        CURRENTFLEET->MoveFleet(hero, status);
+        CURRENTFLEET->MoveFleet(hero, status, sdl->SoundEffects());
 }
 
 void Engine_::moveFleetLazers()
@@ -199,28 +199,31 @@ void Engine_::moveDieStorage()
 }
 
 //Проверка - врезался ли корабль в алиена из флота
-void Engine_::checkFleetCrashHero(NHero* hero, status_t& status)
+void Engine_::checkFleetCrashHero(const Sdl* sdl, NHero* hero, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
-        CURRENTFLEET->CheckFleetCrashHero(hero, status, dieStorage, animatedList);
+        CURRENTFLEET->CheckFleetCrashHero(hero, status, dieStorage, 
+                                        animatedList, sdl->SoundEffects());
 }
 
 //Проверка - подбил ли герой алиена из флота
-bool Engine_::checkHeroLazerHitsFleet(status_t& status)
+bool Engine_::checkHeroLazerHitsFleet(const Sdl* sdl, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
         return CURRENTFLEET->CheckHeroLazerHitsFleet(heroLazerStorage, 
                                                      dieStorage, status,
-                                                     animatedList);
+                                                     animatedList,
+                                                     sdl->SoundEffects());
     return false;
 }
 
 //Проверка - подбит ли герой лазером алиена
-void Engine_::checkFleetLazerHitsHero(NHero* hero, status_t& status)
+void Engine_::checkFleetLazerHitsHero(const Sdl* sdl, 
+                                      NHero* hero, status_t& status)
 {
     if (CURRENTFLEET_ALIVE)
         CURRENTFLEET->CheckFleetLazerHitsHero(hero, status, dieStorage, 
-                                                animatedList);
+                                            animatedList, sdl->SoundEffects());
 }
 
 //Очистка списка лазеров флота алиенов
@@ -259,8 +262,12 @@ void Engine_::InPause(const Sdl* sdl, status_t& status, GameInfoClass* gameInfo)
     gameInfo->ShowGameInfo(sdl, status);
 }
 
-void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
-                        GameInfoClass* gameInfo, Border* b, Sky* s, Gui* gui)
+void Engine_::InGameFlow(Sdl* sdl, NHero* hero, 
+                        status_t& status,
+                        GameInfoClass* gameInfo, 
+                        Border* b, 
+                        Sky* s, 
+                        Gui* gui)
 {
 
     #define GAME_OVER status.gameIsOver == true
@@ -271,11 +278,11 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
     if (GAME_OVER && ANIMATED_EMPTY && DIESTORAGE_EMPTY) return;
 
     showFleet(sdl);
-    moveFleet(hero, status);
-    checkFleetCrashHero(hero, status); 
+    moveFleet(sdl, hero, status);
+    checkFleetCrashHero(sdl, hero, status); 
     showHeroLazers(sdl);
     moveHeroLazers();
-    if (checkHeroLazerHitsFleet(status))
+    if (checkHeroLazerHitsFleet(sdl, status))
         gameInfo->ChangeScore(status);
     showDieStoreage(sdl);
     //
@@ -283,7 +290,7 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
     //
     showFleetLazers(sdl);
     moveFleetLazers();
-    checkFleetLazerHitsHero(hero, status);
+    checkFleetLazerHitsHero(sdl, hero, status);
     clearFleetLazers();
     moveDieStorage();
     //
@@ -309,19 +316,17 @@ void Engine_::InGameFlow(Sdl* sdl, NHero* hero, status_t& status,
 bool Engine_::IsGameOver(Sdl* sdl, GameInfoClass* gameInfo,
                                 status_t& status, Border* b, Sky* s, Gui* gui)
 {
-    #define DIESTORAGE_NOTEMPTY dieStorage->IsEmpty()==false
-    #define ANIMATED_NOTEMPTY animatedList->IsEmpty()==false
 
     if (status.gameIsOver)
     {
-
-        //Если на экране анимация, то выходим
-        if (DIESTORAGE_NOTEMPTY || ANIMATED_NOTEMPTY) return false;
-        //В противном случае показываем что гейм, как говорится, овер
         gui->ResetGameOver();
         while (!status.gameQuit)
         {
             SDL_RenderClear(sdl->Renderer());
+            showDieStoreage(sdl);
+            showAnimated_once(sdl);
+            moveDieStorage();
+            clearDieStorage();
             borderSky_show_moving(sdl, b, s);
             gameInfo->ShowGameInfo(sdl, status);
             gui->ShowGameOver(sdl);
@@ -351,8 +356,6 @@ bool Engine_::IsGameOver(Sdl* sdl, GameInfoClass* gameInfo,
     }
     return false;
 
-    #undef DIESTORAGE_NOTEMPTY
-    #undef ANIMATED_NOTEMPTY 
 }
 
 
@@ -361,12 +364,12 @@ void Engine_::checkFleetsIsGone(status_t& status)
     if (gameFleetsArray[currentFleet]->GetFleetOverStatus())
     {
         currentFleet++;
-        if ( (currentFleet >= fleets::allFleets) || 
-                                            (!gameFleetsArray[currentFleet]))
+        if( (currentFleet >= fleets::allFleets) ||
+                                    (!gameFleetsArray[currentFleet]))
         {
             status.gameIsOver = true;
         }
-    }
+    } 
 }
 
 void  Engine_::checkTmpFleetIsGone(NHero* hero, status_t& status)

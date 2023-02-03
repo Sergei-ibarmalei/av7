@@ -34,7 +34,7 @@ class GameClass
     bool partOne();
     void check_key_events();
     bool initGameInfo(const tc& collection);
-    void pauseIsPressed();
+    void pauseIsPressed(NHero* hero);
     void showHeroIntro();
 
     public:

@@ -34,7 +34,6 @@ class Engine_
     HeroLazerStorage* heroLazerStorage;
 
     ObjectsList<DieComplex>* dieStorage;
-    //ApackList* animatedList;
     ObjectsList<Apack>* animatedList;
 
     bool  fillGameFleetsArray(const tc* collection, const texture_* digits);
@@ -49,14 +48,14 @@ class Engine_
     void showFleet(const Sdl* sdl) const;
     void showFleetLazers(const Sdl* sdl) const;
 
-    void moveFleet(NHero* hero, status_t& status);
+    void moveFleet(const Sdl* sdl, NHero* hero, status_t& status);
     void moveHeroLazers();
     void moveFleetLazers();
     void moveDieStorage();
 
-    void checkFleetCrashHero(NHero* hero, status_t& status);
-    bool checkHeroLazerHitsFleet(status_t& status);
-    void checkFleetLazerHitsHero(NHero* hero, status_t& status);
+    void checkFleetCrashHero(const Sdl* sdl, NHero* hero, status_t& status);
+    bool checkHeroLazerHitsFleet(const Sdl* sdl, status_t& status);
+    void checkFleetLazerHitsHero(const Sdl*, NHero* hero, status_t& status);
     void checkTmpFleetIsGone(NHero* hero, status_t& status);
 
     void clearFleetLazers();

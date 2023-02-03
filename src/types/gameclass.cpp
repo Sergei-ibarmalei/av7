@@ -87,13 +87,12 @@ GameClass::~GameClass()
     delete border; border = nullptr;
     delete sky; sky = nullptr;
     delete gameInfo; gameInfo = nullptr;
-
-
     delete nHero; nHero = nullptr;
     delete engine;
     engine = nullptr;
 
 }
+
 
 void GameClass::initStatus()
 {
@@ -185,8 +184,9 @@ void GameClass::check_key_events()
                 }
                 case SDLK_SPACE:
                 {
-                        engine->MakeHeroLazer(nHero->LazerStart(), status); 
-                        break;
+                    engine->MakeHeroLazer(nHero->LazerStart(), status);
+                    Mix_PlayChannel(-1, sdl_->SoundEffects()->hero_laser, 0); 
+                    break;
                 }
                 #ifdef STOP_FLEET_MOVING
                     case SDLK_z:
@@ -205,7 +205,7 @@ void GameClass::check_key_events()
     }
 }
 
-void GameClass::pauseIsPressed()
+void GameClass::pauseIsPressed(NHero* hero)
 {
     while (!status.gameQuit || !status.pause)
     {
@@ -235,7 +235,9 @@ void GameClass::pauseIsPressed()
                     }
                     case SDLK_q:
                     {
-                        status.mainMenu = true; return;
+                        status.mainMenu = true; 
+                        hero->Reincarnate();
+                        return;
                     }
                     default: {}
                 }
@@ -282,5 +284,6 @@ void GameClass::showHeroIntro()
 
     }
 }
+
 
 

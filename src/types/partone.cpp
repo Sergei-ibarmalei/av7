@@ -11,7 +11,7 @@ bool GameClass::partOne()
         if (status.heroIntro)
         {
             showHeroIntro();
-            if (status.pause) pauseIsPressed();
+            if (status.pause) pauseIsPressed(nHero);
             continue;
         }
 
@@ -24,7 +24,7 @@ bool GameClass::partOne()
 
         borderSky_show_moving(sdl_, border, sky);
         gameInfo->ShowGameInfo(sdl_, status);
-        if (status.pause) pauseIsPressed();
+        if (status.pause) pauseIsPressed(nHero);
         SDL_RenderPresent(sdl_->Renderer());       
 
     }

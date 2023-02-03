@@ -64,7 +64,7 @@ bool FirstFleet::makeFleet(const tc* collection)
     #undef DOWN
 }
 
-void FirstFleet::MoveFleet(NHero* hero, status_t& status)
+void FirstFleet::MoveFleet(NHero* hero, status_t& status, music* sounds)
 {
 
     /*Если герой подбит, то не двигаем флот прямо*/
@@ -112,6 +112,9 @@ void FirstFleet::MoveFleet(NHero* hero, status_t& status)
                 if (!lazer || (lazer->Status() == false)) continue;
                 fleetLazerStorage->Push(lazer);
                 (*(fleetStorage))[alien]->ResetStepsWithoutFire();
+                //--Sound effect
+                Mix_PlayChannel(-1, sounds->alien_laser, 0);
+                
             }
 
         #endif
@@ -201,7 +204,8 @@ void FirstFleet::ShowFleetLazers(const Sdl* sdl) const
 
 void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
                                         ObjectsList<DieComplex>* dieStorage,
-                                        ObjectsList<Apack>* animatedList)
+                                        ObjectsList<Apack>* animatedList,
+                                        music* soundEffect)
 {
     #define ALIEN_IS_ABSENT !(*(fleetStorage))[alien]
     #define ALIEN_isnot_ONSCREEN (*(fleetStorage))[alien]->OnScreen()\
@@ -220,6 +224,9 @@ void FirstFleet::CheckFleetCrashHero(NHero* hero, status_t& status,
                     tn::allsmokyblow, ALIEN_CENTER));
             //--------------------
             fleetStorage->Remove(alien);
+            //---Sound effect
+            Mix_PlayChannel(-1, soundEffect->blow, 0);
+            //---------------
             dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
 
 

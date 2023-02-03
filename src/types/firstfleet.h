@@ -16,7 +16,7 @@ class FirstFleet: public GameFleet_ABC
     ~FirstFleet() {}
     FirstFleet& operator=(const FirstFleet&) = delete;
 
-    void MoveFleet(NHero* hero, status_t& status) override;
+    void MoveFleet(NHero* hero, status_t& status, music* sounds) override;
     void MoveFleetLazers() override;
 
     void ShowFleet(const Sdl* sdl) const override;
@@ -24,7 +24,8 @@ class FirstFleet: public GameFleet_ABC
 
     void CheckFleetCrashHero(NHero* hero, status_t& status,
                             ObjectsList<DieComplex>* dieStorage,
-                            ObjectsList<Apack>* animatedList) override;
+                            ObjectsList<Apack>* animatedList,
+                            music* soundEffect) override;
 
 
     void ClearFleetLazers() override;

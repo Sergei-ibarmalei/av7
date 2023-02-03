@@ -22,7 +22,10 @@ bool Sdl::Init(const char* appName)
                                    S_W,
                                    S_H,
                                    SDL_WINDOW_SHOWN);
-    if (!gWindow) return false;
+    if (!gWindow)
+    {
+        std::cout << "Cannot initiate window, abort.\n"; return false;
+    }
 
     gRenderer = SDL_CreateRenderer(gWindow,
                                     -1,
@@ -34,13 +37,34 @@ bool Sdl::Init(const char* appName)
 
     if (TTF_Init() == 1) return false;
 
-    return true;
+    //Init music
+    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048) <0)
+    {
+        std::cout << "Cannot initiate audio, abort.\n"; return false;
+    }
+
+    //Init soundeffects
+    return initSoundEffects();
+
 }
 
 void Sdl::TextureRender(SDL_Texture* const t, rect_* const r) const
 {
     if (!t) return;
     SDL_RenderCopy(gRenderer, t, nullptr, r);
+}
+
+bool Sdl::initSoundEffects()
+{
+    soundEffects = new (std::nothrow) music;
+    if (!soundEffects) return false;
+    soundEffects->hero_laser = Mix_LoadWAV("sounds/laser_hero.wav");
+    if (!soundEffects->hero_laser) return false;
+    soundEffects->alien_laser = Mix_LoadWAV("sounds/laser_alien.wav");
+    if (!soundEffects->alien_laser) return false;
+    soundEffects->blow = Mix_LoadWAV("sounds/explosion.wav");
+    if (!soundEffects->blow) return false;
+    return true;
 }
 
 Sdl::~Sdl()
@@ -51,5 +75,6 @@ Sdl::~Sdl()
     gWindow = nullptr;
     IMG_Quit();
     TTF_Quit();
+    Mix_Quit();
     SDL_Quit();
 }

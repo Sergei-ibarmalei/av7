@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 
 #include <iostream>
 #include "../consts/graphconsts.h"
@@ -99,5 +101,12 @@ class CRC
 
 };
 
+typedef struct 
+{
+    Mix_Chunk* alien_laser {nullptr};
+    Mix_Chunk* hero_laser  {nullptr};
+    Mix_Chunk* blow        {nullptr};
+} SDL_music;
+using music = SDL_music;
 
 #endif

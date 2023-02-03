@@ -34,13 +34,15 @@ class GameFleet_ABC
     bool Status() const {return init;}
     bool CheckHeroLazerHitsFleet(HeroLazerStorage* heroLazerStorage, 
                         ObjectsList<DieComplex>* dieStorage, status_t& status,
-                        ObjectsList<Apack>* animatedList);
+                        ObjectsList<Apack>* animatedList,
+                        music* soundEffect);
     void CheckFleetLazerHitsHero(NHero* hero, status_t& status,
                             ObjectsList<DieComplex>* dieStorage,
-                            ObjectsList<Apack>* animatedList);
+                            ObjectsList<Apack>* animatedList,
+                            music* soundEffect);
     void DeletingAllLazers();
 
-    virtual void MoveFleet(NHero* hero, status_t&  status) = 0;
+    virtual void MoveFleet(NHero* hero, status_t&  status, music* sounds) = 0;
     virtual void MoveFleetLazers() = 0;
 
     virtual void ShowFleet(const Sdl* sdl) const = 0;
@@ -48,7 +50,8 @@ class GameFleet_ABC
 
     virtual void CheckFleetCrashHero(NHero* hero, status_t& status,
                                 ObjectsList<DieComplex>* dieStorage,
-                                ObjectsList<Apack>* animatedList) = 0;
+                                ObjectsList<Apack>* animatedList,
+                                music* soundEffect) = 0;
 
 
     virtual void ClearFleetLazers() = 0;

@@ -28,7 +28,8 @@ GameFleet_ABC::~GameFleet_ABC()
 bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                                             ObjectsList<DieComplex> *dieStorage,
                                             status_t &status,
-                                            ObjectsList<Apack>* animatedList)
+                                            ObjectsList<Apack>* animatedList,
+                                            music* soundEffect)
 {
     #define HEROLAZER *(*(heroLazerStorage))[lazer]
     #define ALIEN *(*(fleetStorage))[alien]
@@ -63,6 +64,10 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
                 dieStorage->Push(Make_DieComplex(digits, ALIEN_CENTER, 
                                                             ALIEN_SCORE));
 
+                //--Sound effect
+                Mix_PlayChannel(-1, soundEffect->blow, 0);
+                //--------------
+
                 //-----Добавляем анимацию взрыва-----
 
                 animatedList->Push(MakeAnimated(tcollection->Smoky(), 
@@ -96,7 +101,8 @@ bool GameFleet_ABC::CheckHeroLazerHitsFleet(HeroLazerStorage *heroLazerStorage,
 
 void GameFleet_ABC::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
                                             ObjectsList<DieComplex>* dieStorage, 
-                                            ObjectsList<Apack>* animatedList)
+                                            ObjectsList<Apack>* animatedList,
+                                            music* soundEffect)
 {
      if (fleetLazerStorage->Check_withObject(hero))
     {
@@ -104,6 +110,10 @@ void GameFleet_ABC::CheckFleetLazerHitsHero(NHero* hero, status_t& status,
         animatedList->Push(MakeAnimated(tcollection->Smoky(), tn::allsmokyblow,
                                         hero->GetCenter()));
         //
+
+        //---Sound effect
+        Mix_PlayChannel(-1, soundEffect->blow, 0);
+        //------
         /*Если героя подбивают, показываем череп*/
         dieStorage->Push(Make_DieComplex(hero->GetCenter(), tcollection));
         makeTmpFleetStorage(status);
